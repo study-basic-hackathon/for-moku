@@ -1,5 +1,5 @@
-import { auth } from "@/auth";
-import { SignIn, SignOut } from "@/components/auth-components";
+import { auth } from "@/lib/auth/auth";
+import { SignIn, SignOut } from "@/component/organism/auth/authComponents";
 import Image from "next/image";
 
 export default async function Home() {
