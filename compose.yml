@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres:14.7-alpine
+    container_name: 'formoku-db-local'
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - ./database/localsetup:/docker-entrypoint-initdb.d
+      - postgres_volume_formoku:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+volumes:
+  postgres_volume_formoku:
+
+networks:
+  app-network:
+    driver: bridge
