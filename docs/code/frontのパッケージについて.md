@@ -12,8 +12,6 @@ front/
 │   └── middleware.ts     # ミドルウェア
 │
 ├── public/               # 静的ファイル
-│   ├── images/           # 画像ファイル
-│   └── fonts/            # フォントファイル
 │
 ├── .next/                # Next.jsのビルド出力
 ├── node_modules/         # 依存パッケージ
