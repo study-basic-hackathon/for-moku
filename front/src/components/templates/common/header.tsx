@@ -1,5 +1,5 @@
-import { SignIn, SignOut } from "@/component/organism/auth/authComponents";
-import { auth } from "@/lib/auth/auth";
+import { SignIn, SignOut } from "@/components/organisms/auth/authComponents";
+import { auth } from "@/libs/auth/auth";
 
 export default async function Header() {
   const session = await auth();
