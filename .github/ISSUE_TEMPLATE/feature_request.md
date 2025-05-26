@@ -10,18 +10,18 @@ assignees: ''
 （どこを変えるのかを選んでください、正直タグでもいいかもです）
 選択肢：「共通」、「ダッシュボード」「イベント」「当日ページ」「ユーザメンテナンス」「グループメンテナンス」「その他運用」
 
+**Describe the solution you'd like**
+(何をやるのかを一言で)
+A clear and concise description of what you want to happen.
+
 **TODO**
 （簡単にToDOリストを準備してください）
 - [ ] Task1
 - [ ] Task2
 
-**Is your feature request related to a problem? Please describe.**
+**Which directory to change**
 （どこを変えるのか端的にまとめてください）
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
-
-**Describe the solution you'd like**
-(何をやるのかを一言で)
-A clear and concise description of what you want to happen.
+わからなかったら埋めなくていいです。
 
 **Describe alternatives you've considered**
 （ダメだった時の代替案は？、なくてもいいです）
