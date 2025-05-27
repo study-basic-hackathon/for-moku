@@ -6,7 +6,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <SideNav />
       <main className="w-full">
-        <div className="pt-14">{children}</div>
+        {children}
       </main>
     </SidebarProvider>
   )

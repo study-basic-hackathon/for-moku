@@ -11,22 +11,44 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
 } from "@/components/atoms/shadcn/sidebar";
 import Link from "next/link";
 
 const items = [
   {
     title: "ダッシュボード",
-    url: "#",
+    url: "/#",
     icon: Home,
   },
+  {
+    title: "イベント一覧",
+    url: "/#",
+    icon: Calendar,
+  },
+  {
+    title: "イベント作成",
+    url: "/#",
+    icon: Plus,
+  },
+  {
+    title: "グループ管理",
+    url: "/#",
+    icon: Users,
+  },
+  {
+    title: "グループ検索",
+    url: "/#",
+    icon: Search,
+  },
+  {
+    title: "Menu Item",
+    url: "/#",
+    icon: FileQuestion,
+  },
+  
 ]
  
 export function SideNav() {
@@ -39,44 +61,14 @@ export function SideNav() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon className="ml-4 mr-2"/>
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-              <SidebarMenuButton asChild>
-                <Link href="/#">
-                  <Calendar className="ml-4 mr-2"/>
-                  イベント一覧
-                </Link>
-              </SidebarMenuButton>
-              <SidebarMenuButton asChild>
-                <Link href="/#">
-                  <Plus className="ml-4 mr-2"/>
-                  イベント作成
-                </Link>
-              </SidebarMenuButton>
-              <SidebarMenuButton asChild>
-                <Link href="/#">
-                  <Users className="ml-4 mr-2"/>
-                  グループ管理
-                </Link>
-              </SidebarMenuButton>
-              <SidebarMenuButton asChild>
-                <Link href="/#">
-                  <Search className="ml-4 mr-2"/>
-                  グループ検索
-                </Link>
-              </SidebarMenuButton>
-              <SidebarMenuButton asChild>
-                <Link href="/#">
-                  <FileQuestion className="ml-4 mr-2"/>
-                  Menu Item
-                </Link>
-              </SidebarMenuButton>
-          </SidebarMenu> 
+            </SidebarMenu> 
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
