@@ -16,7 +16,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       const { pathname } = request.nextUrl
       if (pathname === "/sandbox") return true // ここでログインパスを制御できます。
       // if (pathname === "/sandbox2") return !!auth
-      return true
+      return !!auth
     },
     async session({ session, token }) {
       if (token?.accessToken) session.accessToken = token.accessToken
@@ -24,7 +24,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session
     },
   },
-  experimental: { enableWebAuthn: true },
 })
 
 declare module "next-auth" {
