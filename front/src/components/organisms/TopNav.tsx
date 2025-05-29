@@ -7,8 +7,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/atoms/shadcn/dropdown-menu"
 import { LogOut, Settings, User } from "lucide-react"
+import { auth, signOut } from "@/lib/auth/auth"
 
-export function TopNav() {
+export async function TopNav() {
+  const session = await auth();
+
+  if (!session?.user) return null
+
   return (
     <nav className="fixed inset-x-0 top-0 z-50 bg-sidebar border-b">
       <div className="flex items-center justify-between h-14 px-8">
@@ -17,29 +22,40 @@ export function TopNav() {
             <h1 className="text-2xl font-bold">forもく</h1>
           </Link>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger className="flex items-center gap-2 text-sm">
-            YasunariIguchi
-            <Avatar>
-              <AvatarImage src="https://avatars.githubusercontent.com/u/39820920" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>
-              <User />
-              アカウント
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Settings />
-              設定
-            </DropdownMenuItem>
-            <DropdownMenuItem variant="destructive">
-              <LogOut />
-              ログアウト
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center gap-2 text-sm">
+          {session.user.email}
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Avatar>
+                <AvatarImage src={`${session.user.image}`} alt="User Avatar"/>
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="min-w-[7rem] shadow-none">
+              <DropdownMenuItem>
+                <User />
+                アカウント
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Settings />
+                設定
+              </DropdownMenuItem>
+              <form
+                action={async () => {
+                  "use server"
+                  await signOut()
+                }}
+              >
+                <button type="submit" className="w-full">
+                  <DropdownMenuItem variant="destructive">
+                    <LogOut />
+                    ログアウト
+                  </DropdownMenuItem>
+                </button>
+              </form>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </nav>
   )
