@@ -14,8 +14,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     authorized({ request, auth }) {
       const { pathname } = request.nextUrl
-      if (pathname === "/sandbox") return true // ここでログインパスを制御できます。
-      // if (pathname === "/sandbox2") return !!auth
+      if (pathname === "/sandbox") return true
+
       return !!auth
     },
     async session({ session, token }) {
