@@ -27,12 +27,12 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen flex`}
       >
         <TopNav />
-        <div className="fixed top-14">
+        <main className="fixed top-14 overflow-y-auto w-full h-full">
           {children}
-        </div>
+        </main>
       </body>
     </html>
   );

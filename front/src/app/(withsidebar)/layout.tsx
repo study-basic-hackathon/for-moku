@@ -5,9 +5,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <SideNav />
-      <main className="w-full">
+      <div className="w-full">
         {children}
-      </main>
+      </div>
     </SidebarProvider>
   )
 }
