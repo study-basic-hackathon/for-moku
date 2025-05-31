@@ -16,13 +16,13 @@ export default function VenueToolSelectionMenu({ selectedTool, onToolSelect }: V
           <div className="grid grid-cols-6 xl:grid-cols-1 gap-2">
             <div className="col-span-1 grid grid-cols-1 xl:grid-cols-2 grid-rows-2 xl:grid-rows-1 gap-2">
               <button 
-                className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="w-full p-2 bg-gray-900 text-white rounded hover:bg-gray-600"
                 onClick={() => onToolSelect('ピクセル塗りつぶし')}
               >
                 ピクセル塗りつぶし
               </button>
               <button 
-                className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="w-full p-2 bg-gray-900 text-white rounded hover:bg-gray-600"
                 onClick={() => onToolSelect('ピクセル消去')}
               >
                 ピクセル消去
@@ -31,13 +31,13 @@ export default function VenueToolSelectionMenu({ selectedTool, onToolSelect }: V
 
             <div className="col-span-1 grid grid-cols-1 xl:grid-cols-2 grid-rows-2 xl:grid-rows-1 gap-2">
               <button 
-                className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="w-full p-2 bg-gray-900 text-white rounded hover:bg-gray-600"
                 onClick={() => onToolSelect('丸オブジェクト配置')}
               >
                 丸オブジェクト配置
               </button>
               <button 
-                className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="w-full p-2 bg-gray-900 text-white rounded hover:bg-gray-600"
                 onClick={() => onToolSelect('丸オブジェクト消去')}
               >
                 丸オブジェクト消去
@@ -46,13 +46,13 @@ export default function VenueToolSelectionMenu({ selectedTool, onToolSelect }: V
 
             <div className="col-span-1 grid grid-cols-1 xl:grid-cols-2 grid-rows-2 xl:grid-rows-1 gap-2">
               <button 
-                className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="w-full p-2 bg-gray-900 text-white rounded hover:bg-gray-600"
                 onClick={() => onToolSelect('任意オブジェクト配置')}
               >
                 任意オブジェクト配置
               </button>
               <button 
-                className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="w-full p-2 bg-gray-900 text-white rounded hover:bg-gray-600"
                 onClick={() => onToolSelect('任意オブジェクト消去')}
               >
                 任意オブジェクト消去
@@ -61,13 +61,13 @@ export default function VenueToolSelectionMenu({ selectedTool, onToolSelect }: V
 
             <div className="col-span-1 grid grid-cols-1 xl:grid-cols-2 grid-rows-2 xl:grid-rows-1 gap-2">
               <button 
-                className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="w-full p-2 bg-gray-900 text-white rounded hover:bg-gray-600"
                 onClick={() => onToolSelect('テキストボックス追加')}
               >
                 テキストボックス追加
               </button>
               <button 
-                className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="w-full p-2 bg-gray-900 text-white rounded hover:bg-gray-600"
                 onClick={() => onToolSelect('テキストボックス消去')}
               >
                 テキストボックス消去
@@ -76,13 +76,13 @@ export default function VenueToolSelectionMenu({ selectedTool, onToolSelect }: V
 
             <div className="col-span-1 grid grid-cols-1 xl:grid-cols-2 grid-rows-2 xl:grid-rows-1 gap-2">
               <button 
-                className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="w-full p-2 bg-gray-900 text-white rounded hover:bg-gray-600"
                 onClick={() => onToolSelect('直線描画')}
               >
                 直線描画
               </button>
               <button 
-                className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="w-full p-2 bg-gray-900 text-white rounded hover:bg-gray-600"
                 onClick={() => onToolSelect('直線消去')}
               >
                 直線消去

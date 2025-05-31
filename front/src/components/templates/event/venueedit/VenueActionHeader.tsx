@@ -12,10 +12,10 @@ export default function VenueActionHeader() {
             </button>
           </div>
           <div className="flex space-x-2">
-            <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+            <button className="px-4 py-2 bg-gray-900 text-white rounded hover:bg-gray-600">
               縮小
             </button>
-            <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+            <button className="px-4 py-2 bg-gray-900 text-white rounded hover:bg-gray-600">
               拡大
             </button>
           </div>
@@ -24,7 +24,7 @@ export default function VenueActionHeader() {
           <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
             取り消し
           </button>
-          <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-red-600">
+          <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
             保存
           </button>
         </div>
