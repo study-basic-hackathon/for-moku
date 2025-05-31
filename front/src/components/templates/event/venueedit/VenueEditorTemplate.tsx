@@ -9,6 +9,7 @@ import VenueToolSelectionMenu from "./VenueToolSelectionMenu"
 export default function VenueEditorTemplate() {
   const [selectedTool, setSelectedTool] = useState<string>('')
   const [zoom] = useState(100)
+  const [n_pixel] = useState(16)
 
   return (
     <div className="pb-10">
@@ -18,6 +19,7 @@ export default function VenueEditorTemplate() {
           <div className="col-span-1 md:col-span-1 lg:col-span-6 xl:col-span-6">
             <VenueEditor 
               selectedTool={selectedTool} 
+              n_pixel={n_pixel}
               zoom={zoom}
             />
           </div>
