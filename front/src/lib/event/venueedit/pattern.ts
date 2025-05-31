@@ -1,3 +1,9 @@
+/**
+ * グリッドを描画する
+ * @param ctx キャンバスのコンテキスト
+ * @param pixels ピクセル数
+ * @param cellSize セルサイズ
+ */
 export const drawGrid = (ctx: CanvasRenderingContext2D, pixels: number, cellSize: number) => {
   const canvasBase = pixels * cellSize
   ctx.strokeStyle = '#777777'
@@ -21,8 +27,16 @@ export const drawGrid = (ctx: CanvasRenderingContext2D, pixels: number, cellSize
 
 } 
 
+/**
+ * パターンを作成用のキャンバスを作成し、パターンでキャンバスを埋め尽くす
+ * @param ctx キャンバスのコンテキスト
+ * @param pixels ピクセル数
+ * @param cellSize セルサイズ
+ */
 export const drawPatternCanvas = (ctx: CanvasRenderingContext2D, pixels: number, cellSize: number) => {
   const canvasBase = pixels * cellSize
+
+  // 白黒のチェックを作成用のキャンバスを作成
   const patternCanvas = document.createElement('canvas')
   patternCanvas.width = 8
   patternCanvas.height = 8
@@ -37,7 +51,10 @@ export const drawPatternCanvas = (ctx: CanvasRenderingContext2D, pixels: number,
     patternCtx.fillRect(4, 4, 4, 4)
   }
   
+  // 白黒のチェックを作成用のキャンバスからパターンを作成
   const pattern = ctx.createPattern(patternCanvas, 'repeat')
+
+  // パターンでキャンバスを埋め尽くす
   if (pattern) {
     ctx.fillStyle = pattern
     ctx.fillRect(0, 0, canvasBase, canvasBase)

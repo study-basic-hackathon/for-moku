@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { useCanvasDraw } from '@/hooks/venue/useCanvasDraw'
 
 interface VenueEditorProps {
@@ -10,7 +9,8 @@ interface VenueEditorProps {
 
 export default function VenueEditor({ selectedTool, zoom }: VenueEditorProps) {
 
-  const { canvasRef, CANVAS_BASE} = useCanvasDraw({ }) // いわゆるカスタムフック
+  // キャンバスに関連するフック（いわゆるカスタムフック）
+  const { canvasRef, CANVAS_BASE} = useCanvasDraw({ }) 
   
   const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     // マウス移動時の処理
