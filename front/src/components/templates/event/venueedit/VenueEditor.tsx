@@ -9,8 +9,8 @@ interface VenueEditorProps {
 }
 
 export default function VenueEditor({ selectedTool, zoom }: VenueEditorProps) {
-  const [cursorUrl, setCursorUrl] = useState('default')
-  const { canvasRef, CANVAS_BASE } = useCanvasDraw({ size: 512 })
+
+  const { canvasRef, CANVAS_BASE} = useCanvasDraw({ }) // いわゆるカスタムフック
   
   const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     // マウス移動時の処理
@@ -45,7 +45,6 @@ export default function VenueEditor({ selectedTool, zoom }: VenueEditorProps) {
               style={{
                 width: `${CANVAS_BASE}px`,
                 height: `${CANVAS_BASE}px`,
-                cursor: `${cursorUrl}, auto`
               }}
             />
           </div>
