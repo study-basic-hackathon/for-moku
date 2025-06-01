@@ -7,7 +7,6 @@ config({ path: ".env" });
 export default {
   dialect: "postgresql",
   schema: "./src/lib/schema",        // ← schema.ts ではなく schema ディレクトリを指定
-  out: "./drizzle", 
   dbCredentials: {
     url: process.env.DATABASE_URL!,
   },
