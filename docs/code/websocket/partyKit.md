@@ -2,4 +2,4 @@
 
 https://docs.partykit.io/
 
-サンプル：Githubのどこか
+サンプル：GitHubのどこか
