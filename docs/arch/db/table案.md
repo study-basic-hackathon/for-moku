@@ -5,7 +5,7 @@
 
 | 項目名        | 型             | 説明                             |
 |---------------|----------------|----------------------------------|
-| id            | int / UUID     | ユーザーID（主キー）             |
+| id            | bigint     | ユーザーID（主キー）             |
 | email         | string         | メールアドレス                   |
 | name          | string         | ユーザー名                       |
 | bio           | text           | 自己紹介文                       |
@@ -18,9 +18,10 @@
 
 | 項目名        | 型             | 説明                                             |
 |---------------|----------------|--------------------------------------------------|
-| id            | int / UUID     | イベントID（主キー）                            |
-| user_group_id | int / UUID     | 所属グループID（外部キー）                      |
+| id            | bigint         | イベントID（主キー）                            |
+| user_group_id | bigint         | 所属グループID（外部キー）                      |
 | name          | string         | イベント名                                       |
+| description   | text           | イベントの概要                                 |
 | start_time    | datetime       | 開始日時                                         |
 | end_time      | datetime       | 終了日時                                         |
 | venue_url     | string (URL)   | 会場のURL（インスタベースのURL想定）            |
@@ -33,15 +34,15 @@
 
 | 項目名     | 型         | 説明                          |
 |------------|------------|-------------------------------|
-| id         | int / UUID | 主キー                        |
-| user_id    | int / UUID | 参加ユーザーID（外部キー）    |
-| event_id   | int / UUID | 参加イベントID（外部キー）    |
+| id         | bigint     | 主キー                        |
+| user_id    | bigint     | 参加ユーザーID（外部キー）    |
+| event_id   | bigint     | 参加イベントID（外部キー）    |
 
 ### **user_group**
 
 | 項目名     | 型             | 説明             |
 |------------|----------------|------------------|
-| id         | int / UUID     | グループID       |
+| id         | bigint         | グループID       |
 | name       | string         | グループ名       |
 | description| text           | グループの概要   |
 | created_at | datetime       | 作成日時         |
@@ -51,21 +52,11 @@
 
 | 項目名         | 型             | 説明                               |
 |----------------|----------------|------------------------------------|
-| id             | int / UUID     | 割り当てID                         |
-| user_id        | int / UUID     | ユーザーID                         |
-| user_group_id  | int / UUID     | ユーザーグループID                 |
+| id             | bigint         | 割り当てID                         |
+| user_id        | bigint         | ユーザーID                         |
+| user_group_id  | bigint         | ユーザーグループID                 |
 | role           | enum           | ロール（admin または member）     |
 
 ## 📙 NoSQLコレクション（user_icons）
 
-### **user_icons**
-
-| フィールド名   | 型               | 説明                                               |
-|----------------|------------------|----------------------------------------------------|
-| email          | string           | ユーザー識別用メールアドレス                      |
-| event_id       | string / number  | 対象イベントID                                     |
-| position.x     | float            | X座標                                              |
-| position.y     | float            | Y座標                                              |
-| name           | string           | 表示名                                             |
-| bio            | string           | 自己紹介                                           |
-| interests      | string / array   | 興味のある分野（カンマ区切り または 配列）        |
+検討中。
