@@ -28,7 +28,7 @@ export async function TopNav() {
             <DropdownMenuTrigger>
               <Avatar>
                 <AvatarImage src={`${session.user.image}`} alt="User Avatar"/>
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarFallback><User /></AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="min-w-[7rem] shadow-none">
