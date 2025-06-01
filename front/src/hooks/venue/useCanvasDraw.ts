@@ -1,12 +1,17 @@
 import { useRef, useEffect } from 'react'
 import { drawPatternCanvas, drawGrid } from '@/lib/event/venueedit/pattern'
+import { DRAWABLE_TOOLS, DrawableTool } from '@/types/tool'
 
 /**
  * キャンバスの描画を管理するフックのProps
  * @param n_pixel ピクセル数
+ * @param selectedColor 選択された色
+ * @param selectedTool 選択されたツール
  */
 interface Props {
   n_pixel?: number
+  selectedColor?: string
+  selectedTool?: string
 }
 
 /**
@@ -17,9 +22,15 @@ const CANVAS_BASE = 512;
 /**
  * キャンバスの描画を管理するフック
  * @param n_pixel ピクセル数
- * @returns キャンバスの参照、キャンバスのサイズ、セルの座標を取得する関数
+ * @param selectedColor 選択された色
+ * @param selectedTool 選択されたツール
+ * @returns キャンバスの参照、キャンバスのサイズ、セルの座標を取得する関数、描画関数
  */
-export const useCanvasDraw = ({ n_pixel = 8 }: Props) => {
+export const useCanvasDraw = ({ 
+  n_pixel = 8, 
+  selectedColor = '#000000',
+  selectedTool = ''
+}: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const CELL_SIZE = CANVAS_BASE / n_pixel
 
@@ -54,5 +65,17 @@ export const useCanvasDraw = ({ n_pixel = 8 }: Props) => {
     return { cellX, cellY };
   }
 
-  return { canvasRef, CANVAS_BASE, getCellCoordinates };
+  /**
+   * 描画可能かどうかを判定する関数
+   * @returns 描画可能な場合はtrue
+   */
+  const canDraw = () => {
+    return DRAWABLE_TOOLS.includes(selectedTool as DrawableTool)
+  }
+
+  return { 
+    canvasRef, 
+    CANVAS_BASE, 
+    canDraw
+  }
 } 

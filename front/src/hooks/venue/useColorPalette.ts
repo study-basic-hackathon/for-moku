@@ -1,0 +1,78 @@
+import { Color } from '@/types/color'
+import { useState, Dispatch, SetStateAction } from 'react'
+import { DEFAULT_COLORS } from '@/lib/event/venueedit/constants'
+
+/**
+ * useColorPaletteフックの戻り値の型定義
+ */
+interface UseColorPaletteReturn {
+  selectedColor: Color
+  colorPalette: Color[]
+  setSelectedColor: Dispatch<SetStateAction<Color>>
+  addColor: (color: Color) => void
+  removeColor: (color: Color) => void
+  reorderColors: (fromIndex: number, toIndex: number) => void
+  resetColors: () => void
+}
+
+/**
+ * カラーパレットを管理するフック
+ * @returns カラーパレットの状態と操作関数
+ */
+export const useColorPalette = (): UseColorPaletteReturn => {
+  const [selectedColor, setSelectedColor] = useState<Color>(DEFAULT_COLORS[0])
+  const [colorPalette, setColorPalette] = useState<Color[]>(DEFAULT_COLORS)
+
+  /**
+   * 新しい色を追加する
+   * @param color 追加する色（HEX形式）
+   */
+  const addColor = (color: Color) => {
+    // 重複チェック
+    if (colorPalette.includes(color)) return
+    setColorPalette([...colorPalette, color])
+    setSelectedColor(color) // 追加した色を選択状態にする
+  }
+
+  /**
+   * 色を削除する
+   * @param color 削除する色
+   */
+  const removeColor = (color: Color) => {
+    setColorPalette(colorPalette.filter(c => c !== color))
+    // 削除した色が選択されていた場合、最初の色を選択
+    if (selectedColor === color) {
+      setSelectedColor(colorPalette[0])
+    }
+  }
+
+  /**
+   * 色の順序を変更する
+   * @param fromIndex 移動元のインデックス
+   * @param toIndex 移動先のインデックス
+   */
+  const reorderColors = (fromIndex: number, toIndex: number) => {
+    const newColors = [...colorPalette]
+    const [removed] = newColors.splice(fromIndex, 1)
+    newColors.splice(toIndex, 0, removed)
+    setColorPalette(newColors)
+  }
+
+  /**
+   * カラーパレットをデフォルトにリセットする
+   */
+  const resetColors = () => {
+    setColorPalette(DEFAULT_COLORS)
+    setSelectedColor(DEFAULT_COLORS[0])
+  }
+
+  return {
+    selectedColor,
+    colorPalette,
+    setSelectedColor,
+    addColor,
+    removeColor,
+    reorderColors,
+    resetColors
+  }
+} 

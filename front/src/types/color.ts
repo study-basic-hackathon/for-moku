@@ -41,7 +41,7 @@ type ColorRGBA<T extends string> =
 export type Color = string & { __type: "Color" };
 
 export const color = <T extends string>(
-  w: ColorHex<T> | ColorRGB<T> | ColorRGBA<T>
+  w: T extends `#${string}` ? T : never
 ): Color => {
   return w as string as Color;
 };
