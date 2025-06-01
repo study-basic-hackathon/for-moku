@@ -24,6 +24,7 @@
 | description   | text           | イベントの概要                                 |
 | start_time    | datetime       | 開始日時                                         |
 | end_time      | datetime       | 終了日時                                         |
+| event_url     | string (URL)   | イベントの詳細URL（connpassのURL想定）            |
 | venue_url     | string (URL)   | 会場のURL（インスタベースのURL想定）            |
 | image_json    | JSON           | 会場の椅子などの配置情報                        |
 | image_url     | string (URL)   | 会場の椅子などの配置情報を画像化したものURL。当日画面の背景に使用する |
