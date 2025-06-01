@@ -25,6 +25,7 @@
 | end_time      | datetime       | 終了日時                                         |
 | venue_url     | string (URL)   | 会場のURL（インスタベースのURL想定）            |
 | image_json    | JSON           | 会場の椅子などの配置情報                        |
+| image_url     | string (URL)   | 会場の椅子などの配置情報を画像化したものURL。当日画面の背景に使用する |
 | created_at    | datetime       | 作成日時                                         |
 | updated_at    | datetime       | 更新日時                                         |
 
