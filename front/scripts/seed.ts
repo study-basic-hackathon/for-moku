@@ -2,11 +2,12 @@
 import { db } from "@/lib/db";
 import { users } from "@/lib/schema";
 import { eq } from "drizzle-orm";
-import { randomUUID } from "crypto";
 
 async function seed() {
-  // すでに同じメールアドレスのユーザーが存在するかチェック
-  const existing = await db.select().from(users).where(eq(users.email, "iguchi.yasunari.0219@gmail.com"));
+  const existing = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, "iguchi.yasunari.0219@gmail.com"));
 
   if (existing.length > 0) {
     console.log("Sample user already exists.");
@@ -14,7 +15,6 @@ async function seed() {
   }
 
   await db.insert(users).values({
-    id: randomUUID(),
     email: "iguchi.yasunari.0219@gmail.com",
     name: "いぐっちゃん",
     bio: "よろしくだお。",
