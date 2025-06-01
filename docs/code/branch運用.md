@@ -71,3 +71,48 @@ ${タスク名} #${タスク番号}
     ```
     
 - develop上に綺麗なコミットログが残る
+
+# Gitの小ネタ一覧
+## 連続した複数のコミットをまとめたい時
+以下のコマンドを実行
+```bash
+git rebase -i HEAD~3
+```
+
+メッセージの書き換え(viの場合)
+```
+pick 12345678 1st commit
+pick 23456789 2nd commit
+pick 34567890 3rd commit
+```
+↓
+```
+pick 12345678 1st commit
+squash 23456789 2nd commit
+squash 34567890 3rd commit
+```
+その後にviを閉じる
+- `:wq` - 変更を保存して終了
+- `:q!` - 変更を破棄して終了
+
+再度実行した後に、コミットメッセージを編集
+```
+git rebase --continue
+```
+
+その後にviを閉じる
+- `:wq` - 変更を保存して終了
+- `:q!` - 変更を破棄して終了
+
+
+### リベース中に問題が発生した場合の対処法
+```bash
+# リベースを中止して元の状態に戻る
+git rebase --abort
+
+# 現在のコミットをスキップ
+git rebase --skip
+```
+
+参考URL：
+https://qiita.com/futakuchi0117/items/0eafe586e88fe593c23f
