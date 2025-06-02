@@ -2,7 +2,7 @@
 
 import { auth } from '@/lib/auth/auth';
 import { db } from '@/lib/db';
-import { users } from '@/lib/schema/user';
+import { users } from '@/lib/db/schema/user';
 import { eq } from 'drizzle-orm';
 
 export async function registerUser(formData: {
