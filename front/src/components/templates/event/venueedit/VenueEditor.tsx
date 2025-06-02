@@ -1,6 +1,7 @@
 'use client'
 
 import { useCanvasDraw } from '@/hooks/venue/useCanvasDraw'
+import { cn } from '@/lib/shadcn/utils'
 
 interface VenueEditorProps {
   selectedTool: string
@@ -21,7 +22,7 @@ const canvasStyleFactory = (zoom: number, CANVAS_BASE: number) : React.CSSProper
   }
 }
 
-export default function VenueEditor({ selectedTool, n_pixel = 8, zoom = 160 }: VenueEditorProps) {
+export default function VenueEditor({ selectedTool, n_pixel = 8, zoom = 150 }: VenueEditorProps) {
 
   // キャンバスに関連するフック（いわゆるカスタムフック）
   const { canvasRef, CANVAS_BASE} = useCanvasDraw({ n_pixel }) 
@@ -39,10 +40,10 @@ export default function VenueEditor({ selectedTool, n_pixel = 8, zoom = 160 }: V
   }
 
   return (
-    <div className="flex flex-col items-center border border-gray-900 rounded-lg p-4 overflow-x-auto">
-      <div>
-        <span className="text-lg font-semibold">キャンバス</span>
-      </div>
+    <div className={cn(
+      "flex flex-col border border-gray-900 rounded-lg p-4 overflow-x-auto",
+      zoom <= 100 && "items-center"
+    )}>
 
       <div style={{ maxWidth: `${CANVAS_BASE}px`, maxHeight: `${CANVAS_BASE + 0}px` }}>
         <div

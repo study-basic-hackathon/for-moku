@@ -1,4 +1,12 @@
-export default function VenueActionHeader() {
+import { ZoomIn, ZoomOut } from 'lucide-react'
+
+interface Props {
+  handleZoomIn: () => void
+  handleZoomOut: () => void
+}
+
+export default function VenueActionHeader({ handleZoomIn, handleZoomOut }: Readonly<Props>) {
+
   return (
     <div className="flex flex-col justify-center items-center border border-gray-900 mx-2 rounded-lg p-4 m-4 gap-4">
       <div className="items-center justify-between w-full grid grid-cols-4 lg:grid-cols-4 xl:grid-cols-2">
@@ -12,11 +20,19 @@ export default function VenueActionHeader() {
             </button>
           </div>
           <div className="flex space-x-2">
-            <button className="px-4 py-2 bg-gray-900 text-white rounded hover:bg-gray-600">
-              縮小
+            <button 
+              className="px-2 py-2 bg-gray-900 text-white rounded hover:bg-gray-600 flex items-center gap-2"
+              onClick={handleZoomOut}
+            >
+              <ZoomOut size={20} />
+              
             </button>
-            <button className="px-4 py-2 bg-gray-900 text-white rounded hover:bg-gray-600">
-              拡大
+            <button 
+              className="px-2 py-2 bg-gray-900 text-white rounded hover:bg-gray-600 flex items-center gap-2"
+              onClick={handleZoomIn}
+            >
+              <ZoomIn size={20} />
+              
             </button>
           </div>
         </div>
