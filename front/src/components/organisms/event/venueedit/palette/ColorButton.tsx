@@ -1,5 +1,7 @@
 'use client'
 
+import { X } from "lucide-react"
+
 interface ColorButtonProps {
   color: string
   isSelected: boolean
@@ -24,7 +26,7 @@ export default function ColorButton({ color, isSelected, onClick, onDelete }: Re
         onClick={onDelete}
         className="
           absolute top-1 left-1
-          w-4 h-4 rounded-full bg-gray-500 text-white
+          w-3 h-3 rounded-full bg-gray-500 text-white
           flex items-center justify-center
           hover:bg-red-600
           z-10
@@ -35,7 +37,7 @@ export default function ColorButton({ color, isSelected, onClick, onDelete }: Re
           border-white
         "
       >
-        ×
+       <X />
       </button>
     </div>
   )

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/shadcn/utils"
+import { Icon, Plus } from "lucide-react"
 
 /**
  * プラス記号を表示するボタンコンポーネント
@@ -57,8 +58,8 @@ export default function PlusButton({
       onClick={onClick}
       disabled={disabled}
       className={cn(defaultClassName, className)}
-    >
-      <span className="text-gray-600 text-xl">+</span>
+    > 
+      <span className="text-gray-600 text-xl"><Plus size={16}/></span>
     </button>
   )
 } 
