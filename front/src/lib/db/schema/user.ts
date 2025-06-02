@@ -1,12 +1,12 @@
 import {
   pgTable,
-  serial,
+  bigint,
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(), // 自動採番される整数ID
+  id: bigint("id", { mode: "number" }).primaryKey().generatedAlwaysAsIdentity(), // 自動採番される整数ID
   email: text("email").notNull(),
   name: text("name").notNull(),
   bio: text("bio"),

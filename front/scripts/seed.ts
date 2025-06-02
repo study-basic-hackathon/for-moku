@@ -1,6 +1,6 @@
 // scripts/seed.ts
 import { db } from "@/lib/db";
-import { users } from "@/lib/schema";
+import { users } from "@/lib/db/schema/user";
 import { eq } from "drizzle-orm";
 
 async function seed() {
