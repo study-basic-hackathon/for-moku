@@ -41,9 +41,16 @@ type ColorRGBA<T extends string> =
 export type Color = string & { __type: "Color" };
 
 export const color = <T extends string>(
-  w: T extends `#${string}` ? T : never
+  w: T extends ColorHex<T> | ColorRGB<T> | ColorRGBA<T> ? T : never
 ): Color => {
-  return w as string as Color;
+  if (
+    /^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/.test(w) || // Hex format
+    /^rgb\(\d{1,3},\d{1,3},\d{1,3}\)$/.test(w) ||   // RGB format
+    /^rgba\(\d{1,3},\d{1,3},\d{1,3},\d(\.\d+)?\)$/.test(w) // RGBA format
+  ) {
+    return w as string as Color;
+  }
+  throw new Error("Invalid color format");
 };
 
 export const defaultColorPalette: Color[] = [
