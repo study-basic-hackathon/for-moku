@@ -15,9 +15,10 @@ front/
 ├── src/
 │   ├── lib/
 │   │   ├── db.ts                 # ← drizzle クライアント生成用
-│   │   └── schema/              # ← テーブルスキーマ（モデル）を定義
-│   │       ├── index.ts         # ← スキーマの一括エクスポート
-│   │       └── user.ts          # ← 各テーブルの定義（例：users テーブル）
+│   │   └── db/
+│   │   │    └── schema/           # ← テーブルスキーマ（モデル）を定義
+│   │   │         ├── index.ts      # ← スキーマの一括エクスポート
+│   │   │         └── user.ts       # ← 各テーブルの定義（例：users テーブル）
 ```
 
 ---
@@ -44,7 +45,7 @@ DATABASE_URL=postgres://formoku:formoku@localhost:5432/formoku
 既に `src/lib/schema/` に定義されているモデル（例：users テーブル）を、初めて DB に反映する場合は以下のコマンドを実行してください。
 
 ```bash
-npx drizzle-kit push
+npm run db:push
 ```
 - 既存のDBに反映されていないモデルはこの操作でテーブル作成されます。
 
@@ -72,7 +73,7 @@ export * from "./event"; // ← 追加の例
 以下のコマンドで、スキーマとデータベースの差分をもとに、直接データベースへ変更を適用します。
 
 ```bash
-npx drizzle-kit push
+npm run db:push
 ```
 
 

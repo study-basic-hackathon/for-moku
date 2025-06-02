@@ -6,7 +6,7 @@ config({ path: ".env" });
 
 export default {
   dialect: "postgresql",
-  schema: "./src/lib/schema",        // ← schema.ts ではなく schema ディレクトリを指定
+  schema: "./src/lib/db/schema",        // ← schema.ts ではなく schema ディレクトリを指定
   dbCredentials: {
     url: process.env.DATABASE_URL!,
   },
