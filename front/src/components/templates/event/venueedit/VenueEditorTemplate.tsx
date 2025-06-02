@@ -6,9 +6,19 @@ import VenueEditor from "./VenueEditor"
 import VenueToolSubMenu from "./VenueToolSubMenu"
 import VenueToolSelectionMenu from "./VenueToolSelectionMenu"
 import { useZoom } from '@/hooks/venue/useZoom'
+import { useColorPalette } from '@/hooks/venue/useColorPalette'
+import { VenueEditTool } from '@/types/tool'
+
 
 export default function VenueEditorTemplate() {
-  const [selectedTool, setSelectedTool] = useState<string>('')
+  const [selectedTool, setSelectedTool] = useState<VenueEditTool>('ピクセル塗りつぶし')
+  const { 
+    selectedColor, 
+    colorPalette, 
+    setSelectedColor,
+    addColor,
+    removeColor
+  } = useColorPalette()
   const {zoom, handleZoomIn, handleZoomOut } = useZoom(100)
   const [n_pixel] = useState(16)
 
@@ -23,16 +33,24 @@ export default function VenueEditorTemplate() {
           <div className="col-span-1 md:col-span-1 lg:col-span-6 xl:col-span-6">
             <VenueEditor 
               selectedTool={selectedTool} 
+              selectedColor={selectedColor}
               n_pixel={n_pixel}
               zoom={zoom}
             />
           </div>
           <div className="col-span-1 md:col-span-1 lg:col-span-2 xl:col-span-2">
-            <VenueToolSubMenu selectedTool={selectedTool} />
+            <VenueToolSubMenu 
+              selectedTool={selectedTool}
+              onToolSelect={setSelectedTool}
+              selectedColor={selectedColor}
+              onColorSelect={setSelectedColor}
+              colorPalette={colorPalette}
+              onAddColor={addColor}
+              onDeleteColor={removeColor}
+            />
           </div>
           <div className="col-span-1 md:col-span-1 lg:col-span-8 xl:col-span-4">
             <VenueToolSelectionMenu 
-              selectedTool={selectedTool}
               onToolSelect={setSelectedTool}
             />
           </div>
