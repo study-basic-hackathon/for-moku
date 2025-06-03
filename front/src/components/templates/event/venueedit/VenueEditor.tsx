@@ -1,12 +1,16 @@
 'use client'
 
-import { useCanvasDraw } from '@/hooks/venue/useCanvasDraw'
 import { cn } from '@/lib/shadcn/utils'
+import { CANVAS_BASE } from '@/lib/event/venueedit/constants'
 
 interface VenueEditorProps {
-  selectedTool: string
-  n_pixel?: number
-  zoom?: number
+  zoom: number
+  canvasRef: React.RefObject<HTMLCanvasElement | null>
+  canDraw: () => boolean
+  handleMouseDown: (e: React.MouseEvent<HTMLCanvasElement>) => void
+  handleMouseMove: (e: React.MouseEvent<HTMLCanvasElement>) => void
+  handleMouseUp: () => void
+  handleMouseLeave: () => void
 }
 
 const canvasStyleFactory = (zoom: number, CANVAS_BASE: number) : React.CSSProperties=> {
@@ -22,29 +26,20 @@ const canvasStyleFactory = (zoom: number, CANVAS_BASE: number) : React.CSSProper
   }
 }
 
-export default function VenueEditor({ selectedTool, n_pixel = 8, zoom = 150 }: VenueEditorProps) {
-
-  // キャンバスに関連するフック（いわゆるカスタムフック）
-  const { canvasRef, CANVAS_BASE} = useCanvasDraw({ n_pixel }) 
-  
-  const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    // マウス移動時の処理
-  }
-
-  const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    // マウスダウン時の処理
-  }
-
-  const handleCanvasMouseUp = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    // マウスアップ時の処理
-  }
-
+export default function VenueEditor({ 
+  zoom,
+  canvasRef,
+  canDraw,
+  handleMouseDown,
+  handleMouseMove,
+  handleMouseUp,
+  handleMouseLeave
+}: Readonly<VenueEditorProps>) {
   return (
     <div className={cn(
       "flex flex-col border border-gray-900 rounded-lg p-4 overflow-x-auto",
       zoom <= 100 && "items-center"
     )}>
-
       <div style={{ maxWidth: `${CANVAS_BASE}px`, maxHeight: `${CANVAS_BASE + 0}px` }}>
         <div
           className="flex"
@@ -52,12 +47,14 @@ export default function VenueEditor({ selectedTool, n_pixel = 8, zoom = 150 }: V
         >
           <canvas
             ref={canvasRef}
-            onMouseMove={handleCanvasMouseMove}
-            onMouseDown={handleCanvasMouseDown}
-            onMouseUp={handleCanvasMouseUp}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
             style={{
               width: `${CANVAS_BASE}px`,
               height: `${CANVAS_BASE}px`,
+              cursor: canDraw() ? 'crosshair' : 'default'
             }}
           />
         </div>
