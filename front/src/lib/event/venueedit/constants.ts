@@ -24,3 +24,20 @@ export const DEFAULT_COLORS: Color[] = [
   color('#808080'), // グレー
 ]
 
+/**
+ * デフォルトのピクセル数
+ */
+export const DEFAULT_NUM_PIXEL = 8
+/**
+ * 最小のピクセル数
+ */
+export const MIN_NUM_PIXEL = 4
+/**
+ * 最大のピクセル数
+ */
+export const MAX_NUM_PIXEL = 64
+
+/**
+ * キャンバスのサイズ(ひとまず固定とします)
+ */
+export const CANVAS_BASE = 512;

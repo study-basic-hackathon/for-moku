@@ -1,15 +1,16 @@
 'use client'
 
-import { useCanvasDraw } from '@/hooks/venue/useCanvasDraw'
 import { cn } from '@/lib/shadcn/utils'
-import { Color } from '@/types/color'
-import { VenueEditTool } from '@/types/tool'
+import { CANVAS_BASE } from '@/lib/event/venueedit/constants'
 
 interface VenueEditorProps {
-  selectedTool: VenueEditTool
-  selectedColor: Color
-  n_pixel?: number
-  zoom?: number
+  zoom: number
+  canvasRef: React.RefObject<HTMLCanvasElement | null>
+  canDraw: () => boolean
+  handleMouseDown: (e: React.MouseEvent<HTMLCanvasElement>) => void
+  handleMouseMove: (e: React.MouseEvent<HTMLCanvasElement>) => void
+  handleMouseUp: () => void
+  handleMouseLeave: () => void
 }
 
 const canvasStyleFactory = (zoom: number, CANVAS_BASE: number) : React.CSSProperties=> {
@@ -25,17 +26,15 @@ const canvasStyleFactory = (zoom: number, CANVAS_BASE: number) : React.CSSProper
   }
 }
 
-export default function VenueEditor({ selectedTool, selectedColor, n_pixel = 8, zoom = 100 }: Readonly<VenueEditorProps>) {
-  const { 
-    canvasRef, 
-    CANVAS_BASE,
-    canDraw
-  } = useCanvasDraw({ 
-    n_pixel, 
-    selectedColor,
-    selectedTool
-  })
-
+export default function VenueEditor({ 
+  zoom,
+  canvasRef,
+  canDraw,
+  handleMouseDown,
+  handleMouseMove,
+  handleMouseUp,
+  handleMouseLeave
+}: Readonly<VenueEditorProps>) {
   return (
     <div className={cn(
       "flex flex-col border border-gray-900 rounded-lg p-4 overflow-x-auto",
@@ -48,6 +47,10 @@ export default function VenueEditor({ selectedTool, selectedColor, n_pixel = 8, 
         >
           <canvas
             ref={canvasRef}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
             style={{
               width: `${CANVAS_BASE}px`,
               height: `${CANVAS_BASE}px`,
