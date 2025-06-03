@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { DRAWABLE_TOOLS, DrawableTool, VenueEditTool } from '@/types/tool'
-import { usePixelDraw } from './usePixelDraw'
-import { usePixelErase } from './usePixelErase'
+import { usePixelDraw } from '@/hooks/event/venueedit/tool/usePixelDraw'
+import { usePixelErase } from '@/hooks/event/venueedit/tool/usePixelErase'
 import { Color } from '@/types/color'
 
 interface Props {
@@ -9,6 +9,7 @@ interface Props {
   selectedColor: Color
   canvasRef: React.RefObject<HTMLCanvasElement | null>
   numPixel: number
+  pixelColorState: (Color | null)[][]
   setPixelColorState: React.Dispatch<React.SetStateAction<(Color | null)[][]>>
 }
 
@@ -24,6 +25,7 @@ export const useToolSelect = ({
   selectedColor,
   canvasRef,
   numPixel,
+  pixelColorState,
   setPixelColorState
 }: Props) => {
   const canDraw = useCallback(() => {
@@ -34,15 +36,16 @@ export const useToolSelect = ({
     canvasRef,
     numPixel,
     selectedColor,
-    setPixelColorState
+    setPixelColorState,
+    pixelColorState
   })
 
   const pixelErase = usePixelErase({
     canvasRef,
     numPixel,
-    setPixelColorState
+    setPixelColorState,
+    pixelColorState
   })
-
 
   const toolHandlers: Partial<Record<VenueEditTool, ToolHandlers>> = {
     'ピクセル塗りつぶし': pixelDraw,
