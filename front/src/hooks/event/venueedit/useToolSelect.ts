@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { DRAWABLE_TOOLS, DrawableTool, VenueEditTool } from '@/types/tool'
 import { usePixelDraw } from './usePixelDraw'
+import { usePixelErase } from './usePixelErase'
 import { Color } from '@/types/color'
 
 interface Props {
@@ -36,9 +37,16 @@ export const useToolSelect = ({
     setPixelColorState
   })
 
+  const pixelErase = usePixelErase({
+    canvasRef,
+    numPixel,
+    setPixelColorState
+  })
+
 
   const toolHandlers: Partial<Record<VenueEditTool, ToolHandlers>> = {
-    'ピクセル塗りつぶし': pixelDraw
+    'ピクセル塗りつぶし': pixelDraw,
+    'ピクセル消去': pixelErase
   }
 
   const createHandler = (eventName: keyof ToolHandlers) => {
