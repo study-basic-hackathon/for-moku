@@ -58,7 +58,7 @@ export const useCanvasDraw = ({
     }
 
     return { cellX, cellY }
-  }, [numPixel, canvasRef]) // CELL_SIZEはuseMemoで定義しているため、依存配列に含めない
+  }, [numPixel, canvasRef, CELL_SIZE]) // CELL_SIZEを依存配列に含めることで、古いクロージャを防ぐ
 
   const drawCanvas = useCallback(() => {
     const canvas = canvasRef.current
