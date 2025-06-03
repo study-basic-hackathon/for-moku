@@ -29,6 +29,27 @@ export const drawAllGrid = (ctx: CanvasRenderingContext2D, pixels: number, cellS
   }
 } 
 
+/**
+ * チェック柄のパターンを作成する
+ * @param ctx キャンバスのコンテキスト
+ * @returns パターンオブジェクト
+ */
+const createCheckPattern = (ctx: CanvasRenderingContext2D) => {
+  const patternCanvas = document.createElement('canvas')
+  patternCanvas.width = 8
+  patternCanvas.height = 8
+  const patternCtx = patternCanvas.getContext('2d')
+  if (patternCtx) {
+    // 白い背景
+    patternCtx.fillStyle = '#ffffff'
+    patternCtx.fillRect(0, 0, 8, 8)
+    // グレーのチェック
+    patternCtx.fillStyle = '#e0e0e0'
+    patternCtx.fillRect(0, 0, 4, 4)
+    patternCtx.fillRect(4, 4, 4, 4)
+  }
+  return ctx.createPattern(patternCanvas, 'repeat')
+}
 
 /**
  * パターンを作成用のキャンバスを作成し、パターンでキャンバスを埋め尽くす
@@ -37,50 +58,30 @@ export const drawAllGrid = (ctx: CanvasRenderingContext2D, pixels: number, cellS
  * @param cellSize セルサイズ
  */
 export const drawPatternCanvas = (ctx: CanvasRenderingContext2D) => {
-  const canvasBase = CANVAS_BASE
-
-  // 白黒のチェックを作成用のキャンバスを作成
-  const patternCanvas = document.createElement('canvas')
-  patternCanvas.width = 8
-  patternCanvas.height = 8
-  const patternCtx = patternCanvas.getContext('2d')
-  if (patternCtx) {
-    // 白い背景
-    patternCtx.fillStyle = '#ffffff'
-    patternCtx.fillRect(0, 0, 8, 8)
-    // グレーのチェック
-    patternCtx.fillStyle = '#e0e0e0'
-    patternCtx.fillRect(0, 0, 4, 4)
-    patternCtx.fillRect(4, 4, 4, 4)
-  }
-  
-  // 白黒のチェックを作成用のキャンバスからパターンを作成
-  const pattern = ctx.createPattern(patternCanvas, 'repeat')
-
-  // パターンでキャンバスを埋め尽くす
+  const pattern = createCheckPattern(ctx)
   if (pattern) {
     ctx.fillStyle = pattern
-    ctx.fillRect(0, 0, canvasBase, canvasBase)
+    ctx.fillRect(0, 0, CANVAS_BASE, CANVAS_BASE)
   }
 } 
 
 /**
  * セルのグリッドを描画する
  * @param ctx キャンバスのコンテキスト
- * @param x x座標
- * @param y y座標
+ * @param cellX セルのx座標インデックス
+ * @param cellY セルのy座標インデックス
  * @param cellSize セルサイズ
  */
-export const drawCellGrid = (ctx: CanvasRenderingContext2D, x: number, y: number, cellSize: number) => {
+export const drawCellGrid = (ctx: CanvasRenderingContext2D, cellX: number, cellY: number, cellSize: number) => {
   ctx.strokeStyle = '#777777'
   const lineWidth = cellSize / 10
   ctx.lineWidth = lineWidth
   const padding = lineWidth / 2 // 内側に2pxの余白を設ける
   ctx.beginPath()
-  ctx.moveTo(x * cellSize + padding, y * cellSize + padding)
-  ctx.lineTo((x + 1) * cellSize - padding, y * cellSize + padding)
-  ctx.lineTo((x + 1) * cellSize - padding, (y + 1) * cellSize - padding)
-  ctx.lineTo(x * cellSize + padding, (y + 1) * cellSize - padding)
+  ctx.moveTo(cellX * cellSize + padding, cellY * cellSize + padding)
+  ctx.lineTo((cellX + 1) * cellSize - padding, cellY * cellSize + padding)
+  ctx.lineTo((cellX + 1) * cellSize - padding, (cellY + 1) * cellSize - padding)
+  ctx.lineTo(cellX * cellSize + padding, (cellY + 1) * cellSize - padding)
   ctx.closePath()
   ctx.stroke()
 }
@@ -88,57 +89,42 @@ export const drawCellGrid = (ctx: CanvasRenderingContext2D, x: number, y: number
 /**
  * グリッドを描画する
  * @param ctx キャンバスのコンテキスト
- * @param pixels ピクセル数
+ * @param cellX セルのx座標インデックス
+ * @param cellY セルのy座標インデックス
  * @param cellSize セルサイズ
  */
-export const drawCellGridThin = (ctx: CanvasRenderingContext2D, x: number, y: number, cellSize: number) => {
+export const drawCellGridThin = (ctx: CanvasRenderingContext2D, cellX: number, cellY: number, cellSize: number) => {
   ctx.strokeStyle = '#777777'
   ctx.lineWidth = 2
-  const padding = 0 // 内側に2pxの余白を設ける
+  const padding = 0 
   ctx.beginPath()
-  ctx.moveTo(x * cellSize + padding, y * cellSize + padding)
-  ctx.lineTo((x + 1) * cellSize - padding, y * cellSize + padding)
-  ctx.lineTo((x + 1) * cellSize - padding, (y + 1) * cellSize - padding)
-  ctx.lineTo(x * cellSize + padding, (y + 1) * cellSize - padding)
+  ctx.moveTo(cellX * cellSize + padding, cellY * cellSize + padding)
+  ctx.lineTo((cellX + 1) * cellSize - padding, cellY * cellSize + padding)
+  ctx.lineTo((cellX + 1) * cellSize - padding, (cellY + 1) * cellSize - padding)
+  ctx.lineTo(cellX * cellSize + padding, (cellY + 1) * cellSize - padding)
   ctx.closePath()
   ctx.stroke()
 } 
 /**
  * セルをパターンで塗る
  * @param ctx キャンバスのコンテキスト
- * @param x x座標
- * @param y y座標
+ * @param cellX セルのx座標インデックス
+ * @param cellY セルのy座標インデックス
  * @param cellSize セルサイズ
  */
-export const drawPatternCell = (ctx: CanvasRenderingContext2D, x: number, y: number, cellSize: number) => {
-  // パターンを作成用のキャンバスを作成
-  const patternCanvas = document.createElement('canvas')
-  patternCanvas.width = 8
-  patternCanvas.height = 8
-  const patternCtx = patternCanvas.getContext('2d')
-  if (patternCtx) {
-    // 白い背景
-    patternCtx.fillStyle = '#ffffff'
-    patternCtx.fillRect(0, 0, 8, 8)
-    // グレーのチェック
-    patternCtx.fillStyle = '#e0e0e0'
-    patternCtx.fillRect(0, 0, 4, 4)
-    patternCtx.fillRect(4, 4, 4, 4)
-  }
-  
-  // パターンを作成
-  const pattern = ctx.createPattern(patternCanvas, 'repeat')
+export const drawPatternCell = (ctx: CanvasRenderingContext2D, cellX: number, cellY: number, cellSize: number) => {
+  const pattern = createCheckPattern(ctx)
   if (pattern) {
     ctx.fillStyle = pattern
-    ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize)
+    ctx.fillRect(cellX * cellSize, cellY * cellSize, cellSize, cellSize)
   }
 }
 
 /**
  * 色付きセルを描画する
  * @param ctx キャンバスのコンテキスト
- * @param x x座標
- * @param y y座標
+ * @param cellX セルのx座標インデックス
+ * @param cellY セルのy座標インデックス
  * @param cellSize セルサイズ
  * @param color 色
  */
