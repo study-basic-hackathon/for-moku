@@ -44,10 +44,10 @@ export const useToolSelect = ({
   const createHandler = (eventName: keyof ToolHandlers) => {
     return (e?: React.MouseEvent<HTMLCanvasElement>) => {
       if (!canDraw()) return
-      if (!e) return
       const handler = toolHandlers[selectedTool]
       if (handler) {
         if (eventName === 'handleMouseDown' || eventName === 'handleMouseMove') {
+          if (!e) return
           handler[eventName](e)
         } else {
           handler[eventName]()
