@@ -5,7 +5,7 @@ import VenueActionHeader from "./VenueActionHeader"
 import VenueEditor from "./VenueEditor"
 import VenueToolSubMenu from "./VenueToolSubMenu"
 import VenueToolSelectionMenu from "./VenueToolSelectionMenu"
-import { useColorPalette } from '@/hooks/event/venueedit/useColorPalette'
+import { useColorPalette } from '@/hooks/event/venueedit/submenu/useColorPalette'
 import { useCanvasDraw } from '@/hooks/event/venueedit/useCanvasDraw'
 import { VenueEditTool } from '@/types/tool'
 
