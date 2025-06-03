@@ -1,4 +1,4 @@
-import { Color } from '@/types/color'
+import { Color } from 'react-color'
 import { useState, Dispatch, SetStateAction } from 'react'
 import { DEFAULT_COLORS } from '@/lib/event/venueedit/constants'
 

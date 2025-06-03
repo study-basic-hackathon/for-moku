@@ -1,6 +1,6 @@
 'use client'
 
-import { ChromePicker } from 'react-color'
+import { Color, ChromePicker } from 'react-color'
 import {
   Dialog,
   DialogContent,
@@ -13,15 +13,15 @@ import { Button } from '@/components/atoms/shadcn/button'
 interface ColorPickerDialogProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
-  color: string
-  onColorChange: (color: string) => void
+  color: Color
+  onColorChange: (color: Color) => void
   onAdd: () => void
 }
 
 export default function ColorPickerDialog({
   isOpen,
   onOpenChange,
-  color,
+  color: selectedColor,
   onColorChange,
   onAdd
 }: Readonly<ColorPickerDialogProps>) {
@@ -33,8 +33,8 @@ export default function ColorPickerDialog({
         </DialogHeader>
         <div className="py-4 w-full flex justify-center items-center">
           <ChromePicker
-            color={color}
-            onChange={(color) => onColorChange(color.hex)}
+            color={selectedColor}
+            onChange={(result) => onColorChange((result.hex))}
           />
         </div>
         <DialogFooter>

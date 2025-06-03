@@ -2,7 +2,7 @@
 
 import ColorAddButton from '@/components/organisms/event/venueedit/palette/ColorAddButton'
 import ColorButton from '@/components/organisms/event/venueedit/palette/ColorButton'
-import { Color } from '@/types/color'
+import { Color } from 'react-color'
 
 interface ColorPaletteProps {
   colors: Color[]
@@ -23,7 +23,7 @@ export default function ColorPalette({
     <div className="grid grid-cols-12 lg:grid-cols-4 gap-2">
       {colors.map((color) => (
         <ColorButton
-          key={color}
+          key={color as string}
           color={color}
           isSelected={selectedColor === color}
           onClick={() => onColorSelect(color)}

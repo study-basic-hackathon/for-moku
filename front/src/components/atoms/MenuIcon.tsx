@@ -1,11 +1,11 @@
-import { ShadcnIconType } from "@/types/ui/shadcnType";
+import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/shadcn/utils";
 
 /**
  * メニューアイコンを表示するコンポーネントのprops
  */
 interface Props {
-  icon: ShadcnIconType;
+  icon: LucideIcon;
   className?: string | string[];
 }
 

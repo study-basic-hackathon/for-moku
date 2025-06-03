@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react'
 import { drawPatternCanvas, drawGrid } from '@/lib/event/venueedit/pattern'
 import { DRAWABLE_TOOLS, DrawableTool, VenueEditTool } from '@/types/tool'
-import { Color, color } from '@/types/color'
+import { Color } from 'react-color'
 import { useZoom } from '@/hooks/event/venueedit/useZoom'
 import { CANVAS_BASE, DEFAULT_NUM_PIXEL } from '@/lib/event/venueedit/constants'
 
@@ -23,7 +23,7 @@ interface Props {
  * @returns キャンバスの参照、キャンバスのサイズ、セルの座標を取得する関数、描画関数
  */
 export const useCanvasDraw = ({ 
-  selectedColor = color('#000000'),
+  selectedColor = '#000000',
   selectedTool = 'ピクセル塗りつぶし'
 }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
