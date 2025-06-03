@@ -21,10 +21,10 @@
     "lucide-react": "^0.511.0",
     "next": "15.3.2",
     "next-auth": "^5.0.0-beta.28",
+    "partysocket": "1.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "tailwind-merge": "^3.3.0",
-    "partysocket": "1.1.4"
+    "tailwind-merge": "^3.3.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -36,7 +36,6 @@
     "eslint-config-next": "15.3.2",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.0",
-    "typescript": "^5",
-    "partykit": "0.0.115"
+    "typescript": "^5"
   }
 }
