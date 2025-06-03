@@ -17,6 +17,9 @@ export default function VenueActionHeader({
 
   const handlePixelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value)
+    if (isNaN(value)) {
+      return
+    }
     if (value >= MIN_NUM_PIXEL && value <= MAX_NUM_PIXEL) {
       setNumPixel(value)
     }
