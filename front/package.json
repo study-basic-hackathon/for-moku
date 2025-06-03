@@ -24,6 +24,7 @@
     "partysocket": "1.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-draggable": "^4.4.6",
     "tailwind-merge": "^3.3.0"
   },
   "devDependencies": {
