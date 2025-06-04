@@ -1,9 +1,10 @@
-import { useRef, useEffect, useState, useCallback, useMemo } from 'react'
-import { drawPatternCanvas, drawGrid } from '@/lib/event/venueedit/pattern'
-import { DRAWABLE_TOOLS, DrawableTool, VenueEditTool } from '@/types/tool'
+import { useRef, useEffect, useState, useMemo } from 'react'
+import { drawPatternCanvas, drawAllGrid } from '@/lib/event/venueedit/canvasControl'
+import { VenueEditTool } from '@/types/tool'
 import { Color, color } from '@/types/color'
 import { useZoom } from '@/hooks/event/venueedit/useZoom'
 import { CANVAS_BASE, DEFAULT_NUM_PIXEL } from '@/lib/event/venueedit/constants'
+import { useToolSelect } from '@/hooks/event/venueedit/useToolSelect'
 
 /**
  * キャンバスの描画を管理するフックのProps
@@ -14,7 +15,6 @@ interface Props {
   selectedColor?: Color
   selectedTool?: VenueEditTool
 }
-
 
 /**
  * キャンバスの描画を管理するフック
@@ -33,34 +33,8 @@ export const useCanvasDraw = ({
   const [pixelColorState, setPixelColorState] = useState<(Color | null)[][]>(
     Array(numPixel).fill(null).map(() => Array(numPixel).fill(null))
   )
-  
-  const [isDrawing, setIsDrawing] = useState(false)
-  const lastCellRef = useRef<{ x: number; y: number } | null>(null)
 
-  //console.log(pixelColorState)
-
-  const canDraw = useCallback(() => {
-    return DRAWABLE_TOOLS.includes(selectedTool as DrawableTool)
-  }, [selectedTool])
-
-  const getCellCoordinates = useCallback((x: number, y: number) => {
-    const rect = canvasRef.current?.getBoundingClientRect()
-    if (!rect) return null
-
-    const scaleX = CANVAS_BASE / rect.width
-    const scaleY = CANVAS_BASE / rect.height
-
-    const cellX = Math.floor((x - rect.left) * scaleX / CELL_SIZE)
-    const cellY = Math.floor((y - rect.top) * scaleY / CELL_SIZE)
-
-    if (cellX < 0 || cellX >= numPixel || cellY < 0 || cellY >= numPixel) {
-      return null
-    }
-
-    return { cellX, cellY }
-  }, [numPixel, canvasRef, CELL_SIZE]) // CELL_SIZEを依存配列に含めることで、古いクロージャを防ぐ
-
-  const drawCanvas = useCallback(() => {
+  useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -75,91 +49,21 @@ export const useCanvasDraw = ({
     ctx.clearRect(0, 0, CANVAS_BASE, CANVAS_BASE)
 
     // パターンの描画
-    drawPatternCanvas(ctx, numPixel, CELL_SIZE)
+    drawPatternCanvas(ctx)
 
     // グリッドを描画
-    drawGrid(ctx, numPixel, CELL_SIZE)
-  }, [numPixel])
+    drawAllGrid(ctx, numPixel, CELL_SIZE)
 
-  useEffect(() => {
-    drawCanvas();
     setPixelColorState(Array(numPixel).fill(null).map(() => Array(numPixel).fill(null)))
   }, [numPixel])
 
-  const drawPixel = useCallback((x: number, y: number, color: Color | null) => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    // パターンまたは色を描画
-    if (color === null) {
-      drawPatternCanvas(ctx, 1, CELL_SIZE)
-    } else {
-      ctx.fillStyle = color.toString()
-      ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-    }
-
-    // グリッドを描画
-    ctx.strokeStyle = '#777777'
-    ctx.lineWidth = 3
-    ctx.beginPath()
-    ctx.moveTo(x * CELL_SIZE, y * CELL_SIZE)
-    ctx.lineTo((x + 1) * CELL_SIZE, y * CELL_SIZE)
-    ctx.lineTo((x + 1) * CELL_SIZE, (y + 1) * CELL_SIZE)
-    ctx.lineTo(x * CELL_SIZE, (y + 1) * CELL_SIZE)
-    ctx.closePath()
-    ctx.stroke()
-  }, [numPixel])
-
-  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!canDraw()) return
-    setIsDrawing(true)
-    const coords = getCellCoordinates(e.clientX, e.clientY)
-    if (!coords) return
-
-    lastCellRef.current = { x: coords.cellX, y: coords.cellY }
-    setPixelColorState(prev => {
-      const newState = [...prev]
-      newState[coords.cellY] = [...newState[coords.cellY]]
-      newState[coords.cellY][coords.cellX] = selectedColor
-      drawPixel(coords.cellX, coords.cellY, selectedColor)
-      return newState
-    })
-  }, [canDraw, selectedColor, drawPixel])
-
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDrawing || !canDraw()) return
-    const coords = getCellCoordinates(e.clientX, e.clientY)
-    if (!coords) return
-
-    // 同じセルの場合は描画しない
-    if (lastCellRef.current?.x === coords.cellX && lastCellRef.current?.y === coords.cellY) {
-      return
-    }
-
-    lastCellRef.current = { x: coords.cellX, y: coords.cellY }
-    setPixelColorState(prev => {
-      const newState = [...prev]
-      newState[coords.cellY] = [...newState[coords.cellY]]
-      newState[coords.cellY][coords.cellX] = selectedColor
-      drawPixel(coords.cellX, coords.cellY, selectedColor)
-      return newState
-    })
-  }, [isDrawing, canDraw, selectedColor, drawPixel])
-
-  const handleMouseUp = useCallback(() => {
-    if (!isDrawing) return
-    setIsDrawing(false)
-    lastCellRef.current = null
-  }, [isDrawing])
-
-  const handleMouseLeave = useCallback(() => {
-    if (!isDrawing) return
-    setIsDrawing(false)
-    lastCellRef.current = null
-  }, [isDrawing])
+  const { canDraw, handleMouseDown, handleMouseMove, handleMouseUp, handleMouseLeave } = useToolSelect({
+    selectedTool,
+    selectedColor,
+    canvasRef,
+    numPixel,
+    setPixelColorState
+  })
 
   return { 
     canvasRef, 
