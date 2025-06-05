@@ -1,16 +1,15 @@
 'use client'
 
 import { X } from "lucide-react"
-import { Color } from "react-color"
 
 interface ColorButtonProps {
-  color: Color
+  color: string
   isSelected: boolean
   onClick: () => void
   onDelete: () => void
 }
 
-export default function ColorButton({ color='#000000', isSelected, onClick, onDelete }: Readonly<ColorButtonProps>) {
+export default function ColorButton({ color, isSelected, onClick, onDelete }: Readonly<ColorButtonProps>) {
   return (
     <div className="relative w-full">
       <button
@@ -19,7 +18,7 @@ export default function ColorButton({ color='#000000', isSelected, onClick, onDe
           aspect-square rounded cursor-pointer border-0 w-full
           ${isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : ''}
         `}
-        style={{ backgroundColor: color as string }}
+        style={{ backgroundColor: color }}
         onClick={onClick}
       />
       <button

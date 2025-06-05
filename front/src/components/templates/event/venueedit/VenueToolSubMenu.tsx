@@ -1,6 +1,6 @@
 import React from 'react'
 import ColorPalette from '@/components/organisms/event/venueedit/palette/ColorPalette'
-import { Color } from 'react-color'
+import { Color } from '@/types/color'
 import { PIXEL_TOOLS, VenueEditTool, PixelTool } from '@/types/tool'
 
 interface VenueToolSubMenuProps {
