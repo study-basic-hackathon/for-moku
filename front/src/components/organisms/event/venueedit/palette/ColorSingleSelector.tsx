@@ -1,6 +1,6 @@
 'use client'
 
-import { Color, color } from '@/types/color'
+import { Color } from 'react-color'
 import ColorPickerDialog from './ColorPickerDialog'
 import { useState } from 'react'
 

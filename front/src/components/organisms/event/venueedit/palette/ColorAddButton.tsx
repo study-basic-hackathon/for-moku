@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import PlusButton from '@/components/molecules/button/PlusButton'
 import ColorPickerDialog from './ColorPickerDialog'
-import { Color, color } from '@/types/color'
+import { Color } from 'react-color'
 
 interface ColorAddButtonProps {
   onAddColor: (color: Color) => void

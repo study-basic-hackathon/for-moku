@@ -1,6 +1,6 @@
 import { TextState } from '@/types/event/state'
 import { CANVAS_BASE } from './constants'
-import { Color } from '@/types/color'
+import { Color } from 'react-color'
 
 /**
  * グリッドを描画する

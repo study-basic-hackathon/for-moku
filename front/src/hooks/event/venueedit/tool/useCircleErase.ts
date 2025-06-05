@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { Color } from '@/types/color'
+import { Color } from 'react-color'
 import { useCellEditableTool } from '@/hooks/event/venueedit/tool/useCellEditableTool'
 import { TextState } from '@/types/event/state'
 

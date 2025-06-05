@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Position, TextState } from '@/types/event/state'
-import { Color } from '@/types/color'
+import { Color } from 'react-color'
 
 interface TextDialogProps {
   textState: TextState[]

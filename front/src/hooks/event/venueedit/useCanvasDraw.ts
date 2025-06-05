@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from 'react'
 import { initializeCanvas, syncAllStateToCanvas } from '@/lib/event/venueedit/canvasControl'
 import { VenueEditTool } from '@/types/tool'
-import { Color } from '@/types/color'
+import { Color } from 'react-color'
 import { useZoom } from '@/hooks/event/venueedit/useZoom'
 import { DEFAULT_NUM_PIXEL, CANVAS_BASE } from '@/lib/event/venueedit/constants'
 import { useToolSelect } from '@/hooks/event/venueedit/tool/useToolSelect'

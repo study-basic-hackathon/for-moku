@@ -2,7 +2,7 @@
 
 import ColorAddButton from '@/components/organisms/event/venueedit/palette/ColorAddButton'
 import ColorButton from '@/components/organisms/event/venueedit/palette/ColorButton'
-import { Color } from '@/types/color'
+import { Color } from 'react-color'
 
 interface ColorPaletteProps {
   colors: Color[]
