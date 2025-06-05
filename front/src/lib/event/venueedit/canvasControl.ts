@@ -209,18 +209,44 @@ export const initializeCanvas = (
  */
 export const syncPixelStateToCanvas = (
   ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
+  cellX: number,
+  cellY: number,
   cellSize: number,
-  pixelColorState: (Color | null)[][]
+  pixelColorState: (Color | null)[][],
+  circleColorState: (Color | null)[][]
 ) => {
-  const color = pixelColorState[y]?.[x]
+  const pixelColor = pixelColorState[cellY]?.[cellX]
+  const circleColor = circleColorState[cellY]?.[cellX]
+
   // セルを色で塗る
-  if (color != null) {
-    drawColoredCell(ctx, x, y, cellSize, color)
-    drawCellGrid(ctx, x, y, cellSize)
+  if (pixelColor != null) {
+    drawColoredCell(ctx, cellX, cellY, cellSize, pixelColor)
+    drawCellGrid(ctx, cellX, cellY, cellSize)
   } else {
-    drawPatternCell(ctx, x, y, cellSize)
-    drawCellGridThin(ctx, x, y, cellSize)
+    drawPatternCell(ctx, cellX, cellY, cellSize)
+    drawCellGridThin(ctx, cellX, cellY, cellSize)
   }
+  // 円を描画
+  if (circleColor != null) {
+    drawCircle(ctx, cellX, cellY, cellSize, circleColor)
+  }
+}
+
+/**
+ * 円を描画する
+ * @param ctx キャンバスのコンテキスト
+ * @param cellX x座標
+ * @param cellY y座標
+ * @param cellSize セルサイズ
+ * @param color 色
+ */
+export const drawCircle = (ctx: CanvasRenderingContext2D, cellX: number, cellY: number, cellSize: number, color: Color) => {
+  const centerX = cellX * cellSize + cellSize / 2
+  const centerY = cellY * cellSize + cellSize / 2
+  const radius = (cellSize / 2) * 0.8
+
+  ctx.fillStyle = color.toString()
+  ctx.beginPath()
+  ctx.arc(centerX, centerY, radius, 0, Math.PI * 2)
+  ctx.fill()
 } 

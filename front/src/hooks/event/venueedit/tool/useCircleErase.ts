@@ -12,20 +12,20 @@ interface Props {
   circleColorState: (Color | null)[][]
 }
 
-export const usePixelDraw = ({ canvasRef, numPixel, selectedColor, setPixelColorState, pixelColorState, circleColorState }: Props) => {
-  const updatePixelState = useCallback((x: number, y: number) => {
-    const newState = [...pixelColorState]
+export const useCircleErase = ({ canvasRef, numPixel, selectedColor, setCircleColorState, pixelColorState, circleColorState }: Props) => {
+  const updateCircleState = useCallback((x: number, y: number) => {
+    const newState = [...circleColorState]
     newState[y] = [...newState[y]]
-    newState[y][x] = selectedColor
-    setPixelColorState(newState)
+    newState[y][x] = null
+    setCircleColorState(newState)
     return newState
-  }, [selectedColor, pixelColorState])
+  }, [selectedColor, circleColorState])
 
   return useCellEditableTool({
     canvasRef,
     numPixel,
     pixelColorState,
     circleColorState,
-    updatePixelState
+    updateCircleState
   })
 } 

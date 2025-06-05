@@ -7,7 +7,9 @@ interface Props {
   canvasRef: React.RefObject<HTMLCanvasElement | null>
   numPixel: number
   pixelColorState: (Color | null)[][]
+  circleColorState: (Color | null)[][]
   updatePixelState?: (x: number, y: number) => (Color | null)[][]
+  updateCircleState?: (x: number, y: number) => (Color | null)[][]
 }
 
 /**
@@ -22,14 +24,16 @@ export const useCellEditableTool = ({
   canvasRef, 
   numPixel, 
   pixelColorState,
-  updatePixelState 
+  circleColorState,
+  updatePixelState,
+  updateCircleState
 }: Props) => {
   const [isDrawing, setIsDrawing] = useState(false)
   const lastCellRef = useRef<{ x: number; y: number } | null>(null)
   const CELL_SIZE = CANVAS_BASE / numPixel
 
-  const syncToCanvas = useCallback((x: number, y: number, ctx: CanvasRenderingContext2D, state: (Color | null)[][]) => {
-    syncPixelStateToCanvas(ctx, x, y, CELL_SIZE, state)
+  const syncToCanvas = useCallback((x: number, y: number, ctx: CanvasRenderingContext2D, pixelState: (Color | null)[][], circleState: (Color | null)[][]) => {
+    syncPixelStateToCanvas(ctx, x, y, CELL_SIZE, pixelState, circleState)
   }, [CELL_SIZE])
 
   /**
@@ -47,9 +51,10 @@ export const useCellEditableTool = ({
 
     lastCellRef.current = { x: coords.cellX, y: coords.cellY }
     const newPixelColorState = updatePixelState ? updatePixelState(coords.cellX, coords.cellY) : pixelColorState
-    syncToCanvas(coords.cellX, coords.cellY, ctx, newPixelColorState)
+    const newCircleColorState = updateCircleState ? updateCircleState(coords.cellX, coords.cellY) : circleColorState
+    syncToCanvas(coords.cellX, coords.cellY, ctx, newPixelColorState, newCircleColorState)
 
-  }, [pixelColorState, updatePixelState])
+  }, [pixelColorState, updatePixelState, circleColorState, updateCircleState])
 
   /**
    * マウスを動かしている時
@@ -71,8 +76,9 @@ export const useCellEditableTool = ({
 
     lastCellRef.current = { x: coords.cellX, y: coords.cellY }
     const newPixelColorState = updatePixelState ? updatePixelState(coords.cellX, coords.cellY) : pixelColorState
-    syncToCanvas(coords.cellX, coords.cellY, ctx, newPixelColorState)
-  }, [isDrawing, pixelColorState, updatePixelState])
+    const newCircleColorState = updateCircleState ? updateCircleState(coords.cellX, coords.cellY) : circleColorState
+    syncToCanvas(coords.cellX, coords.cellY, ctx, newPixelColorState, newCircleColorState)
+  }, [isDrawing, pixelColorState, updatePixelState, circleColorState, updateCircleState])
 
   /**
    * マウスアップ（マウスボタンを離したとき）

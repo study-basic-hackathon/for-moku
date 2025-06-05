@@ -7,9 +7,11 @@ interface Props {
   numPixel: number
   setPixelColorState: React.Dispatch<React.SetStateAction<(Color | null)[][]>>
   pixelColorState: (Color | null)[][]
+  setCircleColorState: React.Dispatch<React.SetStateAction<(Color | null)[][]>>
+  circleColorState: (Color | null)[][]
 }
 
-export const usePixelErase = ({ canvasRef, numPixel, setPixelColorState, pixelColorState }: Props) => {
+export const usePixelErase = ({ canvasRef, numPixel, setPixelColorState, pixelColorState, setCircleColorState, circleColorState }: Props) => {
   const updatePixelState = useCallback((x: number, y: number) => {
     const newState = [...pixelColorState]
     newState[y] = [...newState[y]]
@@ -22,6 +24,7 @@ export const usePixelErase = ({ canvasRef, numPixel, setPixelColorState, pixelCo
     canvasRef,
     numPixel,
     pixelColorState,
+    circleColorState,
     updatePixelState
   })
 } 

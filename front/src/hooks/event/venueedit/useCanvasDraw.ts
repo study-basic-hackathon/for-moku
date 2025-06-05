@@ -32,7 +32,9 @@ export const useCanvasDraw = ({
   const [pixelColorState, setPixelColorState] = useState<(Color | null)[][]>(
     Array(numPixel).fill(null).map(() => Array(numPixel).fill(null))
   )
-
+  const [circleColorState, setCircleColorState] = useState<(Color | null)[][]>(
+    Array(numPixel).fill(null).map(() => Array(numPixel).fill(null))
+  )
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -41,6 +43,7 @@ export const useCanvasDraw = ({
     if (!ctx) return
 
     setPixelColorState(Array(numPixel).fill(null).map(() => Array(numPixel).fill(null)))
+    setCircleColorState(Array(numPixel).fill(null).map(() => Array(numPixel).fill(null)))
   }, [numPixel])
 
   const { canDraw, handleMouseDown, handleMouseMove, handleMouseUp, handleMouseLeave } = useToolSelect({
@@ -49,7 +52,9 @@ export const useCanvasDraw = ({
     canvasRef,
     numPixel,
     setPixelColorState,
-    pixelColorState
+    pixelColorState,
+    setCircleColorState,
+    circleColorState
   })
 
   return { 
