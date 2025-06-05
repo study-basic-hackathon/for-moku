@@ -3,6 +3,7 @@ import { DRAWABLE_TOOLS, DrawableTool, VenueEditTool } from '@/types/tool'
 import { usePixelDraw } from '@/hooks/event/venueedit/tool/cell/usePixelDraw'
 import { usePixelErase } from '@/hooks/event/venueedit/tool/cell/usePixelErase'
 import { useCircleDraw } from '@/hooks/event/venueedit/tool/cell/useCircleDraw'
+import { useTextErase } from '@/hooks/event/venueedit/tool/select/useTextErase'
 import { Color } from 'react-color'
 import { useCircleErase } from '@/hooks/event/venueedit/tool/cell/useCircleErase'
 import { useTextAdd } from '@/hooks/event/venueedit/tool/select/useTextAdd'
@@ -111,12 +112,21 @@ export const useToolSelect = ({
     setIsDialogModalOpen
   })
 
+  const textErase = useTextErase({
+    canvasRef,
+    numPixel,
+    draggingColor: '#00FFFF',
+    textState,
+    setTextState
+  })
+
   const toolHandlers: Partial<Record<VenueEditTool, ToolHandlers>> = {
     'ピクセル塗りつぶし': pixelDraw,
     'ピクセル消去': pixelErase,
     '丸オブジェクト配置': circleDraw,
     '丸オブジェクト消去': circleErase,
     'テキストボックス追加': textAdd,
+    'テキストボックス消去': textErase,
   }
 
   const createHandler = (eventName: keyof ToolHandlers) => {
