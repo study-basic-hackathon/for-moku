@@ -27,7 +27,7 @@ export const DEFAULT_COLORS: Color[] = [
 /**
  * デフォルトのピクセル数
  */
-export const DEFAULT_NUM_PIXEL = 8
+export const DEFAULT_NUM_PIXEL = 16
 /**
  * 最小のピクセル数
  */
@@ -35,7 +35,7 @@ export const MIN_NUM_PIXEL = 4
 /**
  * 最大のピクセル数
  */
-export const MAX_NUM_PIXEL = 64
+export const MAX_NUM_PIXEL = 32
 
 /**
  * キャンバスのサイズ(ひとまず固定とします)

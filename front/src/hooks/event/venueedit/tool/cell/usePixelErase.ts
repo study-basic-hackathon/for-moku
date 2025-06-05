@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { Color } from 'react-color'
-import { useCellEditableTool } from '@/hooks/event/venueedit/tool/useCellEditableTool'
+import { useCellEditableTool } from '@/hooks/event/venueedit/tool/cell/useCellEditableTool'
 import { TextState } from '@/types/event/state'
 
 interface Props {
@@ -13,21 +13,21 @@ interface Props {
   textState: TextState[]
 }
 
-export const useCircleErase = ({ canvasRef, numPixel, selectedColor, setCircleColorState, pixelColorState, circleColorState, textState }: Props) => {
-  const updateCircleState = useCallback((x: number, y: number) => {
-    const newState = [...circleColorState]
+export const usePixelErase = ({ canvasRef, numPixel, setPixelColorState, pixelColorState, setCircleColorState, circleColorState, textState }: Props) => {
+  const updatePixelState = useCallback((x: number, y: number) => {
+    const newState = [...pixelColorState]
     newState[y] = [...newState[y]]
     newState[y][x] = null
-    setCircleColorState(newState)
+    setPixelColorState(newState)
     return newState
-  }, [circleColorState])
+  }, [pixelColorState])
 
   return useCellEditableTool({
     canvasRef,
     numPixel,
     pixelColorState,
     circleColorState,
-    updateCircleState,
+    updatePixelState,
     textState
   })
 } 

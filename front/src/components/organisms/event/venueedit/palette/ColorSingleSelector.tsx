@@ -30,14 +30,14 @@ export default function ColorSingleSelector({
 
   return (
     <>
-      <div className="grid grid-cols-12 lg:grid-cols-2 gap-2">
+      <div className="grid grid-cols-8 lg:grid-cols-2 gap-2">
         <div className="col-span-1">
           <span>テキスト色</span>
         </div>
         <div className="col-span-1">
           <button
             type="button"
-            className="w-24 h-6 rounded border border-gray-300 shadow-sm"
+            className="w-full h-6 rounded border border-gray-300 shadow-sm"
             style={{ backgroundColor: selectedColor.toString() }}
             onClick={() => setIsTextColorOpen(true)}
           />
@@ -48,7 +48,7 @@ export default function ColorSingleSelector({
         <div className="col-span-1">
           <button
             type="button"
-            className="w-24 h-6 rounded border border-gray-300 shadow-sm"
+            className="w-full h-6 rounded border border-gray-300 shadow-sm"
             style={{ backgroundColor: selectedColorBackGround.toString() }}
             onClick={() => setIsBackgroundColorOpen(true)}
           />
