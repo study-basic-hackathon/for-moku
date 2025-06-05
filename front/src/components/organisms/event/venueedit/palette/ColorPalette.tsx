@@ -23,7 +23,7 @@ export default function ColorPalette({
     <div className="grid grid-cols-12 lg:grid-cols-4 gap-2">
       {colors.map((color) => (
         <ColorButton
-          key={color}
+          key={color.toString()}
           color={color}
           isSelected={selectedColor === color}
           onClick={() => onColorSelect(color)}

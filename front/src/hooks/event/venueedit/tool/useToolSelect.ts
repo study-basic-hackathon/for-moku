@@ -5,34 +5,42 @@ import { usePixelErase } from '@/hooks/event/venueedit/tool/usePixelErase'
 import { useCircleDraw } from '@/hooks/event/venueedit/tool/useCircleDraw'
 import { Color } from '@/types/color'
 import { useCircleErase } from '@/hooks/event/venueedit/tool/useCircleErase'
+import { useTextAdd } from '@/hooks/event/venueedit/tool/useTextAdd'
+import { TextState } from '@/types/event/state'
 
 interface Props {
   selectedTool: VenueEditTool
   selectedColor: Color
+  selectedColorBackGround?: Color
   canvasRef: React.RefObject<HTMLCanvasElement | null>
   numPixel: number
   pixelColorState: (Color | null)[][]
   setPixelColorState: React.Dispatch<React.SetStateAction<(Color | null)[][]>>
   setCircleColorState: React.Dispatch<React.SetStateAction<(Color | null)[][]>>
   circleColorState: (Color | null)[][]
+  handleMouseRelieveText: (startX: number, startY: number, endX: number, endY: number) => void
+  textState: TextState[]
 }
 
 type ToolHandlers = {
   handleMouseDown: (e: React.MouseEvent<HTMLCanvasElement>) => void
   handleMouseMove: (e: React.MouseEvent<HTMLCanvasElement>) => void
-  handleMouseUp: () => void
+  handleMouseUp: (e?: React.MouseEvent<HTMLCanvasElement>) => void
   handleMouseLeave: () => void
 }
 
 export const useToolSelect = ({ 
   selectedTool,
   selectedColor,
+  selectedColorBackGround,
   canvasRef,
   numPixel,
   pixelColorState,
   setPixelColorState,
   setCircleColorState,
-  circleColorState
+  circleColorState,
+  handleMouseRelieveText,
+  textState
 }: Props) => {
   const canDraw = useCallback(() => {
     return DRAWABLE_TOOLS.includes(selectedTool as DrawableTool)
@@ -45,7 +53,8 @@ export const useToolSelect = ({
     setPixelColorState,
     pixelColorState,
     setCircleColorState,
-    circleColorState
+    circleColorState,
+    textState
   })
 
   const pixelErase = usePixelErase({
@@ -53,8 +62,9 @@ export const useToolSelect = ({
     numPixel,
     setPixelColorState,
     pixelColorState,
-    setCircleColorState,
-    circleColorState
+    setCircleColorState,    
+    circleColorState,
+    textState
   })
 
   const circleDraw = useCircleDraw({
@@ -64,7 +74,8 @@ export const useToolSelect = ({
     setPixelColorState,
     pixelColorState,
     setCircleColorState,
-    circleColorState
+    circleColorState,
+    textState
   })
 
   const circleErase = useCircleErase({
@@ -74,7 +85,15 @@ export const useToolSelect = ({
     setPixelColorState,
     pixelColorState,
     setCircleColorState,
-    circleColorState
+    circleColorState,
+    textState
+  })
+
+  const textAdd = useTextAdd({
+    canvasRef,
+    numPixel,
+    color: '#FFFF00',
+    handleMouseRelieveText
   })
 
   const toolHandlers: Partial<Record<VenueEditTool, ToolHandlers>> = {
@@ -82,6 +101,7 @@ export const useToolSelect = ({
     'ピクセル消去': pixelErase,
     '丸オブジェクト配置': circleDraw,
     '丸オブジェクト消去': circleErase,
+    'テキストボックス追加': textAdd,
   }
 
   const createHandler = (eventName: keyof ToolHandlers) => {
@@ -108,6 +128,6 @@ export const useToolSelect = ({
     handleMouseDown,
     handleMouseMove,
     handleMouseUp,
-    handleMouseLeave
+    handleMouseLeave,
   }
 } 

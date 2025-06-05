@@ -8,13 +8,16 @@ import VenueToolSelectionMenu from "./VenueToolSelectionMenu"
 import { useColorPalette } from '@/hooks/event/venueedit/submenu/useColorPalette'
 import { useCanvasDraw } from '@/hooks/event/venueedit/useCanvasDraw'
 import { VenueEditTool } from '@/types/tool'
+import TextDialog from '@/components/organisms/event/venueedit/text/TextDialog'
 
 export default function VenueEditorTemplate() {
   const [selectedTool, setSelectedTool] = useState<VenueEditTool>('ピクセル塗りつぶし')
   const { 
-    selectedColor, 
+    selectedColor,
+    setSelectedColor, 
     colorPalette, 
-    setSelectedColor,
+    selectedColorBackGround,
+    setSelectedColorBackGround,
     addColor,
     removeColor
   } = useColorPalette()
@@ -30,10 +33,15 @@ export default function VenueEditorTemplate() {
     handleMouseDown,
     handleMouseMove,
     handleMouseUp,
-    handleMouseLeave
+    handleMouseLeave,
+    isTextDialogOpen,
+    setIsTextDialogOpen,
+    setCurrentText,
+    handleTextAdd,
   } = useCanvasDraw({
     selectedColor,
-    selectedTool
+    selectedTool,
+    selectedColorBackGround
   })
 
   return (
@@ -62,10 +70,18 @@ export default function VenueEditorTemplate() {
               selectedTool={selectedTool}
               onToolSelect={setSelectedTool}
               selectedColor={selectedColor}
-              onColorSelect={setSelectedColor}
+              setSelectedColor={setSelectedColor}
+              selectedColorBackGround={selectedColorBackGround}
+              setSelectedColorBackGround={setSelectedColorBackGround}
               colorPalette={colorPalette}
               onAddColor={addColor}
               onDeleteColor={removeColor}
+            />
+            <TextDialog
+              isOpen={isTextDialogOpen}
+              onOpenChange={setIsTextDialogOpen}
+              onTextChange={setCurrentText}
+              onAdd={handleTextAdd}
             />
           </div>
           <div className="col-span-1 md:col-span-1 lg:col-span-8 xl:col-span-4">

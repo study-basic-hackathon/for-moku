@@ -1,13 +1,16 @@
 import React from 'react'
 import ColorPalette from '@/components/organisms/event/venueedit/palette/ColorPalette'
 import { Color } from '@/types/color'
-import { PIXEL_TOOLS, VenueEditTool, PixelTool } from '@/types/tool'
+import { PIXEL_TOOLS, VenueEditTool, PixelTool, TEXT_TOOLS, TextTool } from '@/types/tool'
+import ColorSingleSelector from '@/components/organisms/event/venueedit/palette/ColorSingleSelector'
 
 interface VenueToolSubMenuProps {
   selectedTool: VenueEditTool
   onToolSelect: (tool: VenueEditTool) => void
   selectedColor: Color
-  onColorSelect: (color: Color) => void
+  setSelectedColor: (color: Color) => void
+  selectedColorBackGround: Color
+  setSelectedColorBackGround: (color: Color) => void
   colorPalette: Color[]
   onAddColor: (color: Color) => void
   onDeleteColor: (color: Color) => void
@@ -17,11 +20,17 @@ function isPixelTool(tool: VenueEditTool): tool is PixelTool {
   return (PIXEL_TOOLS as readonly string[]).includes(tool)
 }
 
+function isTextTool(tool: VenueEditTool): tool is TextTool {
+  return (TEXT_TOOLS as readonly string[]).includes(tool)
+}
+
 export default function VenueToolSubMenu({ 
   selectedTool,
   onToolSelect,
   selectedColor, 
-  onColorSelect,
+  setSelectedColor,
+  selectedColorBackGround,
+  setSelectedColorBackGround,
   colorPalette,
   onAddColor,
   onDeleteColor
@@ -38,11 +47,19 @@ export default function VenueToolSubMenu({
           </div>
           {isPixelTool(selectedTool) && (
             <ColorPalette
-              onColorSelect={onColorSelect}
+              onColorSelect={setSelectedColor}
               selectedColor={selectedColor}
               colors={colorPalette}
               onAddColor={onAddColor}
               onDeleteColor={onDeleteColor}
+            />
+          )}
+          {isTextTool(selectedTool) && (
+            <ColorSingleSelector
+              selectedColor={selectedColor}
+              selectedColorBackGround={selectedColorBackGround}
+              setSelectedColor={setSelectedColor}
+              setSelectedColorBackGround={setSelectedColorBackGround}
             />
           )}
         </div>

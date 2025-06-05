@@ -2,12 +2,14 @@ import { useCallback, useRef, useState } from 'react'
 import { Color } from '@/types/color'
 import { getCellCoordinates, syncPixelStateToCanvas } from '@/lib/event/venueedit/canvasControl'
 import { CANVAS_BASE } from '@/lib/event/venueedit/constants'
+import { TextState } from '@/types/event/state'
 
 interface Props {
   canvasRef: React.RefObject<HTMLCanvasElement | null>
   numPixel: number
   pixelColorState: (Color | null)[][]
   circleColorState: (Color | null)[][]
+  textState: TextState[]
   updatePixelState?: (x: number, y: number) => (Color | null)[][]
   updateCircleState?: (x: number, y: number) => (Color | null)[][]
 }
@@ -25,6 +27,7 @@ export const useCellEditableTool = ({
   numPixel, 
   pixelColorState,
   circleColorState,
+  textState,
   updatePixelState,
   updateCircleState
 }: Props) => {
@@ -33,8 +36,8 @@ export const useCellEditableTool = ({
   const CELL_SIZE = CANVAS_BASE / numPixel
 
   const syncToCanvas = useCallback((x: number, y: number, ctx: CanvasRenderingContext2D, pixelState: (Color | null)[][], circleState: (Color | null)[][]) => {
-    syncPixelStateToCanvas(ctx, x, y, CELL_SIZE, pixelState, circleState)
-  }, [CELL_SIZE])
+    syncPixelStateToCanvas(ctx, x, y, CELL_SIZE, pixelState, circleState, textState)
+  }, [CELL_SIZE, textState])
 
   /**
    * マウスダウン（マウスボタンを押したとき）
@@ -52,9 +55,9 @@ export const useCellEditableTool = ({
     lastCellRef.current = { x: coords.cellX, y: coords.cellY }
     const newPixelColorState = updatePixelState ? updatePixelState(coords.cellX, coords.cellY) : pixelColorState
     const newCircleColorState = updateCircleState ? updateCircleState(coords.cellX, coords.cellY) : circleColorState
-    syncToCanvas(coords.cellX, coords.cellY, ctx, newPixelColorState, newCircleColorState)
+    syncToCanvas(coords.cellX, coords.cellY, ctx, newPixelColorState, newCircleColorState,)
 
-  }, [pixelColorState, updatePixelState, circleColorState, updateCircleState])
+  }, [pixelColorState, updatePixelState, circleColorState, updateCircleState, textState])
 
   /**
    * マウスを動かしている時
@@ -78,6 +81,7 @@ export const useCellEditableTool = ({
     const newPixelColorState = updatePixelState ? updatePixelState(coords.cellX, coords.cellY) : pixelColorState
     const newCircleColorState = updateCircleState ? updateCircleState(coords.cellX, coords.cellY) : circleColorState
     syncToCanvas(coords.cellX, coords.cellY, ctx, newPixelColorState, newCircleColorState)
+    
   }, [isDrawing, pixelColorState, updatePixelState, circleColorState, updateCircleState])
 
   /**
