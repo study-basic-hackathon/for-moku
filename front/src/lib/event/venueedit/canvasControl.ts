@@ -166,4 +166,61 @@ export const getCellCoordinates = (
   }
 
   return { cellX, cellY }
+}
+
+/**
+ * キャンバスを初期化する
+ * @param canvas キャンバス要素
+ * @param numPixel ピクセル数
+ * @param pixelColorState ピクセルの色状態
+ * @returns 初期化されたキャンバスのコンテキスト
+ */
+export const initializeCanvas = (
+  canvas: HTMLCanvasElement,
+  numPixel: number,
+  pixelColorState: (Color | null)[][]
+) => {
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return null
+
+  // キャンバスのサイズを設定
+  canvas.width = CANVAS_BASE
+  canvas.height = CANVAS_BASE
+
+  // キャンバスをクリア
+  ctx.clearRect(0, 0, CANVAS_BASE, CANVAS_BASE)
+
+  // パターンの描画
+  drawPatternCanvas(ctx)
+
+  // グリッドを描画
+  drawAllGrid(ctx, numPixel, CANVAS_BASE / numPixel)
+
+  return ctx
+}
+
+/**
+ * ピクセルを描画する
+ * @param ctx キャンバスのコンテキスト
+ * @param x x座標
+ * @param y y座標
+ * @param cellSize セルサイズ
+ * @param pixelColorState ピクセルの色状態
+ */
+export const syncPixelStateToCanvas = (
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  cellSize: number,
+  pixelColorState: (Color | null)[][]
+) => {
+  const color = pixelColorState[y]?.[x]
+  // セルを色で塗る
+  if (color != null) {
+    drawColoredCell(ctx, x, y, cellSize, color)
+    drawCellGrid(ctx, x, y, cellSize)
+  } else {
+    drawPatternCell(ctx, x, y, cellSize)
+    drawCellGridThin(ctx, x, y, cellSize)
+  }
 } 

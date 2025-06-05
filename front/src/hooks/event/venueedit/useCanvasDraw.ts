@@ -1,10 +1,10 @@
-import { useRef, useEffect, useState, useMemo } from 'react'
-import { drawPatternCanvas, drawAllGrid } from '@/lib/event/venueedit/canvasControl'
+import { useRef, useEffect, useState } from 'react'
+import { initializeCanvas } from '@/lib/event/venueedit/canvasControl'
 import { VenueEditTool } from '@/types/tool'
 import { Color, color } from '@/types/color'
 import { useZoom } from '@/hooks/event/venueedit/useZoom'
-import { CANVAS_BASE, DEFAULT_NUM_PIXEL } from '@/lib/event/venueedit/constants'
-import { useToolSelect } from '@/hooks/event/venueedit/useToolSelect'
+import { DEFAULT_NUM_PIXEL } from '@/lib/event/venueedit/constants'
+import { useToolSelect } from '@/hooks/event/venueedit/tool/useToolSelect'
 
 /**
  * キャンバスの描画を管理するフックのProps
@@ -28,7 +28,6 @@ export const useCanvasDraw = ({
 }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [numPixel, setNumPixel] = useState(DEFAULT_NUM_PIXEL)
-  const CELL_SIZE = useMemo(() => CANVAS_BASE / numPixel, [numPixel])
   const {zoom, handleZoomIn, handleZoomOut} = useZoom()
   const [pixelColorState, setPixelColorState] = useState<(Color | null)[][]>(
     Array(numPixel).fill(null).map(() => Array(numPixel).fill(null))
@@ -38,21 +37,8 @@ export const useCanvasDraw = ({
     const canvas = canvasRef.current
     if (!canvas) return
 
-    const ctx = canvas.getContext('2d')
+    const ctx = initializeCanvas(canvas, numPixel, pixelColorState)
     if (!ctx) return
-
-    // キャンバスのサイズを設定
-    canvas.width = CANVAS_BASE
-    canvas.height = CANVAS_BASE
-
-    // キャンバスをクリア
-    ctx.clearRect(0, 0, CANVAS_BASE, CANVAS_BASE)
-
-    // パターンの描画
-    drawPatternCanvas(ctx)
-
-    // グリッドを描画
-    drawAllGrid(ctx, numPixel, CELL_SIZE)
 
     setPixelColorState(Array(numPixel).fill(null).map(() => Array(numPixel).fill(null)))
   }, [numPixel])
@@ -62,7 +48,8 @@ export const useCanvasDraw = ({
     selectedColor,
     canvasRef,
     numPixel,
-    setPixelColorState
+    setPixelColorState,
+    pixelColorState
   })
 
   return { 
