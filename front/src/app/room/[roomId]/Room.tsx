@@ -5,7 +5,10 @@ import { useState } from "react";
 import Draggable, { DraggableData } from 'react-draggable';
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/shadcn/avatar";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/atoms/shadcn/tooltip";
 import { User } from "lucide-react";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/atoms/shadcn/dialog";
+import { Button } from "@/components/atoms/shadcn/button";
 
 type User = { name: string, email: string, image: string }
 
@@ -67,20 +70,52 @@ export function Room({
   });
 
   const nodeRef = React.useRef(null);
+  const [open, setOpen] = useState(false);
+
   return (
     <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="rounded-sm p-0">
+          <DialogTitle className="sr-only"/>
+          <div className="p-3 border-b">
+            ユーザー情報編集
+          </div>
+          <div className="grid gap-4">
+          </div>
+          <DialogFooter className="p-1">
+            <Button type="submit">適用</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       {userIcons.map((icon, i) => {
         if (icon.user.email !== user.email) {
           return (
             <div
               key={i}
-              className="absolute size-fit select-none"
+              className="absolute size-12 select-none"
               style={{transform: `translate(${icon.position.x}px, ${icon.position.y}px)`}}
               >
-              <Avatar className="size-12 pointer-events-none">
-                <AvatarImage src={`${icon.user.image}`} alt="User Icon"/>
-                <AvatarFallback><User /></AvatarFallback> 
-              </Avatar>
+              <Tooltip>
+                <TooltipTrigger
+                  onClick={(e) => e.preventDefault()}
+                  onPointerDown={(event) => event.preventDefault()}
+                >
+                  <Avatar className="size-12 pointer-events-none">
+                    <AvatarImage 
+                      src={`${icon.user.image}`}
+                      referrerPolicy="no-referrer"
+                    />
+                    <AvatarFallback><User /></AvatarFallback> 
+                  </Avatar>
+                </TooltipTrigger>
+                <TooltipContent
+                  className="rounded-sm"
+                  onPointerDownOutside={(e) => e.preventDefault()}
+                >
+                  <p>{`${icon.user.name}`}</p>
+                  <p>{`${icon.user.email}`}</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           )
         } else {
@@ -92,8 +127,16 @@ export function Room({
               onStop={(e, data) => handleDragStop(data)}
               nodeRef={nodeRef}// エラーは無視する（React 19で廃止されたfindDOMNodeを使っているため）
             >
-              <Avatar ref={nodeRef} className="absolute size-12 select-none z-1">
-                <AvatarImage src={`${user.image}`} alt="User Icon" className="pointer-events-none"/>
+              <Avatar 
+                ref={nodeRef} 
+                className="absolute size-12 select-none z-1"
+                onDoubleClick={() => setOpen(true)}
+              >
+                <AvatarImage 
+                  src={`${user.image}`}
+                  className="pointer-events-none"
+                  referrerPolicy="no-referrer"
+                />
                 <AvatarFallback><User /></AvatarFallback>
               </Avatar>
             </Draggable>
