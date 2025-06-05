@@ -5,21 +5,20 @@ import { useCellEditableTool } from '@/hooks/event/venueedit/tool/useCellEditabl
 interface Props {
   canvasRef: React.RefObject<HTMLCanvasElement | null>
   numPixel: number
-  selectedColor: Color
   setPixelColorState: React.Dispatch<React.SetStateAction<(Color | null)[][]>>
   pixelColorState: (Color | null)[][]
   setCircleColorState: React.Dispatch<React.SetStateAction<(Color | null)[][]>>
   circleColorState: (Color | null)[][]
 }
 
-export const useCircleErase = ({ canvasRef, numPixel, selectedColor, setCircleColorState, pixelColorState, circleColorState }: Props) => {
+export const useCircleErase = ({ canvasRef, numPixel, setCircleColorState, pixelColorState, circleColorState }: Props) => {
   const updateCircleState = useCallback((x: number, y: number) => {
     const newState = [...circleColorState]
     newState[y] = [...newState[y]]
     newState[y][x] = null
     setCircleColorState(newState)
     return newState
-  }, [selectedColor, circleColorState])
+  }, [circleColorState])
 
   return useCellEditableTool({
     canvasRef,
