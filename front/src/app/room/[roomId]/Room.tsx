@@ -9,8 +9,16 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/atoms/shad
 import { User } from "lucide-react";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/atoms/shadcn/dialog";
 import { Button } from "@/components/atoms/shadcn/button";
+import { Label } from "@/components/atoms/shadcn/label";
+import { Input } from "@/components/atoms/shadcn/input";
 
-type User = { name: string, email: string, image: string }
+type User = {
+  name: string,
+  email: string,
+  image: string,
+  bio?: string,
+  interests?: string
+}
 
 type UserIcon = {
   user: User,
@@ -80,11 +88,24 @@ export function Room({
           <div className="p-3 border-b">
             ユーザー情報編集
           </div>
-          <div className="grid gap-4">
+          <div className="grid gap-4 px-6 py-3">
+            <div className="grid gap-3">
+              <Label htmlFor="name-1">表示名</Label>
+              <Input id="name-1" name="name" defaultValue={user.name}/>
+            </div>
+            <div className="grid gap-3">
+              <Label htmlFor="bio-1">自己紹介</Label>
+              <Input id="bio-1" name="bio" defaultValue={user.bio}/>
+            </div>
+            <div className="grid gap-3">
+              <Label htmlFor="interests-1">興味のある分野</Label>
+              <Input id="interests-1" name="interests" defaultValue={user.interests}/>
+            </div>
           </div>
-          <DialogFooter className="p-1">
+          <div className="flex justify-between px-6 pb-6">
+            <Button>キャンセル</Button>
             <Button type="submit">適用</Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
       {userIcons.map((icon, i) => {
@@ -113,7 +134,8 @@ export function Room({
                   onPointerDownOutside={(e) => e.preventDefault()}
                 >
                   <p>{`${icon.user.name}`}</p>
-                  <p>{`${icon.user.email}`}</p>
+                  <p>{`${icon.user.bio ?? ""}`}</p>
+                  <p>{`${icon.user.interests ?? ""}`}</p>
                 </TooltipContent>
               </Tooltip>
             </div>
