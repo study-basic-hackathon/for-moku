@@ -9,9 +9,10 @@ interface UseColorPaletteReturn {
   selectedColor: Color
   colorPalette: Color[]
   setSelectedColor: Dispatch<SetStateAction<Color>>
+  selectedColorBackGround: Color
+  setSelectedColorBackGround: Dispatch<SetStateAction<Color>>
   addColor: (color: Color) => void
   removeColor: (color: Color) => void
-  reorderColors: (fromIndex: number, toIndex: number) => void
   resetColors: () => void
 }
 
@@ -21,6 +22,7 @@ interface UseColorPaletteReturn {
  */
 export const useColorPalette = (): UseColorPaletteReturn => {
   const [selectedColor, setSelectedColor] = useState<Color>(DEFAULT_COLORS[0])
+  const [selectedColorBackGround, setSelectedColorBackGround] = useState<Color>(DEFAULT_COLORS[1])
   const [colorPalette, setColorPalette] = useState<Color[]>(DEFAULT_COLORS)
 
   /**
@@ -47,18 +49,6 @@ export const useColorPalette = (): UseColorPaletteReturn => {
   }
 
   /**
-   * 色の順序を変更する
-   * @param fromIndex 移動元のインデックス
-   * @param toIndex 移動先のインデックス
-   */
-  const reorderColors = (fromIndex: number, toIndex: number) => {
-    const newColors = [...colorPalette]
-    const [removed] = newColors.splice(fromIndex, 1)
-    newColors.splice(toIndex, 0, removed)
-    setColorPalette(newColors)
-  }
-
-  /**
    * カラーパレットをデフォルトにリセットする
    */
   const resetColors = () => {
@@ -70,9 +60,10 @@ export const useColorPalette = (): UseColorPaletteReturn => {
     selectedColor,
     colorPalette,
     setSelectedColor,
+    selectedColorBackGround,
+    setSelectedColorBackGround,
     addColor,
     removeColor,
-    reorderColors,
     resetColors
   }
 } 

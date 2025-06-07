@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { Color } from '@/types/color'
 import { useCellEditableTool } from '@/hooks/event/venueedit/tool/useCellEditableTool'
+import { TextState } from '@/types/event/state'
 
 interface Props {
   canvasRef: React.RefObject<HTMLCanvasElement | null>
@@ -9,10 +10,11 @@ interface Props {
   setPixelColorState: React.Dispatch<React.SetStateAction<(Color | null)[][]>>
   pixelColorState: (Color | null)[][]
   setCircleColorState: React.Dispatch<React.SetStateAction<(Color | null)[][]>>
-  circleColorState: (Color | null)[][]
+  circleColorState: (Color | null)[][]    
+  textState: TextState[]
 }
 
-export const useCircleDraw = ({ canvasRef, numPixel, selectedColor, setCircleColorState, pixelColorState, circleColorState }: Props) => {
+export const useCircleDraw = ({ canvasRef, numPixel, selectedColor, setCircleColorState, pixelColorState, circleColorState, textState }: Props) => {
   const updateCircleState = useCallback((x: number, y: number) => {
     const newState = [...circleColorState]
     newState[y] = [...newState[y]]
@@ -26,6 +28,7 @@ export const useCircleDraw = ({ canvasRef, numPixel, selectedColor, setCircleCol
     numPixel,
     pixelColorState,
     circleColorState,
-    updateCircleState
+    updateCircleState,
+    textState
   })
 } 

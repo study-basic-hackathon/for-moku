@@ -1,3 +1,4 @@
+import { TextState } from '@/types/event/state'
 import { CANVAS_BASE } from './constants'
 import { Color } from '@/types/color'
 
@@ -137,6 +138,24 @@ export const drawColoredCell = (ctx: CanvasRenderingContext2D, cellX : number, c
 }
 
 /**
+ * 色付きセルを描画する
+ * @param ctx キャンバスのコンテキスト
+ * @param cellX セルのx座標インデックス
+ * @param cellY セルのy座標インデックス
+ * @param numCellX セルのx方向の数
+ * @param numCellY セルのy方向の数
+ * @param cellSize セルサイズ
+ * @param color 色
+ */
+export const drawColoredSquare = (ctx: CanvasRenderingContext2D, cellX : number, cellY: number, cellSize: number, numCellX: number, numCellY: number, color: string) => {
+  // パターンまたは色を描画
+  if (color !== null) {
+    ctx.fillStyle = color.toString()
+    ctx.fillRect(cellX * cellSize, cellY * cellSize, numCellX * cellSize, numCellY * cellSize)
+  }
+}
+
+/**
  * マウス座標からセルの座標を取得する
  * @param x マウスのx座標
  * @param y マウスのy座標
@@ -178,7 +197,6 @@ export const getCellCoordinates = (
 export const initializeCanvas = (
   canvas: HTMLCanvasElement,
   numPixel: number,
-  pixelColorState: (Color | null)[][]
 ) => {
   const ctx = canvas.getContext('2d')
   if (!ctx) return null
@@ -213,10 +231,15 @@ export const syncPixelStateToCanvas = (
   cellY: number,
   cellSize: number,
   pixelColorState: (Color | null)[][],
-  circleColorState: (Color | null)[][]
+  circleColorState: (Color | null)[][],
+  textState: TextState[]
 ) => {
   const pixelColor = pixelColorState[cellY]?.[cellX]
   const circleColor = circleColorState[cellY]?.[cellX]
+
+  if (textState.some(text => text.startX <= cellX && text.endX >= cellX && text.startY <= cellY && text.endY >= cellY)) {
+    return;
+  }
 
   // セルを色で塗る
   if (pixelColor != null) {
@@ -229,6 +252,60 @@ export const syncPixelStateToCanvas = (
   // 円を描画
   if (circleColor != null) {
     drawCircle(ctx, cellX, cellY, cellSize, circleColor)
+  }
+}
+
+/**
+ * ドラッグ中の状態をキャンバスに反映する
+ * @param ctx キャンバスのコンテキスト
+ * @param startX 開始X座標
+ * @param startY 開始Y座標
+ * @param endX 終了X座標
+ * @param endY 終了Y座標
+ * @param cellSize セルサイズ
+ * @param color 色
+ */
+export const syncDraggingStateToCanvas = (
+  ctx: CanvasRenderingContext2D,
+  startX: number,
+  startY: number,
+  endX: number,
+  endY: number,
+  cellSize: number,
+  color: string
+) => {
+
+  const fillStartX = Math.min(startX, endX)
+  const fillStartY = Math.min(startY, endY)
+  const fillEndX = Math.max(startX, endX)
+  const fillEndY = Math.max(startY, endY)
+
+  const cellSizeX = (fillEndX - fillStartX + 1) * cellSize
+  const cellSizeY = (fillEndY - fillStartY + 1) * cellSize
+
+  ctx.fillStyle = color.toString()
+  ctx.fillRect(fillStartX * cellSize, fillStartY * cellSize, cellSizeX, cellSizeY)
+
+}
+
+export const syncAllStateToCanvas = (
+  ctx: CanvasRenderingContext2D,
+  numPixel: number,
+  cellSize: number,
+  pixelColorState: (Color | null)[][],
+  circleColorState: (Color | null)[][],
+  textState: TextState[]
+) => {
+  for (let i = 0; i < numPixel; i++) {
+    for (let j = 0; j < numPixel; j++) {
+      syncPixelStateToCanvas(ctx, i, j, cellSize, pixelColorState, circleColorState, textState)
+    }
+  }
+  for (const text of textState) {
+    if (text.backgroundColor != null) {
+    drawColoredSquare(ctx, text.startX, text.startY, cellSize, text.endX - text.startX + 1, text.endY - text.startY + 1, text.backgroundColor.toString())
+    }
+    drawText(ctx, cellSize, text)
   }
 }
 
@@ -249,4 +326,40 @@ export const drawCircle = (ctx: CanvasRenderingContext2D, cellX: number, cellY: 
   ctx.beginPath()
   ctx.arc(centerX, centerY, radius, 0, Math.PI * 2)
   ctx.fill()
+}
+
+/**
+ * テキストを描画する
+ * @param ctx キャンバスのコンテキスト
+ * @param text 描画するテキスト
+ * @param startX 開始X座標
+ * @param startY 開始Y座標
+ * @param endX 終了X座標
+ * @param endY 終了Y座標
+ * @param cellSize セルサイズ
+ */
+export const drawText = (
+  ctx: CanvasRenderingContext2D,
+  cellSize: number,
+  text: TextState
+) => {
+  const startX = text.startX
+  const startY = text.startY
+  const endX = text.endX
+  const endY = text.endY
+  const backgroundColor = text.backgroundColor
+  const textColor = text.textColor
+  const textLength = text.text.length
+
+  const fontSize = Math.min(((Math.abs(endX - startX) + 1) * cellSize)/textLength, (Math.abs(endY - startY)+1) * cellSize) // yの方は長さでは割らない
+  ctx.fillStyle = textColor.toString()
+  ctx.font = `${fontSize}px sans-serif`
+  
+  // 文字の配置を計算
+  const x = ((startX + endX) / 2 + 0.5) * cellSize
+  const y = ((startY + endY) / 2 + 0.5) * cellSize
+
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.fillText(text.text, x, y)
 } 

@@ -16,8 +16,7 @@ export default function ColorAddButton({ onAddColor, disabled }: Readonly<ColorA
 
   const handleAddColor = () => {
     // ChromePickerから受け取る色は常にhex形式（#RRGGBB）
-    const hexColor = selectedColor as `#${string}`
-    onAddColor(color(hexColor))
+    onAddColor(selectedColor as Color)
     setIsOpen(false)
   }
 
