@@ -25,3 +25,17 @@ export async function insertUser({
     interests,
   });
 }
+
+export async function updateUserById(
+  userId: number,
+  data: { name: string; bio: string; interests: string }
+) {
+  await db
+    .update(users)
+    .set({
+      name: data.name,
+      bio: data.bio,
+      interests: data.interests,
+    })
+    .where(eq(users.id, userId));
+}
