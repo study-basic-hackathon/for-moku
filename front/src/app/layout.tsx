@@ -30,7 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen flex`}
       >
         <TopNav />
-        <main className="fixed top-14 overflow-y-auto w-full h-full">
+        <main className="fixed top-14 overflow-y-auto w-full h-[calc(100vh-56px)]">
           {children}
         </main>
       </body>
