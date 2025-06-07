@@ -1,7 +1,9 @@
 import { db } from '@/lib/db';
 import { userGroups } from '@/lib/db/schema/user_group';
-import { eq } from 'drizzle-orm';
+import { eq, InferInsertModel } from 'drizzle-orm';
 
+
+export type NewUserGroup = InferInsertModel<typeof userGroups>;
 
 export async function selectUserGroupByName(name: string) {
   const result = await db
@@ -13,15 +15,14 @@ export async function selectUserGroupByName(name: string) {
   return result[0] ?? null;
 }
 
+export async function insertUserGroupWithTx(
+  tx: any, // 型注釈を省略または any にする（実際は tx に自動で正しい型が付きます）
+  data: NewUserGroup
+) {
+  const [inserted] = await tx
+    .insert(userGroups)
+    .values(data)
+    .returning();
 
-type NewUserGroup = {
-  name: string;
-  description: string;
-};
-
-export async function insertUserGroup(data: NewUserGroup) {
-  await db.insert(userGroups).values({
-    name: data.name,
-    description: data.description,
-  });
+  return inserted;
 }
