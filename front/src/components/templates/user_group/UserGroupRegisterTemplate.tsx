@@ -1,13 +1,14 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useActionState } from 'react';
 import { useRouter } from 'next/navigation';
 import { registerUserGroup } from '@/actions/user_group/registerUserGroup';
-import { useActionState } from 'react'; // ← 修正ポイント
-import type { FormEvent } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function UserGroupRegisterTemplate() {
   const router = useRouter();
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const initialState = { success: false, error: '' };
   const [state, formAction] = useActionState(registerUserGroup, initialState);
 
@@ -20,12 +21,23 @@ export default function UserGroupRegisterTemplate() {
   return (
     <div className="max-w-md mx-auto mt-10 p-4 border rounded shadow">
       <h1 className="text-xl font-bold mb-4">ユーザーグループ登録</h1>
-      <form action={formAction} className="space-y-4">
+
+      {/* hidden inputsでuseActionStateに値を渡す */}
+      <form
+        action={(formData) => {
+          formData.set('name', name);
+          formData.set('description', description);
+          return formAction(formData);
+        }}
+        className="space-y-4"
+      >
         <div>
           <label className="block mb-1 font-medium">グループ名</label>
           <input
             type="text"
             name="name"
+            value={name}
+            onChange={e => setName(e.target.value)}
             required
             className="w-full border px-3 py-2 rounded"
           />
@@ -36,6 +48,8 @@ export default function UserGroupRegisterTemplate() {
           <textarea
             name="description"
             rows={6}
+            value={description}
+            onChange={e => setDescription(e.target.value)}
             className="w-full border px-3 py-2 rounded"
           />
         </div>

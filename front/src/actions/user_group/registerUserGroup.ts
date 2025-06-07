@@ -1,7 +1,7 @@
 'use server';
 
 import { auth } from '@/lib/auth/auth';
-import { insertUserGroup } from '@/lib/db/user_group';
+import { insertUserGroup, selectUserGroupByName } from '@/lib/db/user_group';
 
 export async function registerUserGroup(
   _prevState: { success: boolean; error: string },
@@ -12,8 +12,17 @@ export async function registerUserGroup(
     return { success: false, error: 'ログインしていません' };
   }
 
-  const name = formData.get('name')?.toString() || '';
-  const description = formData.get('description')?.toString() || '';
+  const name = formData.get('name')?.toString().trim();
+  const description = formData.get('description')?.toString().trim() ?? '';
+
+  if (!name) {
+    return { success: false, error: 'グループ名は必須です' };
+  }
+
+  const existing = await selectUserGroupByName(name);
+  if (existing) {
+    return { success: false, error: 'このグループ名はすでに使われています' };
+  }
 
   try {
     await insertUserGroup({ name, description });
