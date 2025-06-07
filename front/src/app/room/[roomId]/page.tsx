@@ -12,18 +12,19 @@ export default async function RoomPage({
   const url = `${PARTYKIT_URL}/parties/main/${roomId}`;
 
   const session = await auth();
-  const user = session?.user as { name: string, email: string, image: string }
-
-  await fetch(url, {
+  const req = await fetch(url, {
     method: "POST",
-    body: JSON.stringify(user),
+    body: JSON.stringify(session?.user as User),
     headers: {
       "Content-Type": "application/json",
     },
   });
 
+  const user = (await req.json()) as User;
+
   return (
     <div className="w-full h-[calc(100vh-56px)] flex justify-center items-center">
+      {/*<img src="https://i.ibb.co/1J4WN36v/room-sampleimage.png" draggable="false"/>*/}
       <Room
         roomId={roomId}
         user={user}

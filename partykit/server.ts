@@ -1,6 +1,12 @@
 import type * as Party from "partykit/server";
 
-type User = { name: string, email: string, image: string }
+type User = {
+  name: string,
+  email: string,
+  image: string,
+  bio?: string,
+  interests?: string
+}
 
 type UserIcon = {
   user: User,
@@ -23,12 +29,14 @@ export default class Server implements Party.Server {
 
     if (request.method === "POST") {
       const user = (await request.json()) as User;
-
-      if (!userIcons.some(e => e.user.email === user.email)) {
-        this.room.broadcast(JSON.stringify({ type: "new", user }));
-        this.userIcons!.push({ user: user, position: { x: 0, y: 0 }});
+      const userIcon = userIcons.find(e => e.user.email === user.email);
+      if (userIcon) {
+        return new Response(JSON.stringify(userIcon.user));
       }
-      return new Response("OK");
+
+      this.room.broadcast(JSON.stringify({ type: "new", user }));
+      this.userIcons!.push({ user: user, position: { x: 0, y: 0 }});
+      return new Response(JSON.stringify(user));
     }
 
     return new Response("Not found", { status: 404 });
@@ -53,6 +61,13 @@ export default class Server implements Party.Server {
       this.userIcons = this.userIcons!.map((icon) =>
         icon.user.email === message.user.email ? userIcon : icon
       );
+    }
+    if (message.type === "edit") {
+      this.room.broadcast(JSON.stringify({ type: "edit", user: message.user }), [sender.id]);
+      this.userIcons = this.userIcons!.map((icon) => {
+        const userIcon = { user: message.user, position: icon.position }
+        return icon.user.email === message.user.email ? userIcon : icon
+      });
     }
   }
 }
