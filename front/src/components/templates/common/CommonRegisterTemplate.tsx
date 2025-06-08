@@ -56,7 +56,7 @@ export default function CommonRegisterTemplate<T>({ title, fields, onSubmit }: R
       <form action={onSubmit} className="space-y-4">
         {fields.map((field) => (
           <div key={field.name.toString()}>
-            <label className="block mb-1 font-medium">
+            <label className="block mb-1 font-medium" htmlFor={field.name.toString()}>
               {field.label}
               {field.required && <span className="text-red-500 ml-1">*</span>}
             </label>
