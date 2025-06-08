@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/shadcn/a
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/atoms/shadcn/tooltip";
 import { User } from "lucide-react";
 import { EditProfileDialog } from "./EditProfileDialog";
+import { WheelEvent } from "react";
 
 export function Room(props: {
   roomId: string;
@@ -73,7 +74,7 @@ export function Room(props: {
 
   const [scale, setScale] = useState(1);
 
-  function onScroll(event: WheelEvent) {
+  function onScroll(event: WheelEvent<HTMLDivElement>) {
     const delta = event.deltaY * -0.001;
     setScale(scale + delta);
   }
