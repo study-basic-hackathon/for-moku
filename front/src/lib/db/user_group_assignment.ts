@@ -3,7 +3,7 @@ import { InferInsertModel } from 'drizzle-orm';
 
 export type NewUserGroupAssignment = InferInsertModel<typeof userGroupAssignments>;
 
-export async function insertUserGroupAssignmentWithTx(
+export async function insertUserGroupAssignment(
   tx: any,
   data: NewUserGroupAssignment
 ) {

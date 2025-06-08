@@ -15,7 +15,7 @@ export async function selectUserGroupByName(name: string) {
   return result[0] ?? null;
 }
 
-export async function insertUserGroupWithTx(
+export async function insertUserGroup(
   tx: any, // 型注釈を省略または any にする（実際は tx に自動で正しい型が付きます）
   data: NewUserGroup
 ) {
