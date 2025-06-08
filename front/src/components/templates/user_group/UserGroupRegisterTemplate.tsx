@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { useRouter } from 'next/navigation';
-import { registerUserGroup } from '@/actions/user_group/registerUserGroup';
+import { registerMyUserGroup } from '@/actions/user_group/registerMyUserGroup';
 import { useEffect, useState } from 'react';
 
 export default function UserGroupRegisterTemplate() {
@@ -10,7 +10,7 @@ export default function UserGroupRegisterTemplate() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const initialState = { success: false, error: '' };
-  const [state, formAction] = useActionState(registerUserGroup, initialState);
+  const [state, formAction] = useActionState(registerMyUserGroup, initialState);
 
   useEffect(() => {
     if (state.success) {

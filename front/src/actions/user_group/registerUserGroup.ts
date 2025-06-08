@@ -6,7 +6,7 @@ import { insertUserGroupAssignment } from '@/lib/db/user_group_assignment';
 import { selectUserByEmail } from '@/lib/db/user';
 import { auth } from '@/lib/auth/auth';
 
-export async function registerUserGroup(
+export async function registerMyUserGroup(
   _prevState: { success: boolean; error: string },
   formData: FormData
 ): Promise<{ success: boolean; error: string }> {
