@@ -5,7 +5,7 @@ import { PARTYKIT_URL } from "@/app/env";
 export default async function RoomPage({
   params,
 }: {
-  params: { roomId: string };
+  params: Promise<{ roomId: string }>;
 }) {
 
   const { roomId } = await params;

@@ -68,7 +68,7 @@ export function Room(props: {
     }
   });
 
-  const nodeRef = useRef(null);
+  const nodeRef = useRef<null | HTMLElement>(null);
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(props.user);
 
@@ -100,7 +100,7 @@ export function Room(props: {
                 <Tooltip>
                   <TooltipTrigger
                     onClick={(e) => e.preventDefault()}
-                    onPointerDown={(event) => event.preventDefault()}
+                    onPointerDown={(e) => e.preventDefault()}
                   >
                     <Avatar className="size-12">
                       <AvatarImage 
@@ -129,7 +129,7 @@ export function Room(props: {
                 bounds="parent"
                 defaultPosition={icon.position}
                 onStop={(e, data) => handleDragStop(data)}
-                nodeRef={nodeRef}// エラーは無視する（React 19で廃止されたfindDOMNodeを使っているため）
+                nodeRef={nodeRef as React.RefObject<HTMLElement>}// エラーは無視する（React 19で廃止されたfindDOMNodeを使っているため）
               >
                 <Avatar 
                   ref={nodeRef}

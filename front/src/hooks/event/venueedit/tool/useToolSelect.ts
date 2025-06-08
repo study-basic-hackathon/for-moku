@@ -92,7 +92,6 @@ export const useToolSelect = ({
   const circleErase = useCircleErase({
     canvasRef,
     numPixel,
-    selectedColor,
     setPixelColorState,
     pixelColorState,
     setCircleColorState,
