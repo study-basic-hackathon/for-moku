@@ -71,73 +71,82 @@ export function Room(props: {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(props.user);
 
+  const [scale, setScale] = useState(1);
+
+  function onScroll(event: WheelEvent) {
+    const delta = event.deltaY * -0.001;
+    setScale(scale + delta);
+  }
+
   return (
-    <>
-      <EditProfileDialog
-        socket={socket}
-        open={open}
-        setOpen={setOpen}
-        user={user}
-        setUser={setUser}
-      />
-      {userIcons.map((icon, i) => {
-        if (icon.user.email !== user.email) {
-          return (
-            <div
-              key={i}
-              className="absolute size-12 select-none"
-              style={{transform: `translate(${icon.position.x}px, ${icon.position.y}px)`}}
-              >
-              <Tooltip>
-                <TooltipTrigger
-                  onClick={(e) => e.preventDefault()}
-                  onPointerDown={(event) => event.preventDefault()}
+    <div className="w-full h-full overflow-hidden" onWheel={onScroll}>
+      <div className="w-full h-full flex justify-center items-center" style={{transform: `scale(${scale})`}}>
+        <EditProfileDialog
+          socket={socket}
+          open={open}
+          setOpen={setOpen}
+          user={user}
+          setUser={setUser}
+        />
+        {userIcons.map((icon, i) => {
+          if (icon.user.email !== user.email) {
+            return (
+              <div
+                key={i}
+                className="absolute size-12 select-none"
+                style={{transform: `translate(${icon.position.x}px, ${icon.position.y}px)`}}
                 >
-                  <Avatar className="size-12">
-                    <AvatarImage 
-                      src={`${icon.user.image}`}
-                      draggable="false"
-                      referrerPolicy="no-referrer"
-                    />
-                    <AvatarFallback><User /></AvatarFallback> 
-                  </Avatar>
-                </TooltipTrigger>
-                <TooltipContent
-                  className="rounded-sm"
-                  onPointerDownOutside={(e) => e.preventDefault()}
-                >
-                  <p>{`${icon.user.name}`}</p>
-                  <p>{`${icon.user.bio ?? ""}`}</p>
-                  <p>{`${icon.user.interests ?? ""}`}</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          )
-        } else {
-          return (
-            <Draggable
-              key={i}
-              bounds="parent"
-              defaultPosition={icon.position}
-              onStop={(e, data) => handleDragStop(data)}
-              nodeRef={nodeRef}// エラーは無視する（React 19で廃止されたfindDOMNodeを使っているため）
-            >
-              <Avatar 
-                ref={nodeRef} 
-                className="absolute size-12 select-none z-1"
-                onDoubleClick={() => setOpen(true)}
+                <Tooltip>
+                  <TooltipTrigger
+                    onClick={(e) => e.preventDefault()}
+                    onPointerDown={(event) => event.preventDefault()}
+                  >
+                    <Avatar className="size-12">
+                      <AvatarImage 
+                        src={`${icon.user.image}`}
+                        draggable="false"
+                        referrerPolicy="no-referrer"
+                      />
+                      <AvatarFallback><User /></AvatarFallback> 
+                    </Avatar>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    className="rounded-sm"
+                    onPointerDownOutside={(e) => e.preventDefault()}
+                  >
+                    <p>{`${icon.user.name}`}</p>
+                    <p>{`${icon.user.bio ?? ""}`}</p>
+                    <p>{`${icon.user.interests ?? ""}`}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            )
+          } else {
+            return (
+              <Draggable
+                key={i}
+                bounds="parent"
+                defaultPosition={icon.position}
+                onStop={(e, data) => handleDragStop(data)}
+                nodeRef={nodeRef}// エラーは無視する（React 19で廃止されたfindDOMNodeを使っているため）
               >
-                <AvatarImage 
-                  src={`${user.image}`}
-                  draggable="false"
-                  referrerPolicy="no-referrer"
-                />
-                <AvatarFallback><User /></AvatarFallback>
-              </Avatar>
-            </Draggable>
-          )
-        }
-      })}
-    </>  
+                <Avatar 
+                  ref={nodeRef}
+                  className="absolute size-12 select-none z-1"
+                  onDoubleClick={() => setOpen(true)}
+                >
+                  <AvatarImage 
+                    src={`${user.image}`}
+                    draggable="false"
+                    referrerPolicy="no-referrer"
+                  />
+                  <AvatarFallback><User /></AvatarFallback>
+                </Avatar>
+              </Draggable>
+            )
+          }
+        })}
+      </div>
+    </div>
   )
 };

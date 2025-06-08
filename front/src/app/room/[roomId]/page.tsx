@@ -23,12 +23,12 @@ export default async function RoomPage({
   const user = (await req.json()) as User;
 
   return (
-    <div className="w-full h-[calc(100vh-56px)] flex justify-center items-center">
+    <>
       {/*<img src="https://i.ibb.co/1J4WN36v/room-sampleimage.png" draggable="false"/>*/}
       <Room
         roomId={roomId}
         user={user}
       />
-    </div>
+    </>
   )
 }

@@ -67,7 +67,6 @@ export function EditProfileDialog({
       bio: values.bio,
       interests: values.interests,
     }
-
     setUser(newUser);
     socket.send(JSON.stringify({ type: "edit", user: newUser }));
   }
