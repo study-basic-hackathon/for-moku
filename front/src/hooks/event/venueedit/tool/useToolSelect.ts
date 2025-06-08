@@ -1,11 +1,12 @@
 import { useCallback } from 'react'
 import { DRAWABLE_TOOLS, DrawableTool, VenueEditTool } from '@/types/tool'
-import { usePixelDraw } from '@/hooks/event/venueedit/tool/usePixelDraw'
-import { usePixelErase } from '@/hooks/event/venueedit/tool/usePixelErase'
-import { useCircleDraw } from '@/hooks/event/venueedit/tool/useCircleDraw'
-import { Color } from '@/types/color'
-import { useCircleErase } from '@/hooks/event/venueedit/tool/useCircleErase'
-import { useTextAdd } from '@/hooks/event/venueedit/tool/useTextAdd'
+import { usePixelDraw } from '@/hooks/event/venueedit/tool/cell/usePixelDraw'
+import { usePixelErase } from '@/hooks/event/venueedit/tool/cell/usePixelErase'
+import { useCircleDraw } from '@/hooks/event/venueedit/tool/cell/useCircleDraw'
+import { useTextErase } from '@/hooks/event/venueedit/tool/select/useTextErase'
+import { Color } from 'react-color'
+import { useCircleErase } from '@/hooks/event/venueedit/tool/cell/useCircleErase'
+import { useTextAdd } from '@/hooks/event/venueedit/tool/select/useTextAdd'
 import { TextState } from '@/types/event/state'
 
 interface Props {
@@ -14,12 +15,16 @@ interface Props {
   selectedColorBackGround?: Color
   canvasRef: React.RefObject<HTMLCanvasElement | null>
   numPixel: number
-  pixelColorState: (Color | null)[][]
   setPixelColorState: React.Dispatch<React.SetStateAction<(Color | null)[][]>>
+  pixelColorState: (Color | null)[][]
   setCircleColorState: React.Dispatch<React.SetStateAction<(Color | null)[][]>>
   circleColorState: (Color | null)[][]
-  handleMouseRelieveText: (startX: number, startY: number, endX: number, endY: number) => void
   textState: TextState[]
+  startDrawing: () => void
+  endDrawing: () => void
+  setTextState: React.Dispatch<React.SetStateAction<TextState[]>>
+  isDialogModalOpen: boolean
+  setIsDialogModalOpen: (isOpen: boolean) => void
 }
 
 type ToolHandlers = {
@@ -29,19 +34,25 @@ type ToolHandlers = {
   handleMouseLeave: () => void
 }
 
-export const useToolSelect = ({ 
+export const useToolSelect = ({
   selectedTool,
   selectedColor,
   selectedColorBackGround,
   canvasRef,
   numPixel,
-  pixelColorState,
   setPixelColorState,
+  pixelColorState,
   setCircleColorState,
   circleColorState,
-  handleMouseRelieveText,
-  textState
+  setTextState,
+  isDialogModalOpen,
+  setIsDialogModalOpen,
+  textState,
+  startDrawing,
+  endDrawing,
 }: Props) => {
+
+
   const canDraw = useCallback(() => {
     return DRAWABLE_TOOLS.includes(selectedTool as DrawableTool)
   }, [selectedTool])
@@ -62,7 +73,7 @@ export const useToolSelect = ({
     numPixel,
     setPixelColorState,
     pixelColorState,
-    setCircleColorState,    
+    setCircleColorState,
     circleColorState,
     textState
   })
@@ -92,8 +103,21 @@ export const useToolSelect = ({
   const textAdd = useTextAdd({
     canvasRef,
     numPixel,
-    color: '#FFFF00',
-    handleMouseRelieveText
+    draggingColor: '#FFFF00',
+    selectedColor,
+    selectedColorBackGround,
+    textState,
+    setTextState,
+    isDialogModalOpen,
+    setIsDialogModalOpen
+  })
+
+  const textErase = useTextErase({
+    canvasRef,
+    numPixel,
+    draggingColor: '#00FFFF',
+    textState,
+    setTextState
   })
 
   const toolHandlers: Partial<Record<VenueEditTool, ToolHandlers>> = {
@@ -102,17 +126,23 @@ export const useToolSelect = ({
     '丸オブジェクト配置': circleDraw,
     '丸オブジェクト消去': circleErase,
     'テキストボックス追加': textAdd,
+    'テキストボックス消去': textErase,
   }
 
   const createHandler = (eventName: keyof ToolHandlers) => {
     return (e?: React.MouseEvent<HTMLCanvasElement>) => {
       const handler = toolHandlers[selectedTool]
       if (handler) {
-        if (eventName === 'handleMouseDown' || eventName === 'handleMouseMove') {
+        if (eventName === 'handleMouseDown') {
+          if (!e) return
+          startDrawing()
+          handler[eventName](e)
+        } else if (eventName === 'handleMouseUp' || eventName === 'handleMouseLeave') {
+          endDrawing()
+          handler[eventName]()
+        } else if (eventName === 'handleMouseMove') {
           if (!e) return
           handler[eventName](e)
-        } else {
-          handler[eventName]()
         }
       }
     }
@@ -129,5 +159,12 @@ export const useToolSelect = ({
     handleMouseMove,
     handleMouseUp,
     handleMouseLeave,
+    isTextDialogOpen: textAdd.isTextDialogOpen,
+    setIsTextDialogOpen: textAdd.setIsTextDialogOpen,
+    currentText: textAdd.currentText,
+    setCurrentText: textAdd.setCurrentText,
+    textPosition: textAdd.textPosition,
+    setTextPosition: textAdd.setTextPosition,
+    handleTextAdd: textAdd.handleTextAdd,
   }
 } 

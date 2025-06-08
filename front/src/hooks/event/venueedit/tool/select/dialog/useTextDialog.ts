@@ -1,12 +1,14 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Position, TextState } from '@/types/event/state'
-import { Color } from '@/types/color'
+import { Color } from 'react-color'
 
 interface TextDialogProps {
   textState: TextState[]
   setTextState: React.Dispatch<React.SetStateAction<TextState[]>>
   selectedColor: Color
   selectedColorBackGround?: Color
+  isDialogModalOpen: boolean
+  setIsDialogModalOpen: (isOpen: boolean) => void
 }
 
 export const useTextDialog = ({
@@ -14,6 +16,8 @@ export const useTextDialog = ({
   setTextState,
   selectedColor,
   selectedColorBackGround,
+  isDialogModalOpen,
+  setIsDialogModalOpen,
 }: TextDialogProps) => {
   const [isTextDialogOpen, setIsTextDialogOpen] = useState(false)
   const [currentText, setCurrentText] = useState('')
@@ -24,9 +28,17 @@ export const useTextDialog = ({
     endY: 0
   })
 
+  // isTextDialogOpenの変更をisDialogModalOpenに反映
+  useEffect(() => {
+    setIsDialogModalOpen(isTextDialogOpen)
+  }, [isTextDialogOpen, setIsDialogModalOpen])
+
+  // isDialogModalOpenの変更をisTextDialogOpenに反映
+  useEffect(() => {
+    setIsTextDialogOpen(isDialogModalOpen)
+  }, [isDialogModalOpen])
+
   const handleTextAdd = () => {
-    console.log("selectedColor", selectedColor)
-    console.log("selectedColorBackGround", selectedColorBackGround)
     const newTextState: TextState[] = [...textState, {
       text: currentText,
       textColor: selectedColor,

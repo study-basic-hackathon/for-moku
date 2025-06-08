@@ -1,12 +1,11 @@
-import { useRef, useEffect, useState, useCallback } from 'react'
-import { initializeCanvas, syncAllStateToCanvas } from '@/lib/event/venueedit/canvasControl'
+import { useState } from 'react'
 import { VenueEditTool } from '@/types/tool'
-import { Color } from '@/types/color'
+import { Color } from 'react-color'
 import { useZoom } from '@/hooks/event/venueedit/useZoom'
-import { DEFAULT_NUM_PIXEL, CANVAS_BASE } from '@/lib/event/venueedit/constants'
+import { DEFAULT_NUM_PIXEL } from '@/lib/event/venueedit/constants'
 import { useToolSelect } from '@/hooks/event/venueedit/tool/useToolSelect'
-import { useTextDialog } from '@/hooks/event/venueedit/dialog/useTextDialog'
 import { TextState } from '@/types/event/state'
+import { useDrawingState } from '@/hooks/event/venueedit/useDrawingState'
 
 /**
  * キャンバスの描画を管理するフックのProps
@@ -30,7 +29,7 @@ export const useCanvasDraw = ({
   selectedTool,
   selectedColorBackGround
 }: Props) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  // ピクセルの定義
   const [numPixel, setNumPixel] = useState(DEFAULT_NUM_PIXEL)
   const {zoom, handleZoomIn, handleZoomOut} = useZoom()
 
@@ -41,59 +40,32 @@ export const useCanvasDraw = ({
     Array(numPixel).fill(null).map(() => Array(numPixel).fill(null))
   )
   const [textState, setTextState] = useState<TextState[]>([])
+  const [isDialogModalOpen, setIsDialogModalOpen] = useState(false)
 
-  const syncAllState = useCallback((ctx: CanvasRenderingContext2D) => {
-    syncAllStateToCanvas(ctx, numPixel, CANVAS_BASE / numPixel, pixelColorState, circleColorState, textState)
-  }, [numPixel, pixelColorState, circleColorState, textState])
-  
-  const {
-    isTextDialogOpen,
-    setIsTextDialogOpen,
-    currentText,
-    setCurrentText,
-    textPosition,
-    setTextPosition,
-    handleTextAdd,
-  } = useTextDialog({
-    selectedColor,
-    selectedColorBackGround,
+
+  const { canvasRef, startDrawing, endDrawing } = useDrawingState({
+    numPixel,
+    pixelColorState,
+    circleColorState,
     textState,
+    setPixelColorState,
+    setCircleColorState,
     setTextState,
+    isDialogModalOpen
   })
 
-  // isTextDialogOpenの変更も検知して、StateとCanvasの同期を行う
-  useEffect(() => {
-    const ctx = canvasRef.current?.getContext('2d')
-    if (ctx) {
-      syncAllState(ctx)
-    }
-  }, [syncAllState, isTextDialogOpen])
-
-  // numPixelの変更が実施されたら、Stateをリセットする
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    const ctx = initializeCanvas(canvas, numPixel)
-    if (!ctx) return
-
-    setPixelColorState(Array(numPixel).fill(null).map(() => Array(numPixel).fill(null)))
-    setCircleColorState(Array(numPixel).fill(null).map(() => Array(numPixel).fill(null)))
-    setTextState([])
-    syncAllState(ctx)
-  }, [numPixel])
-
-  const handleMouseRelieveText = useCallback((startX: number, startY: number, endX: number, endY: number) => {
-    setIsTextDialogOpen(true)
-    setTextPosition({
-      startX,
-      startY,
-      endX,
-      endY
-    })
-  }, [selectedColor, selectedColorBackGround])
-
-  const { canDraw: toolCanDraw, handleMouseDown, handleMouseMove, handleMouseUp, handleMouseLeave } = useToolSelect({
+  const { canDraw: toolCanDraw,
+      handleMouseDown,
+      handleMouseMove,
+      handleMouseUp,
+      handleMouseLeave,
+      isTextDialogOpen, 
+      setIsTextDialogOpen, 
+      currentText, 
+      setCurrentText, 
+      textPosition, 
+      setTextPosition, 
+      handleTextAdd } = useToolSelect({
     selectedTool,
     selectedColor,
     selectedColorBackGround,
@@ -103,8 +75,12 @@ export const useCanvasDraw = ({
     pixelColorState,
     setCircleColorState,
     circleColorState,
-    handleMouseRelieveText,
     textState,
+    startDrawing,
+    endDrawing,
+    setTextState,
+    isDialogModalOpen,
+    setIsDialogModalOpen
   })
 
   return { 

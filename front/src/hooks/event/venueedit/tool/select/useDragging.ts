@@ -5,11 +5,11 @@ import { useCallback, useRef, useState } from "react"
 interface Props {
   canvasRef: React.RefObject<HTMLCanvasElement | null>
   numPixel: number
-  color: string
+  draggingColor : string
   handleMouseRelieve: (startX: number, startY: number, endX: number, endY: number) => void
 }
 
-export const useDragging = ({ canvasRef, numPixel, color, handleMouseRelieve }: Props) => {
+export const useDragging = ({ canvasRef, numPixel, draggingColor, handleMouseRelieve }: Props) => {
 
   const [isDrawing, setIsDrawing] = useState(false)
   const [startX, setStartX] = useState<number | null>(null)
@@ -22,8 +22,8 @@ export const useDragging = ({ canvasRef, numPixel, color, handleMouseRelieve }: 
 
   const syncToCanvas = useCallback((ctx: CanvasRenderingContext2D, startX: number | null, startY: number | null, endX: number | null, endY: number | null) => {
     if (startX === null || startY === null || endX === null || endY === null) return
-    syncDraggingStateToCanvas(ctx, startX, startY, endX, endY, CELL_SIZE, color)
-  }, [CELL_SIZE, color])
+    syncDraggingStateToCanvas(ctx, startX, startY, endX, endY, CELL_SIZE, draggingColor)
+  }, [CELL_SIZE, draggingColor])
 
   const handleMouseDown = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
     setIsDrawing(true)
@@ -57,9 +57,20 @@ export const useDragging = ({ canvasRef, numPixel, color, handleMouseRelieve }: 
     if (!ctx) return
 
     lastCellRef.current = { x: coords.cellX, y: coords.cellY }
+    
+    // ドラッグする範囲は原則縮小しないようにする
+    if (startX !== null && startY !== null && endX !== null && endY !== null) {
+      if (startX !== endX && startY !== endY) {
+        // 右下へのドラッグの場合
+        if ((coords.cellX - startX) / (endX - startX) < 1 || (coords.cellY - startY) / (endY - startY) < 1) {
+          return
+        }
+      }
+    }
     setEndX(coords.cellX)
     setEndY(coords.cellY)
     syncToCanvas(ctx, startX, startY, coords.cellX, coords.cellY)
+
   }, [canvasRef, numPixel, isDrawing, startX, startY, endX, endY])
 
   const handleMouseUp = useCallback((e?: React.MouseEvent<HTMLCanvasElement>) => {

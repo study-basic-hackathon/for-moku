@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react'
-import { Color } from '@/types/color'
+import { Color } from 'react-color'
 import { getCellCoordinates, syncPixelStateToCanvas } from '@/lib/event/venueedit/canvasControl'
 import { CANVAS_BASE } from '@/lib/event/venueedit/constants'
 import { TextState } from '@/types/event/state'

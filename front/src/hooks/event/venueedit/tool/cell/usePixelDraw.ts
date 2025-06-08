@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
-import { Color } from '@/types/color'
-import { useCellEditableTool } from '@/hooks/event/venueedit/tool/useCellEditableTool'
+import { Color } from 'react-color'
+import { useCellEditableTool } from '@/hooks/event/venueedit/tool/cell/useCellEditableTool'
 import { TextState } from '@/types/event/state'
 
 interface Props {
