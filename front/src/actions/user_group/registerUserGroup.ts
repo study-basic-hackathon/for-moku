@@ -15,8 +15,8 @@ export async function registerUserGroup(
     return { success: false, error: 'ログインしていません' };
   }
 
-  const name = formData.get('name')?.toString().trim();
-  const description = formData.get('description')?.toString().trim() ?? '';
+  const name = formData.get('name')?.toString();
+  const description = formData.get('description')?.toString() ?? '';
 
   if (!name) {
     return { success: false, error: 'グループ名は必須です' };
