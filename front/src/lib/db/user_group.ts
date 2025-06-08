@@ -4,6 +4,7 @@ import { eq, InferInsertModel } from 'drizzle-orm';
 
 
 export type NewUserGroup = InferInsertModel<typeof userGroups>;
+type Transaction = Parameters<typeof db.transaction>[0] extends (tx: infer T) => any ? T : never;
 
 export async function selectUserGroupByName(name: string) {
   const result = await db
@@ -16,7 +17,7 @@ export async function selectUserGroupByName(name: string) {
 }
 
 export async function insertUserGroup(
-  tx: any, // 型注釈を省略または any にする（実際は tx に自動で正しい型が付きます）
+  tx: Transaction,
   data: NewUserGroup
 ) {
   const [inserted] = await tx
