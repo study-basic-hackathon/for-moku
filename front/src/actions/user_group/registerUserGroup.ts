@@ -1,7 +1,10 @@
 'use server';
 
+import { db } from '@/lib/db';
+import { insertUserGroupWithTx, selectUserGroupByName } from '@/lib/db/user_group';
+import { insertUserGroupAssignmentWithTx } from '@/lib/db/user_group_assignment';
+import { selectUserByEmail } from '@/lib/db/user';
 import { auth } from '@/lib/auth/auth';
-import { insertUserGroup, selectUserGroupByName } from '@/lib/db/user_group';
 
 export async function registerUserGroup(
   _prevState: { success: boolean; error: string },
@@ -25,12 +28,32 @@ export async function registerUserGroup(
   }
 
   try {
-    await insertUserGroup({ name, description });
+    const user = await selectUserByEmail(session.user.email);
+    if (!user) {
+      return { success: false, error: 'ユーザー情報が見つかりません' };
+    }
+
+    await db.transaction(async (tx) => {
+      // グループを作成
+      const group = await insertUserGroupWithTx(tx, {
+        name,
+        description,
+      });
+
+      if (!group?.id) {
+        throw new Error('グループの作成に失敗しました');
+      }
+
+      // 作成者を admin として割り当て
+      await insertUserGroupAssignmentWithTx(tx, {
+        userId: user.id,
+        userGroupId: group.id,
+        role: 'admin',
+      });
+    });
+
     return { success: true, error: '' };
   } catch (e: any) {
-    return {
-      success: false,
-      error: e?.message || '登録に失敗しました',
-    };
+    return { success: false, error: e?.message || '登録に失敗しました' };
   }
 }
