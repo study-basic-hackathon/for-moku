@@ -1,10 +1,11 @@
 import { db } from '@/lib/db';
+import { Transaction } from '@/types/db';
+import { NewUserGroup } from '@/types/user_group/schema';
 import { userGroups } from '@/lib/db/schema/user_group';
-import { eq, InferInsertModel } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 
-export type NewUserGroup = InferInsertModel<typeof userGroups>;
-type Transaction = Parameters<typeof db.transaction>[0] extends (tx: infer T) => any ? T : never;
+
 
 export async function selectUserGroupByName(name: string) {
   const result = await db
