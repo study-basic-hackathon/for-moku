@@ -33,8 +33,10 @@ export async function TopNav() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="min-w-[7rem] shadow-none">
               <DropdownMenuItem>
-                <User />
-                アカウント
+                <Link href="/user/edit">
+                  <User />
+                  アカウント
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Settings />
