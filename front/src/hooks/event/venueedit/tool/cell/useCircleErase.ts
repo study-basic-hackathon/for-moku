@@ -13,7 +13,7 @@ interface Props {
   textState: TextState[]
 }
 
-export const useCircleErase = ({ canvasRef, numPixel, selectedColor, setCircleColorState, pixelColorState, circleColorState, textState }: Props) => {
+export const useCircleErase = ({ canvasRef, numPixel, setCircleColorState, pixelColorState, circleColorState, textState }: Props) => {
   const updateCircleState = useCallback((x: number, y: number) => {
     const newState = [...circleColorState]
     newState[y] = [...newState[y]]
