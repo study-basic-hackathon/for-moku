@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "partykit": "npx partykit dev"
+  },
   "dependencies": {
     "partykit": "^0.0.115"
   }

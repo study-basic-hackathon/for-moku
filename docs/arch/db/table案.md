@@ -1,7 +1,7 @@
 
 ## 📘 RDBテーブル一覧（リレーショナルデータベース）
 
-### **user**
+### **users**
 
 | 項目名        | 型             | 説明                             |
 |---------------|----------------|----------------------------------|
@@ -14,7 +14,7 @@
 | updated_at    | datetime       | 更新日時                         |
 | deactivated_at| datetime/null  | 退会日時（退会していない場合はnull）|
 
-### **event**
+### **events**
 
 | 項目名        | 型             | 説明                                             |
 |---------------|----------------|--------------------------------------------------|
@@ -31,15 +31,18 @@
 | created_at    | datetime       | 作成日時                                         |
 | updated_at    | datetime       | 更新日時                                         |
 
-### **user_event_participation**
+### **user_event_participations**
 
 | 項目名     | 型         | 説明                          |
 |------------|------------|-------------------------------|
 | id         | bigint     | 主キー                        |
 | user_id    | bigint     | 参加ユーザーID（外部キー）    |
 | event_id   | bigint     | 参加イベントID（外部キー）    |
+| created_at | datetime       | 作成日時         |
+| updated_at | datetime       | 更新日時         |
 
-### **user_group**
+
+### **user_groups**
 
 | 項目名     | 型             | 説明             |
 |------------|----------------|------------------|
@@ -49,7 +52,7 @@
 | created_at | datetime       | 作成日時         |
 | updated_at | datetime       | 更新日時         |
 
-### **user_group_assignment**
+### **user_group_assignments**
 
 | 項目名         | 型             | 説明                               |
 |----------------|----------------|------------------------------------|
@@ -57,6 +60,9 @@
 | user_id        | bigint         | ユーザーID                         |
 | user_group_id  | bigint         | ユーザーグループID                 |
 | role           | enum           | ロール（admin または member）     |
+| created_at | datetime       | 作成日時         |
+| updated_at | datetime       | 更新日時         |
+
 
 ## 📙 NoSQLコレクション（user_icons）
 

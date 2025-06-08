@@ -1,6 +1,7 @@
 import {
   Calendar,
   FileQuestion,
+  FileText,
   Home,
   Plus,
   Search,
@@ -47,6 +48,11 @@ const items = [
     title: "Menu Item",
     url: "/#",
     icon: FileQuestion,
+  },
+  {
+    title: "イベント詳細サンプル",
+    url: "/event/view/sample",
+    icon: FileText,
   },
   
 ]
