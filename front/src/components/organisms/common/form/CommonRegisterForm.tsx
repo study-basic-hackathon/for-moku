@@ -25,7 +25,7 @@ export default function CommonRegisterForm<T>({ fields, onSubmit }: Readonly<Com
       {fields.map((field) => {
         const hasError = formState.error?.some(error => error.path.includes(field.name.toString()));
         const value = formState.formData?.[field.name.toString()];
-        const stringValue = value instanceof File ? value.name : value?.toString() ?? '';
+        const stringValue = value instanceof File ? value.name : value?.toString() ?? field.defaultValue ?? '';
 
         return (
           <div key={field.name.toString()}>
@@ -40,7 +40,14 @@ export default function CommonRegisterForm<T>({ fields, onSubmit }: Readonly<Com
       })}
 
       {formState.error && formState.error.length > 0 && (
-        <div className="text-red-500 text-center">{formState.error.map(error => error.message).join(', ')}</div>
+        <div className="text-red-500 text-center">
+          {formState.error.map(error => (
+            <div key={error.message}>
+              {error.message}
+              <br />
+            </div>
+          ))}
+        </div>
       )}
 
       <FormSubmitButton isPending={isPending} />

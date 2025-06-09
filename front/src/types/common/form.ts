@@ -27,14 +27,17 @@ export type InputType = InputHTMLAttributes<HTMLInputElement>['type']
  * @returns フィールド（詳細は下記）
  */
 export type CommonRegisterFormField<T> = {
-  name: keyof T;
-  label: string;
-  required: boolean;
-  elementType: HtmlElement;
-  inputType?: InputType;
-  placeholder?: string;
-  options?: { value: string; label: string }[];
-}; 
+  [K in keyof T]: { // Tの各プロパティKについて繰り返します。
+    name: K;
+    label: string;
+    required: undefined extends T[K] ? false : null extends T[K] ? false : true; // ジェネリクスの型がundefinedまたはnullを許容するならfalse, それ以外ならtrue
+    elementType: HtmlElement;
+    inputType?: InputType;
+    placeholder?: string;
+    options?: { value: string; label: string }[];
+    defaultValue?: string;
+  }
+}[keyof T]; // nameが取りうる値を限定しています
 
 /**
  * フォームの状態(バリデーションエラーを返す時に使う)

@@ -4,8 +4,10 @@ import { z } from 'zod'
 import { FormState } from '@/types/common/form';
 import { DATE_PATTERN, TIME_PATTERN } from '@/lib/util/constants';
 
-// FromSchema (エラー文も指定できる)
-const FormSchema = z.object({
+/**
+ * 単一バリデーション
+ */
+const BaseSchema = z.object({
   name: z.string({
     required_error: 'イベント名は必須です。',
   }),
@@ -16,14 +18,14 @@ const FormSchema = z.object({
     required_error: 'ユーザーグループは必須です。',
   }),
   eventDate: z.string()
-    .regex(DATE_PATTERN, '日付はYYYY-MM-DD形式で入力してください。')
+    .regex(DATE_PATTERN, 'イベント日はYYYY-MM-DD形式で入力してください。')
     .refine((date) => !isNaN(Date.parse(date)), '有効な日付を入力してください。'),
   eventStartTime: z.string()
-    .regex(TIME_PATTERN, '時刻はHH:mm形式で入力してください。'),
+    .regex(TIME_PATTERN, '開始時刻はHH:mm形式で入力してください。'),
   eventEndTime: z.string()
-    .regex(TIME_PATTERN, '時刻はHH:mm形式で入力してください。'),
-  eventUrl: z.string().url('有効なURLを入力してください。').optional().or(z.literal('')),
-  venueUrl: z.string().url('有効なURLを入力してください。').optional().or(z.literal(''))
+    .regex(TIME_PATTERN, '終了時刻はHH:mm形式で入力してください。'),
+  eventUrl: z.string().url('イベントの詳細URLが有効な形式ではありません。').optional().or(z.literal('')),
+  venueUrl: z.string().url('会場のURLが有効な形式ではありません。').optional().or(z.literal(''))
 }).refine(
   (data) => {
     const startTime = new Date(`${data.eventDate}T${data.eventStartTime}`);
@@ -37,6 +39,22 @@ const FormSchema = z.object({
 );
 
 /**
+ * 相関バリデーション（開始時刻と終了時刻の比較）
+ */
+const FormSchema = BaseSchema.refine(
+  (data) => {
+    const startTime = new Date(`${data.eventDate}T${data.eventStartTime}`);
+    const endTime = new Date(`${data.eventDate}T${data.eventEndTime}`);
+    return startTime < endTime;
+  },
+  {
+    message: '終了時刻は開始時刻より後である必要があります。',
+    path: ['eventEndTime']
+  }
+);
+
+
+/**
  * イベントを登録
  * 
  * @param prevState 前回の状態
@@ -48,7 +66,8 @@ export async function registerEvent(
   formData: FormData
 ): Promise<FormState> {
 
-  const validatedFields = FormSchema.safeParse({
+  // まず基本バリデーションを実行
+  const baseValidation = BaseSchema.safeParse({
     name: formData.get('name'),
     description: formData.get('description'),
     userGroupId: formData.get('userGroupId'),
@@ -59,6 +78,17 @@ export async function registerEvent(
     venueUrl: formData.get('venueUrl')
   });
 
+  // 基本バリデーションでエラーがあれば、そのエラーを返却
+  if (!baseValidation.success) {
+    return {
+      error: baseValidation.error.errors,
+      formData: Object.fromEntries(formData.entries())
+    };
+  }
+
+  // 基本バリデーションが成功した場合のみ、時刻の比較バリデーションを実行
+  const validatedFields = FormSchema.safeParse(baseValidation.data);
+
   // バリデーションエラーがあれば、エラーとフォームデータを返却
   if (!validatedFields.success) {
     return {
@@ -66,6 +96,9 @@ export async function registerEvent(
       formData: Object.fromEntries(formData.entries()) // オブジェクトっぽいやつからオブジェクトライクなものに変換する
     };
   }
+
+  const eventStartDateTime = new Date(formData.get('eventDate') + 'T' + formData.get('eventStartTime') + ':00').toISOString();
+  const eventEndDateTime = new Date(formData.get('eventDate') + 'T' + formData.get('eventEndTime') + ':00').toISOString();
 
   // TODO: イベントの登録処理を実装
   return { error: [], formData: undefined };
