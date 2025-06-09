@@ -39,7 +39,6 @@ export default function FormSelect({ name, placeholder, required, hasError, defa
       required={required}
       defaultValue={defaultValue}
       className={`w-full p-2 border rounded ${hasError ? 'border-red-500' : 'border-gray-300'}`}
-      key={defaultValue}
     >
       {placeholder && (
         <option value="" disabled>
