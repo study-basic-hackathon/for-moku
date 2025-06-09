@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { useRouter } from 'next/navigation';
-import { registerMyUserGroup } from '@/actions/user_group/registerMyUserGroup';
+import { registerMyUserGroup } from '@/actions/user_group/registerUserGroup';
 import { useEffect, useState } from 'react';
 
 export default function UserGroupRegisterTemplate() {

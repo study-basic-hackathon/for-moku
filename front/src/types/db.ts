@@ -1,5 +1,7 @@
 // src/types/db.ts
-import { db } from '@/lib/db';
+import { PgTransaction } from 'drizzle-orm/pg-core';
+import { NodePgQueryResultHKT } from 'drizzle-orm/node-postgres';
+import { ExtractTablesWithRelations } from 'drizzle-orm';
+import * as schema from '@/lib/db/schema';
 
-
-export type Transaction = Parameters<typeof db.transaction>[0] extends (tx: infer T) => any ? T : never;
+export type Transaction = PgTransaction<NodePgQueryResultHKT, typeof schema, ExtractTablesWithRelations<typeof schema>>;
