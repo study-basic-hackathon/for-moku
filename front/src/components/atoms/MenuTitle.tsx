@@ -33,6 +33,8 @@ export default function MenuTitle({
   className 
 }: Readonly<Props>) {
   return (
-    <span className={cn(className)}>{title}</span>
+    <div className={cn("break-words whitespace-pre-wrap overflow-hidden text-ellipsis", className)}>
+      {title}
+    </div>
   )
 } 

@@ -12,7 +12,7 @@ interface Props {
 /**
  * デフォルトのアイコンのクラス名 (40x40px, アイコンのサイズを固定)
  */
-const defaultIconClassName = ["w-10", "h-10", "shrink-0"];
+const defaultIconClassName = ["w-7", "h-7", "shrink-0"];
 
 /**
  * メニューアイコンを表示するコンポーネント

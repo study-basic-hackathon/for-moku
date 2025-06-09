@@ -8,7 +8,7 @@ import MenuTitle from "@/components/atoms/MenuTitle";
  */
 interface Props {
   title: string;
-  icon: LucideIconType;
+  icon?: LucideIconType;
   divClassName?: string | string[];
   iconClassName?: string | string[];
   titleClassName?: string | string[];
@@ -17,7 +17,7 @@ interface Props {
 /**
  * デフォルトのクラス名 (flex, 中央揃え, アイコンとタイトルの間隔2rem)
  */
-const defaultDivClassName = ["flex", "items-center", "gap-2"];
+const defaultDivClassName = ["flex", "items-center", "gap-2", "p-2"];
 
 /**
  * メニューの行を表示するコンポーネント
@@ -57,7 +57,7 @@ export default function MenuIconUnit({
 }: Readonly<Props>) {
   return (
     <div className={cn(defaultDivClassName, divClassName)}>
-      <MenuIcon icon={icon} className={iconClassName} />
+      {icon && <MenuIcon icon={icon} className={iconClassName} />}
       <MenuTitle title={title} className={titleClassName} />
     </div>
   )
