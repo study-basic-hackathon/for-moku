@@ -31,7 +31,7 @@ const items = [
   },
   {
     title: "イベント作成",
-    url: "/#",
+    url: "/event/register",
     icon: Plus,
   },
   {

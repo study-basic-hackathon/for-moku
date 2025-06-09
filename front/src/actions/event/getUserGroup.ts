@@ -1,18 +1,25 @@
 'use server';
 
-/**
- * ユーザーグループを取得
- * 
- * @returns ユーザーグループの配列
- */
-export async function getMockUserGroups() {
-  // 1秒待機
-  await new Promise(resolve => setTimeout(resolve, 1000));
+import { auth } from "@/lib/auth/auth";
+import { selectAuthedUserGroupsByEmail } from "@/lib/db/user_group";
 
-  // 適当なデータを返却
-  return [
-    { id: 1, name: 'グループA' },
-    { id: 2, name: 'グループB' },
-    { id: 3, name: 'グループC' }
-  ];
+/**
+ * ログイン中のユーザーが所属するユーザーグループを取得
+ * 
+ * ログイン中のユーザーが所属するユーザーグループのリストを取得
+ * 見つからなければ、[]を返却
+ * あと、セッションが取得できなければエラーを返却
+ * 
+ * @returns ログイン中のユーザーが所属するユーザーグループの配列
+ */
+export async function getMyAuthedUserGroups() {
+  const session = await auth();
+
+  if (!session?.user?.email) {
+    return Error("ログイン中のユーザーが見つかりません");
+  }
+
+  const userGroups = await selectAuthedUserGroupsByEmail(session.user.email);
+
+  return {userGroups};
 }
