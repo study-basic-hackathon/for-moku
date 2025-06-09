@@ -1,5 +1,6 @@
 import { InputHTMLAttributes } from "react";
 import { JSX } from "react/jsx-runtime";
+import { ZodIssue } from "zod";
 
 /**
  * HTML要素の型(input, select, textareaとか)
@@ -35,3 +36,15 @@ export type CommonRegisterFormField<T> = {
   options?: { value: string; label: string }[];
 }; 
 
+/**
+ * フォームの状態(バリデーションエラーを返す時に使う)
+ * 
+ * @param error バリデーションエラー
+ * @param formData フォームデータ
+ * @returns フォームの状態
+ * 
+ */
+export type FormState = {
+  error: ZodIssue[];
+  formData?: { [key: string]: FormDataEntryValue | null };
+};
