@@ -1,12 +1,12 @@
 'use server';
 
 import { db } from '@/lib/db';
-import { insertUserGroupWithTx, selectUserGroupByName } from '@/lib/db/user_group';
-import { insertUserGroupAssignmentWithTx } from '@/lib/db/user_group_assignment';
+import { insertUserGroup, selectUserGroupByName } from '@/lib/db/user_group';
+import { insertUserGroupAssignment } from '@/lib/db/user_group_assignment';
 import { selectUserByEmail } from '@/lib/db/user';
 import { auth } from '@/lib/auth/auth';
 
-export async function registerUserGroup(
+export async function registerMyUserGroup(
   _prevState: { success: boolean; error: string },
   formData: FormData
 ): Promise<{ success: boolean; error: string }> {
@@ -15,8 +15,8 @@ export async function registerUserGroup(
     return { success: false, error: 'ログインしていません' };
   }
 
-  const name = formData.get('name')?.toString().trim();
-  const description = formData.get('description')?.toString().trim() ?? '';
+  const name = formData.get('name')?.toString();
+  const description = formData.get('description')?.toString() ?? '';
 
   if (!name) {
     return { success: false, error: 'グループ名は必須です' };
@@ -35,7 +35,7 @@ export async function registerUserGroup(
 
     await db.transaction(async (tx) => {
       // グループを作成
-      const group = await insertUserGroupWithTx(tx, {
+      const group = await insertUserGroup(tx, {
         name,
         description,
       });
@@ -45,7 +45,7 @@ export async function registerUserGroup(
       }
 
       // 作成者を admin として割り当て
-      await insertUserGroupAssignmentWithTx(tx, {
+      await insertUserGroupAssignment(tx, {
         userId: user.id,
         userGroupId: group.id,
         role: 'admin',
