@@ -1,14 +1,12 @@
 import { db } from "@/lib/db";
 import { events } from "@/lib/db/schema/event";
-import { eq, ExtractTablesWithRelations, InferInsertModel, InferSelectModel } from "drizzle-orm";
+import { eq, ExtractTablesWithRelations} from "drizzle-orm";
 import { NodePgQueryResultHKT } from "drizzle-orm/node-postgres";
 import { PgTransaction } from "drizzle-orm/pg-core";
 import * as schema from '@/lib/db/schema';
+import { Event, NewEvent, UpdateEvent } from "@/types/event/schema";
 
-export type Event = InferSelectModel<typeof events>;
-export type NewEvent = InferInsertModel<typeof events>;
-export type UpdateEvent = Partial<NewEvent>;
-
+// ToDO後で消す
 export type Transaction = PgTransaction<NodePgQueryResultHKT, typeof schema, ExtractTablesWithRelations<typeof schema>>;
 
 /**
