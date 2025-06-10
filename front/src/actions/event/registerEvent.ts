@@ -3,7 +3,8 @@
 import { z } from 'zod'
 import { FormState } from '@/types/common/form';
 import { DATE_PATTERN, TIME_PATTERN } from '@/lib/util/constants';
-import { insertEvent, NewEvent } from '@/lib/db/event';
+import { insertEvent } from '@/lib/db/event';
+import { NewEvent } from '@/types/event/schema';
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
