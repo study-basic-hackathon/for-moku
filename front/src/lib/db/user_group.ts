@@ -1,11 +1,13 @@
 import { db } from '@/lib/db';
+import { Transaction } from '@/types/db';
+import { NewUserGroup } from '@/types/user_group/schema';
 import { userGroups } from '@/lib/db/schema/user_group';
-import { and, eq, InferInsertModel } from 'drizzle-orm';
 import { userGroupAssignments } from '@/lib/db/schema/user_group_assignment';
 import { users } from '@/lib/db/schema/user';
+import {  and, eq } from 'drizzle-orm';
 
 
-export type NewUserGroup = InferInsertModel<typeof userGroups>;
+
 
 export async function selectUserGroupByName(name: string) {
   const result = await db
@@ -42,8 +44,8 @@ export async function selectAuthedUserGroupsByEmail(email: string) {
   return results?.map((e) => e.userGroup) ?? [];
 }
 
-export async function insertUserGroupWithTx(
-  tx: any, // 型注釈を省略または any にする（実際は tx に自動で正しい型が付きます）
+export async function insertUserGroup(
+  tx: Transaction,
   data: NewUserGroup
 ) {
   const [inserted] = await tx
