@@ -4,11 +4,14 @@ import { NewUserGroup } from '@/types/user_group/schema';
 import { userGroups } from '@/lib/db/schema/user_group';
 import { userGroupAssignments } from '@/lib/db/schema/user_group_assignment';
 import { users } from '@/lib/db/schema/user';
-import {  and, eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
-
-
-
+/**
+ * グループ名でユーザーグループを選択する関数
+ *
+ * @param name 検索するグループ名
+ * @returns ユーザーグループ情報またはnull
+ */
 export async function selectUserGroupByName(name: string) {
   const result = await db
     .select()
@@ -44,6 +47,13 @@ export async function selectAuthedUserGroupsByEmail(email: string) {
   return results?.map((e) => e.userGroup) ?? [];
 }
 
+/**
+ * 新しいユーザーグループをデータベースに挿入する関数
+ *
+ * @param tx トランザクションオブジェクト
+ * @param data 新しいユーザーグループのデータ
+ * @returns 挿入されたユーザーグループ情報
+ */
 export async function insertUserGroup(
   tx: Transaction,
   data: NewUserGroup

@@ -13,6 +13,7 @@ export default function UserGroupRegisterTemplate() {
   const [state, formAction] = useActionState(registerMyUserGroup, initialState);
 
   useEffect(() => {
+    // 登録が成功した場合、ホームページにリダイレクト
     if (state.success) {
       router.push('/');
     }

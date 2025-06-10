@@ -16,6 +16,7 @@ export default function UserEditTemplate() {
 
   useEffect(() => {
     (async () => {
+      // 現在のユーザープロフィールを取得し、フォームの初期値として設定
       const profile = await getMyProfile();
       if (profile) {
         setInitialValues({
@@ -37,6 +38,7 @@ export default function UserEditTemplate() {
       <UserProfileForm
         initialValues={initialValues}
         onSubmit={async (data) => {
+          // プロフィールを更新
           await updateMyProfile(data);
         }}
         submitLabel="更新"

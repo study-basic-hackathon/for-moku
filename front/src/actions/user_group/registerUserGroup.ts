@@ -6,33 +6,46 @@ import { insertUserGroupAssignment } from '@/lib/db/user_group_assignment';
 import { selectUserByEmail } from '@/lib/db/user';
 import { auth } from '@/lib/auth/auth';
 
+/**
+ * ユーザーグループを登録する関数
+ *
+ * @param _prevState 前回の状態（成功/失敗のフラグとエラーメッセージ）
+ * @param formData フォームデータ（グループ名と説明）
+ * @returns 処理結果（成功/失敗のフラグとエラーメッセージ）
+ */
 export async function registerMyUserGroup(
   _prevState: { success: boolean; error: string },
   formData: FormData
 ): Promise<{ success: boolean; error: string }> {
+  // 現在のユーザーセッションを取得
   const session = await auth();
   if (!session?.user?.email) {
     return { success: false, error: 'ログインしていません' };
   }
 
+  // フォームデータからグループ名と説明を取得
   const name = formData.get('name')?.toString();
   const description = formData.get('description')?.toString() ?? '';
 
+  // グループ名がない場合はエラーを返す
   if (!name) {
     return { success: false, error: 'グループ名は必須です' };
   }
 
+  // 既存のグループ名をチェック
   const existing = await selectUserGroupByName(name);
   if (existing) {
     return { success: false, error: 'このグループ名はすでに使われています' };
   }
 
   try {
+    // ユーザー情報を取得
     const user = await selectUserByEmail(session.user.email);
     if (!user) {
       return { success: false, error: 'ユーザー情報が見つかりません' };
     }
 
+    // トランザクションを開始
     await db.transaction(async (tx) => {
       // グループを作成
       const group = await insertUserGroup(tx, {
