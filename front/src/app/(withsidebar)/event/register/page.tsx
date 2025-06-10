@@ -1,10 +1,25 @@
-import { getMockUserGroups } from '@/actions/event/getUserGroup';
+import { getMyAuthedUserGroups } from '@/actions/event/getUserGroup';
 import EventRegisterTemplate from '@/components/templates/event/register/EventRegisterTemplate';
+import RegisterShortcutTemplate from '@/components/templates/common/RegisterShortcutTemplate';
 
 export default async function EventRegisterPage() {
-  const userGroups = await getMockUserGroups();
-  
+  const result = await getMyAuthedUserGroups();
+
+  if (result instanceof Error) {
+    return <div>エラーが発生しました</div>;
+  }
+  const {userGroups} = result;
+  if (userGroups.length === 0) {
+    return (
+      <RegisterShortcutTemplate
+        title="イベントを作る前にユーザグループを作りましょう"
+        linkHref="/user_group/register"
+        linkLabel="ユーザーグループを作成する"
+      />
+    );
+  }
+
   return (
-    <EventRegisterTemplate userGroups={userGroups} />
+    <EventRegisterTemplate userGroups={result.userGroups} />
   );
 } 
