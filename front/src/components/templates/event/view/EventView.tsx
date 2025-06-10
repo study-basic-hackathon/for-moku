@@ -2,43 +2,13 @@
 import { eventContainerClass } from "@/styles/event";
 import CommonViewIconUnitList from "@/components/organisms/common/view/CommonViewIconUnitList";
 import ViewIconUnit from "@/components/organisms/common/view/ViewIconUnit";
-import { eventSample } from "@/actions/event/sample";
-import { CommonViewIconUnit } from "@/types/common/view";
+import { EventViewViewModel } from "@/types/event/viewmodel";
+import { useEventViewIconUnits } from "@/hooks/event/view/useEventViewIconUnits";
+import { useEventSample } from "@/hooks/event/view/useEventSample";
 
-export const eventViewIconUnits: CommonViewIconUnit[] = [
-  {
-    name: "participants",
-    iconName: "Users",
-    description: "ユーザーグループ",
-    href: "#",
-    descriptionClassName: "text-xl font-bold",
-  },
-  {
-    name: "startTime",
-    iconName: "Calendar",
-    description: "2024年5月1日 10:00",
-    descriptionClassName: "text-lg font-bold",
-  },
-  {
-    name: "endTime",
-    description: "　　　〜　2024年5月1日 18:00",
-    descriptionClassName: "text-lg font-bold",
-  },
-  {
-    name: "venueLink",
-    iconName: "Link",
-    description: "会場リンク",
-    descriptionClassName: "text-md font-bold",
-    href: "#",
-  },
-  {
-    name: "eventLink",
-    iconName: "Link",
-    description: "イベントリンク",
-    descriptionClassName: "text-md font-bold",
-    href: "#",
-  }
-];
+interface Props {
+  event: EventViewViewModel;
+}
 
 /**
  * イベントのビュー
@@ -50,7 +20,12 @@ export const eventViewIconUnits: CommonViewIconUnit[] = [
  * 
  * 使用例:
  */
-export default function EventView() {
+export default function EventView({ event }: Readonly<Props>) {
+  // アイコンユニットリストを作成
+  const eventViewIconUnits = useEventViewIconUnits(event);
+  // イベントサンプル生成のコールバックを取得
+  const handleEventSample = useEventSample();
+
   return (
     <div className={eventContainerClass}>
       <div className="flex justify-end items-center w-full gap-x-2">
@@ -58,7 +33,7 @@ export default function EventView() {
           name: "edit",
           iconName: "Pencil",
           description: "編集",
-          href: "/event/eventedit/sample",
+          href: `/event/eventedit/${event.eventId}`,
           iconClassName: "w-6 h-6",
         }} />
         <ViewIconUnit unit={{
@@ -66,7 +41,7 @@ export default function EventView() {
           iconName: "Copy",
           description: "イベントコピー",
           iconClassName: "w-6 h-6",
-          onClick: eventSample,
+          onClick: handleEventSample,
         }} />
       </div>
       <CommonViewIconUnitList units={eventViewIconUnits} />

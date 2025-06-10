@@ -55,3 +55,20 @@ export async function insertUserGroup(
 
   return inserted;
 }
+
+/**
+ * ユーザーグループIDからユーザーグループを取得
+ * 
+ * 見つからなければ、nullを返却
+ * @param id ユーザーグループID
+ * @returns ユーザーグループ
+ */
+export async function selectUserGroupById(id: number) {
+  const result = await db
+    .select()
+    .from(userGroups)
+    .where(eq(userGroups.id, id))
+    .limit(1);
+
+  return result[0] ?? null;
+}
