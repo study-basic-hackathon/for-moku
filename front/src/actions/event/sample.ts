@@ -1,9 +1,5 @@
 'use server'
 
-async function eventSample() {
-  return {
-    message: "Event Sample",
-  }
+export async function eventSample() {
+  console.log("サンプル");
 }
-
-export default {eventSample};
