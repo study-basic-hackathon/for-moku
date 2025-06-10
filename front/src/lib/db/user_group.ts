@@ -67,18 +67,36 @@ export async function insertUserGroup(
 }
 
 /**
- * ユーザーグループIDからユーザーグループを取得
- * 
- * 見つからなければ、nullを返却
- * @param id ユーザーグループID
- * @returns ユーザーグループ
+ * グループIDでユーザーグループを選択する関数
+ *
+ * @param groupId 検索するグループID
+ * @returns ユーザーグループ情報またはnull
  */
-export async function selectUserGroupById(id: number) {
+export async function selectUserGroupById(groupId: number) {
   const result = await db
     .select()
     .from(userGroups)
-    .where(eq(userGroups.id, id))
+    .where(eq(userGroups.id, groupId))
     .limit(1);
 
   return result[0] ?? null;
+}
+
+/**
+ * グループIDでユーザーグループを更新する関数
+ *
+ * @param groupId 更新するグループのID
+ * @param data 更新するグループの名前と説明
+ */
+export async function updateUserGroupById(
+  groupId: number,
+  data: { name: string; description: string }
+) {
+  await db
+    .update(userGroups)
+    .set({
+      name: data.name,
+      description: data.description,
+    })
+    .where(eq(userGroups.id, groupId));
 }
