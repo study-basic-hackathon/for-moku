@@ -6,13 +6,17 @@ interface Props {
   handleZoomOut: () => void
   numPixel: number
   setNumPixel: (n: number) => void
+  saveAction?: () => void
+  isPending?: boolean
 }
 
 export default function VenueActionHeader({ 
   handleZoomIn, 
   handleZoomOut,
   numPixel,
-  setNumPixel 
+  setNumPixel,
+  saveAction,
+  isPending
 }: Readonly<Props>) {
 
   const handlePixelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,8 +69,12 @@ export default function VenueActionHeader({
           <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
             取り消し
           </button>
-          <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-            保存
+          <button 
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            onClick={saveAction}
+            disabled={isPending}
+          >
+            {isPending ? '保存中...' : '保存'}
           </button>
         </div>
       </div>
