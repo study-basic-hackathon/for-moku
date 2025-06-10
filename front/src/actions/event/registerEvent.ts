@@ -105,8 +105,8 @@ export async function registerEvent(
 
   const newEvent: NewEvent = {
     ...rest,
-    startDateTime: new Date(`${eventDate}T${eventStartTime}:00.000000000`),
-    endDateTime: new Date(`${eventDate}T${eventEndTime}:00.000000000`),
+    startDateTime: new Date(`${eventDate}T${eventStartTime}:00.000`),
+    endDateTime: new Date(`${eventDate}T${eventEndTime}:00.000`),
   };
 
   // イベントの登録処理(トランザクションは正直なくてもいいけど、lib/db側の記述がシンプルになるために使用)
