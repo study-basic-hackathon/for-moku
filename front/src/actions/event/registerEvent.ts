@@ -3,6 +3,10 @@
 import { z } from 'zod'
 import { FormState } from '@/types/common/form';
 import { DATE_PATTERN, TIME_PATTERN } from '@/lib/util/constants';
+import { insertEvent, NewEvent } from '@/lib/db/event';
+import { db } from '@/lib/db';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 /**
  * 単一バリデーション
@@ -93,13 +97,23 @@ export async function registerEvent(
   if (!validatedFields.success) {
     return {
       error: validatedFields.error.errors,
-      formData: Object.fromEntries(formData.entries()) // オブジェクトっぽいやつからオブジェクトライクなものに変換する
+      formData: Object.fromEntries(formData.entries())
     };
   }
 
-  const eventStartDateTime = new Date(formData.get('eventDate') + 'T' + formData.get('eventStartTime') + ':00').toISOString();
-  const eventEndDateTime = new Date(formData.get('eventDate') + 'T' + formData.get('eventEndTime') + ':00').toISOString();
+  const { eventDate, eventStartTime, eventEndTime, ...rest } = validatedFields.data;
 
-  // TODO: イベントの登録処理を実装
-  return { error: [], formData: undefined };
+  const newEvent: NewEvent = {
+    ...rest,
+    startDateTime: new Date(`${eventDate}T${eventStartTime}:00.000000000`),
+    endDateTime: new Date(`${eventDate}T${eventEndTime}:00.000000000`),
+  };
+
+  // イベントの登録処理(トランザクションは正直なくてもいいけど、lib/db側の記述がシンプルになるために使用)
+  const insertedEvent = await db.transaction(async (tx) => {
+    return await insertEvent(tx, newEvent);
+  });
+
+  revalidatePath('/event/register');
+  redirect(`/event/view/${insertedEvent.id}`);
 }

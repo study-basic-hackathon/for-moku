@@ -16,17 +16,17 @@
 
 ### **events**
 
-| 項目名        | 型             | 説明                                             |
-|---------------|----------------|--------------------------------------------------|
+| 項目名          | 型             | 説明                                             |
+|----------------|----------------|--------------------------------------------------|
 | id            | bigint         | イベントID（主キー）                            |
 | user_group_id | bigint         | 所属グループID（外部キー）                      |
 | name          | string         | イベント名                                       |
 | description   | text           | イベントの概要                                 |
-| start_time    | datetime       | 開始日時                                         |
-| end_time      | datetime       | 終了日時                                         |
+| start_date_time| datetime       | 開始日時                                         |
+| end_date_time  | datetime       | 終了日時                                         |
 | event_url     | string (URL)   | イベントの詳細URL（connpassのURL想定）            |
 | venue_url     | string (URL)   | 会場のURL（インスタベースのURL想定）            |
-| image_json    | JSON           | 会場の椅子などの配置情報                        |
+| image_json    | JSONB          | 会場の椅子などの配置情報                        |
 | image_url     | string (URL)   | 会場の椅子などの配置情報を画像化したものURL。当日画面の背景に使用する |
 | created_at    | datetime       | 作成日時                                         |
 | updated_at    | datetime       | 更新日時                                         |
