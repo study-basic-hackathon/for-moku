@@ -22,7 +22,7 @@ export async function selectUserGroupByName(name: string) {
 /**
  * 指定したメールアドレスを持つユーザーが管理するユーザーグループのリストを取得
  * 見つからなければ、[]を返却
- * 
+ *
  * @param email ユーザーのメールアドレス
  * @returns ユーザーグループの配列
  */
