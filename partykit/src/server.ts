@@ -1,6 +1,7 @@
 import type * as Party from "partykit/server";
 
 type User = {
+  id: string,
   name: string,
   email: string,
   image: string,
@@ -29,16 +30,22 @@ export default class Server implements Party.Server {
 
     if (request.method === "POST") {
       const user = (await request.json()) as User;
-      const userIcon = userIcons.find(e => e.user.email === user.email);
+
+      const userIcon = userIcons.find((icon) => {
+        if (user.email === "guest@example.com") {
+          return icon.user.id === user.id;
+        }
+        return icon.user.email === user.email;
+      })
+
       if (userIcon) {
-        return new Response(JSON.stringify(userIcon.user));
+        return new Response(JSON.stringify(userIcon.user.id));
       }
 
       this.room.broadcast(JSON.stringify({ type: "new", user }));
       this.userIcons!.push({ user: user, position: { x: 0, y: 0 }});
-      return new Response(JSON.stringify(user));
+      return new Response(JSON.stringify(user.id));
     }
-
     return new Response("Not found", { status: 404 });
   }
 
@@ -57,16 +64,16 @@ export default class Server implements Party.Server {
 
     if (message.type === "move") {
       const userIcon = { user: message.user, position: message.position }
-      this.room.broadcast(JSON.stringify({ type: "move", ...userIcon }), [sender.id]);
+      this.room.broadcast(JSON.stringify({ type: "move", ...userIcon }));
       this.userIcons = this.userIcons!.map((icon) =>
-        icon.user.email === message.user.email ? userIcon : icon
+        icon.user.id === message.user.id ? userIcon : icon
       );
     }
     if (message.type === "edit") {
-      this.room.broadcast(JSON.stringify({ type: "edit", user: message.user }), [sender.id]);
+      this.room.broadcast(JSON.stringify({ type: "edit", user: message.user }));
       this.userIcons = this.userIcons!.map((icon) => {
         const userIcon = { user: message.user, position: icon.position }
-        return icon.user.email === message.user.email ? userIcon : icon
+        return icon.user.id === message.user.id ? userIcon : icon
       });
     }
   }

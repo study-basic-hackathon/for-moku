@@ -22,14 +22,6 @@ import {
 import { Dispatch, SetStateAction } from "react";
 import PartySocket from "partysocket";
 
-type User = {
-  name: string,
-  email: string,
-  image: string,
-  bio?: string,
-  interests?: string
-}
-
 const formSchema = z.object({
 	name: z.string(),
 	bio: z.string(),
@@ -41,13 +33,11 @@ export function EditProfileDialog({
   open,
   setOpen,
   user,
-  setUser,
 }: {
   socket: PartySocket,
   open: boolean,
   setOpen: Dispatch<SetStateAction<boolean>>,
   user: User,
-  setUser: Dispatch<SetStateAction<User>>,
 }) {
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -67,7 +57,6 @@ export function EditProfileDialog({
       bio: values.bio,
       interests: values.interests,
     }
-    setUser(newUser);
     socket.send(JSON.stringify({ type: "edit", user: newUser }));
   }
 
@@ -134,9 +123,10 @@ export function EditProfileDialog({
                 キャンセル
               </Button>
               <div className="flex-1"/>
-              <Button 
+              <Button
                 variant="ghost" 
-                className="flex-1 rounded-sm" 
+                className="flex-1 rounded-sm"
+                onClick={() => setOpen(false)}
                 type="submit"
               >
                 適用
