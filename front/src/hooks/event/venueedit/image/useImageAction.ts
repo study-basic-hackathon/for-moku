@@ -25,10 +25,6 @@ export const useImageAction = (props: Props) => {
       setIsPendingForSave(true)
       const encoded = encodeVenue(numPixel, pixelColorState, circleColorState, textState)
       await Promise.all([
-        // TODO: 本番リリース前に必ず削除
-        // デバッグ用のJSONファイルをダウンロード
-        downloadVenueJson(numPixel, pixelColorState, circleColorState, textState),  
-
         // 画像データを保存&永続化
         saveVenueInfo({
           numPixel,
