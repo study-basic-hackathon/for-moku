@@ -51,6 +51,7 @@ export function EditProfileDialog({
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const newUser = {
+      id: user.id,
       name: values.name,
       email: user.email,
       image: user.image,
