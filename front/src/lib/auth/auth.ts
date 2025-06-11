@@ -1,39 +1,68 @@
-import NextAuth from "next-auth"
+import NextAuth, { NextAuthConfig } from "next-auth"
 import "next-auth/jwt"
 
 import Google from "next-auth/providers/google"
+import Credentials from "next-auth/providers/credentials"
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+import { NextResponse } from "next/server"
+
+export const authConfig = {
   debug: !!process.env.AUTH_DEBUG,
-  theme: { logo: "https://authjs.dev/img/logo-sm.png" }, // ロゴを設定します
   providers: [
     Google,
+    Credentials({
+      name: 'Guest User',
+      async authorize() {
+        const user = { name: 'Guest User', email: 'guest@example.com' };
+        return user;
+      }
+    })
   ],
-  basePath: "/auth",
+  pages: {
+    signIn: "/auth/signin",
+  },
   session: { strategy: "jwt" },
   callbacks: {
-    authorized({ request, auth }) {
+    async authorized({ request, auth }) {
       const { pathname } = request.nextUrl
+
       if (pathname === "/sandbox") return true
+
+      const isGuest = auth?.user && auth.user.email === "guest@example.com";
+      if (isGuest && !pathname.startsWith('/room')) return false
+
+      if (pathname.startsWith('/auth') && !!auth) {
+        return NextResponse.redirect(new URL('/', request.url));
+      }
 
       return !!auth
     },
-    async session({ session, token }) {
+    jwt({ token, user }) {
+      if (user) token.id = user.id
+
+      return token
+    },
+    session({ session, token }) {
       if (token?.accessToken) session.accessToken = token.accessToken
+
+      session.user.id = token.id ?? ""
 
       return session
     },
   },
-})
+} satisfies NextAuthConfig
+
+export const { handlers, auth, signIn, signOut } = NextAuth(authConfig)
 
 declare module "next-auth" {
   interface Session {
-    accessToken?: string
+    accessToken?: string,
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    accessToken?: string
+    accessToken?: string,
+    id?: string,
   }
 }
