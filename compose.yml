@@ -13,6 +13,17 @@ services:
       - postgres_volume_formoku:/var/lib/postgresql/data
     networks:
       - app-network
+  gyazo:
+    build:
+      context: ./localgyazo
+      dockerfile: Dockerfile
+    container_name: 'gyazo-local'
+    ports:
+      - '8888:80'
+    environment:
+      - GYAZO_API_TOKEN=sampletoken
+    networks:
+      - app-network
 
 volumes:
   postgres_volume_formoku:
