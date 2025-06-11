@@ -34,7 +34,6 @@ imagedata = cgi.params['imagedata'][0].read
 hash = Digest::MD5.hexdigest(imagedata)
 
 id = Digest::MD5.hexdigest(cgi.remote_addr + Time.now.to_s)
-create_newid = true
 
 dbm = SDBM.open('db/id',0644)
 dbm[hash] = id
