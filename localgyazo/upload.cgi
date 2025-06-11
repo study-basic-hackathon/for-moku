@@ -40,7 +40,7 @@ dbm = SDBM.open('db/id',0644)
 dbm[hash] = id
 dbm.close
 
-File.open("data/#{hash}.png","w").print(imagedata)
+File.open("data/#{hash}.png","wb").print(imagedata)
 
 # レスポンスの形式を本家と同じに形式に
 response = {
