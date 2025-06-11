@@ -6,6 +6,7 @@ import { DEFAULT_NUM_PIXEL } from '@/lib/event/venueedit/constants'
 import { useToolSelect } from '@/hooks/event/venueedit/tool/useToolSelect'
 import { TextState } from '@/types/event/state'
 import { useDrawingState } from '@/hooks/event/venueedit/useDrawingState'
+import { useImageAction } from './image/useImageAction'
 
 /**
  * キャンバスの描画を管理するフックのProps
@@ -42,7 +43,6 @@ export const useCanvasDraw = ({
   const [textState, setTextState] = useState<TextState[]>([])
   const [isDialogModalOpen, setIsDialogModalOpen] = useState(false)
 
-
   const { canvasRef, startDrawing, endDrawing } = useDrawingState({
     numPixel,
     pixelColorState,
@@ -52,6 +52,13 @@ export const useCanvasDraw = ({
     setCircleColorState,
     setTextState,
     isDialogModalOpen
+  })
+
+  const {saveImageAction, isPendingForSave} = useImageAction({
+    numPixel,
+    pixelColorState,
+    circleColorState,
+    textState
   })
 
   const { canDraw: toolCanDraw,
@@ -102,5 +109,7 @@ export const useCanvasDraw = ({
     textPosition,
     setTextPosition,
     handleTextAdd,
+    saveImageAction,
+    isPendingForSave
   }
 } 

@@ -38,6 +38,8 @@ export default function VenueEditorTemplate() {
     setIsTextDialogOpen,
     setCurrentText,
     handleTextAdd,
+    saveImageAction,
+    isPendingForSave
   } = useCanvasDraw({
     selectedColor,
     selectedTool,
@@ -51,6 +53,8 @@ export default function VenueEditorTemplate() {
         setNumPixel={setNumPixel}
         handleZoomIn={handleZoomIn}
         handleZoomOut={handleZoomOut}
+        saveAction={saveImageAction}
+        isPending={isPendingForSave}
       />
       <div className="p-5">
         <div className="grid grid-cols-1 lg:grid-cols-8 xl:grid-cols-12 gap-4">
