@@ -1,6 +1,6 @@
 import EventViewTemplate from "@/components/templates/event/view/EventViewTemplate"
-import { selectEventById } from "@/lib/db/event";
 import { notFound } from "next/navigation";
+import { getEventViewViewModel } from "@/actions/event/eventview";
 
 export default async function EventViewPage({
   params,
@@ -17,14 +17,13 @@ export default async function EventViewPage({
     return notFound();
   }
 
-  const event = await selectEventById(eventIdNumber);
+  // イベント詳細画面用のビューモデルを取得
+  const eventViewModel = await getEventViewViewModel(eventIdNumber);
   
-  // イベントが見つからない場合はエラーを返す
-  if (!event) {
+  if (!eventViewModel) {
     return notFound();
   }
 
-  console.log(event);
-  
-  return <EventViewTemplate/>
+  // イベント詳細画面を表示
+  return <EventViewTemplate event={eventViewModel} />
 } 
