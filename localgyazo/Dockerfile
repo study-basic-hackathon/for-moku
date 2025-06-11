@@ -3,8 +3,7 @@
 FROM ubuntu/apache2:2.4-20.04_beta
 
 # upload.cgiはrubyで動く
-RUN apt-get update && apt-get install -y wget \
-    ruby
+RUN apt-get update && apt-get install -y wget ruby
 
 # apache2のcgiモジュールの有効化    
 RUN a2enmod cgi
