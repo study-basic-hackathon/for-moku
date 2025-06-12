@@ -6,6 +6,8 @@ import Credentials from "next-auth/providers/credentials"
 
 import { NextResponse } from "next/server"
 
+const GUEST_EMAIL = 'guest@example.com'
+
 export const authConfig = {
   debug: !!process.env.AUTH_DEBUG,
   providers: [
@@ -13,7 +15,7 @@ export const authConfig = {
     Credentials({
       name: 'Guest User',
       async authorize() {
-        const user = { name: 'Guest User', email: 'guest@example.com' };
+        const user = { name: 'Guest User', email: GUEST_EMAIL };
         return user;
       }
     })
@@ -28,7 +30,7 @@ export const authConfig = {
 
       if (pathname === "/sandbox") return true
 
-      const isGuest = auth?.user && auth.user.email === "guest@example.com";
+      const isGuest = auth?.user && auth.user.email === GUEST_EMAIL;
       if (isGuest && !pathname.startsWith('/room')) return false
 
       if (pathname.startsWith('/auth') && !!auth) {
