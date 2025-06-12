@@ -3,6 +3,7 @@
 import { auth } from "@/lib/auth/auth";
 import { TextState } from "@/types/event/state";
 import { generateImage } from "@/lib/event/venueedit/nodeCanvasControl";  
+import { BASE_URL } from "@/app/env";
 
 /**
  * 会場の情報を永続化するためのパラメータ
@@ -56,14 +57,33 @@ export async function saveVenueInfo({
     gridWidth
   });
   
+  // BufferをUint8Arrayに変換してからBlobを作成
+  const uint8Array = new Uint8Array(imageBuffer);
+  const blob = new Blob([uint8Array], { type: 'image/png' });
+  
+  // APIに送信する処理
+  const response = await fetch(`${BASE_URL}/api/event/gyazo`, {
+    method: 'POST',
+    body: blob
+  });
+
+  if (!response.ok) {
+    throw new Error('画像のアップロードに失敗しました');
+  }
+
+  const result = await response.json();
+
+  // TODO: レスポンスをそのまま表示、この中にURLが含まれる。次のブランチで消す。
+  console.log(result);
+  
   // TODO: 画像を保存する
   // 仮の実装として、Base64形式に変換して返す
   const base64Data = imageBuffer.toString('base64');
-  console.log(base64Data)
   const imageUrl = `data:image/png;base64,${base64Data}`;
 
   return {
     imageUrl,
-    message: '画像が生成されました'
+    message: '画像が生成されました',
+    gyazoUrl: result.data.url
   };
 } 
