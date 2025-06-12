@@ -31,22 +31,31 @@ export function Room({
       if (message.type === "sync") {
         setUserIcons(message.userIcons);
       }
+
       if (message.type === "new") {
-        const userIcon = { user: message.user, position: { x: 0, y: 0 }};
+        const userIcon = { user: message.user, position: { x: 0, y: 0 } };
         setUserIcons(prev => [...prev, userIcon])
       }
+
       if (message.type === "move") {
         const userIcon = { user: message.user, position: message.position }
         setUserIcons(prev =>
           prev.map(icon => icon.user.id === message.user.id ? userIcon : icon)
         )
       }
+
       if (message.type === "edit") {
         setUserIcons(prev => 
           prev.map(icon => {
             const userIcon = { user: message.user, position: icon.position }
             return icon.user.id === message.user.id ? userIcon : icon;
           })
+        )
+      }
+
+      if (message.type === "delete") {
+        setUserIcons(prev =>
+          prev.filter(icon => icon.user.id !== message.userId)
         )
       }
     },

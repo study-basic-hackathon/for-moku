@@ -1,4 +1,5 @@
 import type * as Party from "partykit/server";
+import { SINGLETON_ROOM_ID } from "./conns";
 
 type User = {
   id: string,
@@ -30,12 +31,8 @@ export default class Server implements Party.Server {
 
     if (request.method === "POST") {
       const user = (await request.json()) as User;
-
       const userIcon = userIcons.find((icon) => {
-        if (user.email === "guest@example.com") {
-          return icon.user.id === user.id;
-        }
-        return icon.user.email === user.email;
+        return icon.user.id === user.id;
       })
 
       if (userIcon) {
@@ -44,22 +41,44 @@ export default class Server implements Party.Server {
 
       this.room.broadcast(JSON.stringify({ type: "new", user }));
       this.userIcons!.push({ user: user, position: { x: 0, y: 0 }});
+      await this.room.storage.put("userIcons", this.userIcons);
+
       return new Response(JSON.stringify(user.id));
     }
-    return new Response("Not found", { status: 404 });
-  }
 
-  async onConnect(conn: Party.Connection, ctx: Party.ConnectionContext) {
-    const userIcons = await this.ensureLoadUserIcons();
+    if (request.method === "DELETE") {
+      const userId = await request.json();
 
-    const message = {
-      type: "sync",
-      userIcons,
+      this.room.broadcast(JSON.stringify({ type: "delete", userId }))
+      this.userIcons = userIcons!.filter((icon) => {
+        return icon.user.id !== userId;
+      });
+      await this.room.storage.put("userIcons", this.userIcons);
+
+      return new Response(null, { status: 204 });
     }
-    conn.send(JSON.stringify(message));
+
+    return new Response("Not Found", { status: 404 });
   }
 
-  onMessage(messageString: string, sender: Party.Connection) {
+  async onConnect(conn: Party.Connection, _ctx: Party.ConnectionContext) {
+    const userIcons = await this.ensureLoadUserIcons();
+    conn.send(JSON.stringify({ type: "sync", userIcons }));
+
+    const conns = this.room.context.parties.conns;
+    conns.get(SINGLETON_ROOM_ID).fetch({
+      method: "POST",
+      body: JSON.stringify({
+        userId: conn.id,
+        roomId: this.room.id
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+  }
+
+  async onMessage(messageString: string, _sender: Party.Connection) {
     const message = JSON.parse(messageString);
 
     if (message.type === "move") {
@@ -69,6 +88,7 @@ export default class Server implements Party.Server {
         icon.user.id === message.user.id ? userIcon : icon
       );
     }
+
     if (message.type === "edit") {
       this.room.broadcast(JSON.stringify({ type: "edit", user: message.user }));
       this.userIcons = this.userIcons!.map((icon) => {
@@ -76,6 +96,8 @@ export default class Server implements Party.Server {
         return icon.user.id === message.user.id ? userIcon : icon
       });
     }
+
+    await this.room.storage.put("userIcons", this.userIcons);
   }
 }
 
