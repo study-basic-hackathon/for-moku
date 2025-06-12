@@ -23,6 +23,9 @@ RUN sed -i '/<\/VirtualHost>/i\ \ RewriteEngine On\n\ \ RewriteRule .* - [E=HTTP
 # PassEnv GYAZO_API_TOKEN の追加
 RUN sed -i '/<\/VirtualHost>/i\ \ PassEnv GYAZO_API_TOKEN' /etc/apache2/sites-available/000-default.conf
 
+# DELETEメソッドを許可
+RUN sed -i '/<\/VirtualHost>/i\ \ <Directory /var/www/html>\n\ \ \ \ <LimitExcept GET POST DELETE>\n\ \ \ \ \ \ Deny from all\n\ \ \ \ </LimitExcept>\n\ \ </Directory>' /etc/apache2/sites-available/000-default.conf
+
 # apache2の設定ファイル内でcgiを読み込むように設定する()
 RUN sed -i "s/#AddHandler cgi-script .cgi/AddHandler cgi-script .cgi/" /etc/apache2/mods-available/mime.conf
 RUN sed -i "1,/Options Indexes FollowSymLinks/s/Options Indexes FollowSymLinks/Options Indexes FollowSymLinks ExecCGI/" /etc/apache2/apache2.conf
@@ -38,5 +41,10 @@ RUN install -d -m 755 -g www-data -o www-data /var/www/html/db
 COPY upload.cgi /var/www/html/upload.cgi
 RUN chown www-data:www-data /var/www/html/upload.cgi
 RUN chmod +x /var/www/html/upload.cgi
+
+# ローカルのdelete.cgiを置き換え
+COPY delete.cgi /var/www/html/delete.cgi
+RUN chown www-data:www-data /var/www/html/delete.cgi
+RUN chmod +x /var/www/html/delete.cgi
 
 RUN service apache2 restart
