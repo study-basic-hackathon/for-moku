@@ -4,11 +4,11 @@ export const SINGLETON_ROOM_ID = "list";
 
 export default class Connections implements Party.Server {
   connections?: Record<string, string>;
-  constructor(readonly room: Party) {}
+  constructor(readonly room: Party.Room) {}
 
   removeUserFromRoom(userId: string) {
     const main = this.room.context.parties.main;
-    main.get(this.connections[userId]).fetch({
+    main.get(this.connections![userId]).fetch({
       method: "DELETE",
       body: JSON.stringify(userId),
       headers: {
@@ -26,7 +26,8 @@ export default class Connections implements Party.Server {
     }
 
     if (request.method === "POST") {
-      const { userId, roomId } = await request.json();;
+      const { userId, roomId } =
+        (await request.json()) as { userId: string, roomId: string };
 
       if (userId in this.connections) {
         if (this.connections[userId] !== roomId) {
@@ -40,7 +41,7 @@ export default class Connections implements Party.Server {
     }
 
     if (request.method === "DELETE") {
-      const userId = await request.json();
+      const userId: string = await request.json();
 
       this.removeUserFromRoom(userId);
       delete this.connections[userId];
