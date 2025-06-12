@@ -119,7 +119,9 @@ export async function saveVenueInfo({
   if (!oldEvent) {  
     throw new Error('イベントが見つかりません');
   }
-
+  // 古い画像を削除
+  await deleteOldImage(oldEvent.imageUrl);
+  
   // 画像をアップロード
   const newImageUrl = await uploadImageToGyazo(imageBuffer);
 
@@ -131,9 +133,6 @@ export async function saveVenueInfo({
   if (!updatedEvent) {
     throw new Error('イベントの更新に失敗しました');
   }
-
-  // 古い画像を削除
-  await deleteOldImage(oldEvent.imageUrl);
 
   revalidatePath(`/event/venueedit/${eventId}`);
   redirect(`/event/view/${eventId}`);
