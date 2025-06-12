@@ -50,6 +50,10 @@ export const authConfig = {
       return session
     },
   },
+  events: {
+    signIn: () => removeUserFromRoom(),
+    signOut: () => removeUserFromRoom(),
+  },
 } satisfies NextAuthConfig
 
 export const { handlers, auth, signIn, signOut } = NextAuth(authConfig)
@@ -64,5 +68,21 @@ declare module "next-auth/jwt" {
   interface JWT {
     accessToken?: string,
     id?: string,
+  }
+}
+
+import { PARTYKIT_URL } from "@/app/env";
+
+async function removeUserFromRoom() {
+  const session = await auth();
+  if (session?.user) {
+    const url = `${PARTYKIT_URL}/parties/conns/list`;
+    await fetch(url, {
+      method: "DELETE",
+      body: JSON.stringify(session.user.id),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
   }
 }
