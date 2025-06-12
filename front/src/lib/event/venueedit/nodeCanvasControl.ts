@@ -1,8 +1,11 @@
-import { EncodedVenue, TextState } from "@/types/event/state"
+import { TextState } from "@/types/event/state"
 import { createCanvas, CanvasRenderingContext2D } from 'canvas'
 
 interface Props {
-  encodedVenue: EncodedVenue
+  numPixel: number
+  encodedPixelColor: {[k: string]: {x: number, y: number}[]}
+  encodedCircleColor: {[k: string]: {x: number, y: number}[]}
+  textState: TextState[]
   pixelSize?: number
   backgroundColor?: string
   gridColor?: string
@@ -89,14 +92,16 @@ function drawCellGrid(
  * @returns 会場の画像(バッファ)
  */
 export function generateImage({
-  encodedVenue,
+  numPixel,
+  encodedPixelColor,
+  encodedCircleColor,
+  textState,
   pixelSize = 30,
   backgroundColor = '#FFFFFF',
 }: Props): Buffer {
-  const {numPixel,encodedPixelColor ,encodedCircleColor, textState} = encodedVenue
   const canvasSize = numPixel * pixelSize
   const canvas = createCanvas(canvasSize, canvasSize)
-  const ctx = canvas.getContext('2d')
+  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
 
   // 背景を塗りつぶし
   ctx.fillStyle = backgroundColor

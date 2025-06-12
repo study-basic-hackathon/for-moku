@@ -9,13 +9,8 @@ import { useColorPalette } from '@/hooks/event/venueedit/submenu/useColorPalette
 import { useCanvasDraw } from '@/hooks/event/venueedit/useCanvasDraw'
 import { VenueEditTool } from '@/types/tool'
 import TextDialog from '@/components/organisms/event/venueedit/text/TextDialog'
-import { EventVenueEditViewModel } from '@/types/event/viewmodel'
 
-interface Props {
-  eventVenueEditViewModel: EventVenueEditViewModel
-}
-
-export default function VenueEditorTemplate({ eventVenueEditViewModel }: Readonly<Props>) {
+export default function VenueEditorTemplate() {
   const [selectedTool, setSelectedTool] = useState<VenueEditTool>('ピクセル塗りつぶし')
   const { 
     selectedColor,
@@ -48,8 +43,7 @@ export default function VenueEditorTemplate({ eventVenueEditViewModel }: Readonl
   } = useCanvasDraw({
     selectedColor,
     selectedTool,
-    selectedColorBackGround,
-    eventVenueEditViewModel,
+    selectedColorBackGround
   })
 
   return (

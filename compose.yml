@@ -22,16 +22,11 @@ services:
       - '8888:80'
     environment:
       - GYAZO_API_TOKEN=sampletoken
-    volumes:
-      - gyazo_data_formoku:/var/www/html/data
-      - gyazo_db_formoku:/var/www/html/db
     networks:
       - app-network
 
 volumes:
   postgres_volume_formoku:
-  gyazo_data_formoku:
-  gyazo_db_formoku:
 
 networks:
   app-network:

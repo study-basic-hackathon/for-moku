@@ -18,13 +18,3 @@ export type Position = {
   endX: number
   endY: number
 }
-
-/**
- * エンコード済み会場データの型
- */
-export type EncodedVenue = {
-  numPixel: number
-  encodedPixelColor: {[k: string]: {x: number, y: number}[]}
-  encodedCircleColor: {[k: string]: {x: number, y: number}[]}
-  textState: TextState[]
-}

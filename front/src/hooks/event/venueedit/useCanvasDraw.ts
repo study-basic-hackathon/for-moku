@@ -7,7 +7,6 @@ import { useToolSelect } from '@/hooks/event/venueedit/tool/useToolSelect'
 import { TextState } from '@/types/event/state'
 import { useDrawingState } from '@/hooks/event/venueedit/useDrawingState'
 import { useImageAction } from './image/useImageAction'
-import { EventVenueEditViewModel } from '@/types/event/viewmodel'
 
 /**
  * キャンバスの描画を管理するフックのProps
@@ -18,7 +17,6 @@ interface Props {
   selectedColor: Color
   selectedTool: VenueEditTool
   selectedColorBackGround?: Color
-  eventVenueEditViewModel: EventVenueEditViewModel
 }
 
 /**
@@ -30,8 +28,7 @@ interface Props {
 export const useCanvasDraw = ({ 
   selectedColor,
   selectedTool,
-  selectedColorBackGround,
-  eventVenueEditViewModel
+  selectedColorBackGround
 }: Props) => {
   // ピクセルの定義
   const [numPixel, setNumPixel] = useState(DEFAULT_NUM_PIXEL)
@@ -61,8 +58,7 @@ export const useCanvasDraw = ({
     numPixel,
     pixelColorState,
     circleColorState,
-    textState,
-    eventId: eventVenueEditViewModel.eventId
+    textState
   })
 
   const { canDraw: toolCanDraw,
