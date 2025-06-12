@@ -39,8 +39,12 @@ export const authConfig = {
 
       return !!auth
     },
-    jwt({ token, user }) {
+    jwt({ token, user, trigger, session }) {
       if (user) token.id = user.id
+
+      if (trigger === "update" && session.roomId) {
+        token.roomId = session.roomId;
+      }
 
       return token
     },
@@ -48,6 +52,7 @@ export const authConfig = {
       if (token?.accessToken) session.accessToken = token.accessToken
 
       session.user.id = token.id ?? ""
+      session.roomId = token.roomId;
 
       return session
     },
@@ -63,6 +68,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(authConfig)
 declare module "next-auth" {
   interface Session {
     accessToken?: string,
+    roomId?: string,
   }
 }
 
@@ -70,6 +76,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     accessToken?: string,
     id?: string,
+    roomId?: string,
   }
 }
 
@@ -77,11 +84,12 @@ import { PARTYKIT_URL } from "@/app/env";
 
 async function removeUserFromRoom() {
   const session = await auth();
-  if (session?.user) {
-    const url = `${PARTYKIT_URL}/parties/conns/list`;
-    await fetch(url, {
+
+  if (session?.user && session.roomId) {
+    const { user, roomId } = session;
+    fetch(`${PARTYKIT_URL}/parties/main/${roomId}`, {
       method: "DELETE",
-      body: JSON.stringify(session.user.id),
+      body: JSON.stringify(user.id),
       headers: {
         "Content-Type": "application/json",
       },

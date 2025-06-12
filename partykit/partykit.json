@@ -2,8 +2,5 @@
   "$schema": "https://www.partykit.io/schema.json",
   "name": "for-moku",
   "main": "src/server.ts",
-  "parties": {
-    "conns": "src/conns.ts",
-  },
   "compatibilityDate": "2025-06-02"
 }

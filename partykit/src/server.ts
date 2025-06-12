@@ -1,5 +1,4 @@
 import type * as Party from "partykit/server";
-import { SINGLETON_ROOM_ID } from "./conns";
 
 type User = {
   id: string,
@@ -64,18 +63,6 @@ export default class Server implements Party.Server {
   async onConnect(conn: Party.Connection, _ctx: Party.ConnectionContext) {
     const userIcons = await this.ensureLoadUserIcons();
     conn.send(JSON.stringify({ type: "sync", userIcons }));
-
-    const conns = this.room.context.parties.conns;
-    conns.get(SINGLETON_ROOM_ID).fetch({
-      method: "POST",
-      body: JSON.stringify({
-        userId: conn.id,
-        roomId: this.room.id
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
   }
 
   async onMessage(messageString: string, _sender: Party.Connection) {

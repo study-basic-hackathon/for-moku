@@ -1,7 +1,7 @@
 "use client";
 import usePartySocket from "partysocket/react";
 import { PARTYKIT_HOST } from "@/app/env";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Draggable, { DraggableData } from 'react-draggable';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/shadcn/avatar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/atoms/shadcn/tooltip";
@@ -9,6 +9,7 @@ import { User } from "lucide-react";
 import { EditProfileDialog } from "./EditProfileDialog";
 import { WheelEvent } from "react";
 import PartySocket from "partysocket";
+import { useSession } from "next-auth/react";
 
 export function Room({
   roomId,
@@ -19,6 +20,15 @@ export function Room({
 }) {
 
   const [userIcons, setUserIcons] = useState<UserIcon[]>([]);
+
+  const { data: session, status, update } = useSession();
+  useEffect(() => {
+    if (session && session.roomId !== roomId) {
+      update({
+        roomId: roomId,
+      });
+    }
+  }, [status]);
 
   const socket = usePartySocket({
     host: PARTYKIT_HOST,
