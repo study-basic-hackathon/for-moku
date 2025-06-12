@@ -347,7 +347,6 @@ export const drawText = (
   const startY = text.startY
   const endX = text.endX
   const endY = text.endY
-  const backgroundColor = text.backgroundColor
   const textColor = text.textColor
   const textLength = text.text.length
 

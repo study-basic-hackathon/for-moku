@@ -1,5 +1,6 @@
 import { Color } from "react-color"
-import { TextState } from "@/types/event/state"
+import { EncodedVenue, TextState } from "@/types/event/state"
+import { DEFAULT_NUM_PIXEL } from "@/lib/event/venueedit/constants"
 
 /**
  * 復元された会場の情報
@@ -16,32 +17,46 @@ interface DecodedVenue {
  * @param json 会場の情報
  * @returns 復元された会場の情報
  */
-export function decodeVenue(json: string): DecodedVenue {
-  const data = JSON.parse(json)
+export function decodeVenue(json: JSON): DecodedVenue {
+  const data = json as unknown as EncodedVenue
+
+  if (!data) {
+    return {
+      numPixel: DEFAULT_NUM_PIXEL,
+      pixelColorState: Array(DEFAULT_NUM_PIXEL).fill(null).map(() => Array(DEFAULT_NUM_PIXEL).fill(null)),
+      circleColorState: Array(DEFAULT_NUM_PIXEL).fill(null).map(() => Array(DEFAULT_NUM_PIXEL).fill(null)),
+      textState: []
+    }
+  }
+
   const { numPixel, encodedPixelColor, encodedCircleColor, textState } = data
 
   // 空の二次元配列を作成
-  const pixelColorState: (Color | null)[][] = Array(numPixel).fill(null).map(() => Array(numPixel).fill(null))
-  const circleColorState: (Color | null)[][] = Array(numPixel).fill(null).map(() => Array(numPixel).fill(null))
-
-  // ピクセルカラーを復元
-  Object.entries(encodedPixelColor).forEach(([color, positions]) => {
-    (positions as {x: number, y: number}[]).forEach(({x, y}) => {
-      pixelColorState[y][x] = color as Color
+  const numPixelNew = numPixel ?? DEFAULT_NUM_PIXEL
+  const pixelColorState: (Color | null)[][] = Array(numPixelNew).fill(null).map(() => Array(numPixelNew).fill(null))
+  const circleColorState: (Color | null)[][] = Array(numPixelNew).fill(null).map(() => Array(numPixelNew).fill(null))
+  const textStateNew: TextState[] = textState ?? []
+  if(encodedPixelColor) {
+    // ピクセルカラーを復元
+    Object.entries(encodedPixelColor).forEach(([color, positions]) => {
+      (positions as {x: number, y: number}[]).forEach(({x, y}) => {
+        pixelColorState[y][x] = color as Color
+      })
     })
-  })
-
-  // 円のカラーを復元
-  Object.entries(encodedCircleColor).forEach(([color, positions]) => {
-    (positions as {x: number, y: number}[]).forEach(({x, y}) => {
-      circleColorState[y][x] = color as Color
+  }
+  if(encodedCircleColor) {
+    // 円のカラーを復元
+    Object.entries(encodedCircleColor).forEach(([color, positions]) => {
+      (positions as {x: number, y: number}[]).forEach(({x, y}) => {
+        circleColorState[y][x] = color as Color
+      })
     })
-  })
+  }
 
   return {
-    numPixel,
+    numPixel: numPixelNew,
     pixelColorState,
     circleColorState,
-    textState
+    textState: textStateNew
   }
 } 
