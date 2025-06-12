@@ -37,9 +37,6 @@ export default class Connections implements Party.Server {
       await this.room.storage.put("connections", this.connections);
 
       return new Response(JSON.stringify({ userId: roomId }));
-
-      // save to storage
-      // await this.room.storage.put("connections", this.connections);
     }
 
     if (request.method === "DELETE") {
