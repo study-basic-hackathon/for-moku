@@ -19,7 +19,7 @@ export async function POST(req: Request) {
   try {
     const imageBuffer = await req.arrayBuffer();
     if (!imageBuffer) {
-      return Response.json(
+      return NextResponse.json(
         { error: '画像データが必要です' },
         { status: 400 }
       );
