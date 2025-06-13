@@ -19,16 +19,19 @@ export default function UserGroupEditTemplate({ groupId }: Props) {
 
   useEffect(() => {
     (async () => {
-      // 指定されたグループIDでユーザーグループ情報を取得
-      const group = await getUserGroupById(groupId);
-      if (group) {
+      const result = await getUserGroupById(groupId);
+
+      if (result.success && result.data) {
         setInitialValues({
-          name: group.name || '',
-          description: group.description || '',
+          name: result.data.name ?? '',
+          description: result.data.description ?? '',
         });
+      } else {
+        console.error('ユーザーグループの取得に失敗:', result.error);
       }
     })();
   }, [groupId]);
+
 
   if (!initialValues) {
     return <p>読み込み中...</p>;

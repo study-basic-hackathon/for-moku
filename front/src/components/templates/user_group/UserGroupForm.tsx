@@ -1,6 +1,4 @@
-'use client';
-
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Props = {
   initialValues?: {
@@ -22,6 +20,15 @@ export default function UserGroupForm({
   const [description, setDescription] = useState(initialValues?.description ?? '');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+
+  // 初期値が変わったらフォームに反映させる
+  useEffect(() => {
+    if (initialValues) {
+      setName(initialValues.name);
+      setDescription(initialValues.description);
+    }
+  }, [initialValues]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
