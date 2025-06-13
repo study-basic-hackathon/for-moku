@@ -17,8 +17,8 @@ interface DecodedVenue {
  * @param json 会場の情報
  * @returns 復元された会場の情報
  */
-export function decodeVenue(json: JSON): DecodedVenue {
-  const data = json as unknown as EncodedVenue
+export function decodeVenue(json: string | EncodedVenue): DecodedVenue {
+  const data: EncodedVenue = typeof json === "string" ? JSON.parse(json) : json;
 
   if (!data) {
     return {
