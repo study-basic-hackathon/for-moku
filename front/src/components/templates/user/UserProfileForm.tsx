@@ -11,12 +11,14 @@ type Props = {
   };
   onSubmit: (data: { name: string; bio: string; interests: string }) => Promise<void>;
   submitLabel?: string;
+  pending?: boolean;
 };
 
 export default function UserProfileForm({
   initialValues,
   onSubmit,
   submitLabel = '送信',
+  pending = false,
 }: Props) {
   // フォームの各フィールドの状態を管理
   const [name, setName] = useState(initialValues?.name ?? '');
@@ -78,8 +80,12 @@ export default function UserProfileForm({
       {success && <p className="text-green-600">{submitLabel}しました！</p>}
 
       <div className="text-center">
-        <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded">
-          {submitLabel}
+        <button
+          type="submit"
+          disabled={pending}
+          className="bg-blue-600 text-white px-6 py-2 rounded disabled:opacity-50"
+        >
+          {pending ? '送信中...' : submitLabel}
         </button>
       </div>
     </form>
