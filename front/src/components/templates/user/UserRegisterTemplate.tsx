@@ -13,6 +13,7 @@ export default function UserRegisterTemplate() {
       <h1 className="text-xl font-bold mb-4">ユーザー登録</h1>
       <UserProfileForm
         onSubmit={async (data) => {
+          // ユーザー登録を行い、成功したらホームページにリダイレクト
           await registerUser(data);
           router.push('/');
         }}

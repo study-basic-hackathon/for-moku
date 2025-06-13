@@ -18,21 +18,25 @@ export default function UserProfileForm({
   onSubmit,
   submitLabel = '送信',
 }: Props) {
+  // フォームの各フィールドの状態を管理
   const [name, setName] = useState(initialValues?.name ?? '');
   const [bio, setBio] = useState(initialValues?.bio ?? '');
   const [interests, setInterests] = useState(initialValues?.interests ?? '');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
+  // フォーム送信時の処理
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccess(false);
 
     try {
+      // onSubmit関数を呼び出し、成功時に成功メッセージを表示
       await onSubmit({ name, bio, interests });
       setSuccess(true);
     } catch (err: any) {
+      // エラー発生時にエラーメッセージを設定
       setError(err.message || '送信に失敗しました');
     }
   };
