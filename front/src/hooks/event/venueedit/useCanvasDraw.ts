@@ -1,13 +1,12 @@
-import { useState } from 'react'
+
 import { VenueEditTool } from '@/types/tool'
 import { Color } from 'react-color'
 import { useZoom } from '@/hooks/event/venueedit/useZoom'
-import { DEFAULT_NUM_PIXEL } from '@/lib/event/venueedit/constants'
 import { useToolSelect } from '@/hooks/event/venueedit/tool/useToolSelect'
-import { TextState } from '@/types/event/state'
 import { useDrawingState } from '@/hooks/event/venueedit/useDrawingState'
 import { useImageAction } from './image/useImageAction'
 import { EventVenueEditViewModel } from '@/types/event/viewmodel'
+import { useInitialState } from '@/hooks/event/venueedit/usenInitialState'
 
 /**
  * キャンバスの描画を管理するフックのProps
@@ -33,18 +32,21 @@ export const useCanvasDraw = ({
   selectedColorBackGround,
   eventVenueEditViewModel
 }: Props) => {
-  // ピクセルの定義
-  const [numPixel, setNumPixel] = useState(DEFAULT_NUM_PIXEL)
-  const {zoom, handleZoomIn, handleZoomOut} = useZoom()
 
-  const [pixelColorState, setPixelColorState] = useState<(Color | null)[][]>(
-    Array(numPixel).fill(null).map(() => Array(numPixel).fill(null))
-  )
-  const [circleColorState, setCircleColorState] = useState<(Color | null)[][]>(
-    Array(numPixel).fill(null).map(() => Array(numPixel).fill(null))
-  )
-  const [textState, setTextState] = useState<TextState[]>([])
-  const [isDialogModalOpen, setIsDialogModalOpen] = useState(false)
+  const {
+    numPixel,
+    setNumPixel,
+    pixelColorState,
+    setPixelColorState,
+    circleColorState,
+    setCircleColorState,
+    textState,
+    setTextState,
+    isDialogModalOpen,
+    setIsDialogModalOpen
+  } = useInitialState({eventVenueEditViewModel})
+
+  const {zoom, handleZoomIn, handleZoomOut} = useZoom()
 
   const { canvasRef, startDrawing, endDrawing } = useDrawingState({
     numPixel,

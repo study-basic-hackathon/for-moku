@@ -3,6 +3,7 @@ import { Color } from 'react-color'
 import { TextState } from '@/types/event/state'
 import { syncAllStateToCanvas, initializeCanvas } from '@/lib/event/venueedit/canvasControl'
 import { CANVAS_BASE } from '@/lib/event/venueedit/constants'
+import { resizeTwoDimensionalArray } from '@/lib/event/venueedit/arrayControl'
 
 interface Props {
   numPixel: number
@@ -43,15 +44,20 @@ export const useDrawingState = ({ numPixel, pixelColorState, circleColorState, t
     isDrawingRef.current = false
   }, [])
 
-  // 初期化・リサイズ時の処理
+  // リサイズ時の処理
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = initializeCanvas(canvas, numPixel)
     if (!ctx) return
-    setPixelColorState(Array(numPixel).fill(null).map(() => Array(numPixel).fill(null)))
-    setCircleColorState(Array(numPixel).fill(null).map(() => Array(numPixel).fill(null)))
-    setTextState([])
+
+    // 初期化時には後述の初期化処理を実行しない
+    setPixelColorState(prev => resizeTwoDimensionalArray(prev, numPixel))
+    setCircleColorState(prev => resizeTwoDimensionalArray(prev, numPixel))
+    setTextState(prev => prev.filter(text => 
+      text.startX < numPixel && text.startY < numPixel &&
+      text.endX < numPixel && text.endY < numPixel
+    ))
     syncAllState(ctx)
   }, [numPixel])
 
