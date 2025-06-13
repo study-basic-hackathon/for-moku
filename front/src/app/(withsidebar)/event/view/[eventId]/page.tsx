@@ -1,6 +1,6 @@
 import EventViewTemplate from "@/components/templates/event/view/EventViewTemplate"
 import { notFound } from "next/navigation";
-import { getEventViewViewModel } from "@/actions/event/eventview";
+import { getEventViewViewModel } from "@/actions/event/eventview/viewmodel";
 
 export default async function EventViewPage({
   params,

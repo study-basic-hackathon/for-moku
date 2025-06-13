@@ -4,7 +4,6 @@ import CommonViewIconUnitList from "@/components/organisms/common/view/CommonVie
 import ViewIconUnit from "@/components/organisms/common/view/ViewIconUnit";
 import { EventViewViewModel } from "@/types/event/viewmodel";
 import { useEventViewIconUnits } from "@/hooks/event/view/useEventViewIconUnits";
-import { useEventSample } from "@/hooks/event/view/useEventSample";
 
 interface Props {
   event: EventViewViewModel;
@@ -23,8 +22,6 @@ interface Props {
 export default function EventView({ event }: Readonly<Props>) {
   // アイコンユニットリストを作成
   const eventViewIconUnits = useEventViewIconUnits(event);
-  // イベントサンプル生成のコールバックを取得
-  const handleEventSample = useEventSample();
 
   return (
     <div className={eventContainerClass}>
@@ -41,7 +38,7 @@ export default function EventView({ event }: Readonly<Props>) {
           iconName: "Copy",
           description: "イベントコピー",
           iconClassName: "w-6 h-6",
-          onClick: handleEventSample,
+          onClick: async () => {},
         }} />
       </div>
       <CommonViewIconUnitList units={eventViewIconUnits} />
