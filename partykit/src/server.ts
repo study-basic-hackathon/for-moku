@@ -1,6 +1,7 @@
 import type * as Party from "partykit/server";
 
 type User = {
+  id: string,
   name: string,
   email: string,
   image: string,
@@ -29,46 +30,61 @@ export default class Server implements Party.Server {
 
     if (request.method === "POST") {
       const user = (await request.json()) as User;
-      const userIcon = userIcons.find(e => e.user.email === user.email);
+      const userIcon = userIcons.find((icon) => {
+        return icon.user.id === user.id;
+      })
+
       if (userIcon) {
-        return new Response(JSON.stringify(userIcon.user));
+        return new Response(JSON.stringify(userIcon.user.id));
       }
 
       this.room.broadcast(JSON.stringify({ type: "new", user }));
       this.userIcons!.push({ user: user, position: { x: 0, y: 0 }});
-      return new Response(JSON.stringify(user));
+      await this.room.storage.put("userIcons", this.userIcons);
+
+      return new Response(JSON.stringify(user.id));
     }
 
-    return new Response("Not found", { status: 404 });
+    if (request.method === "DELETE") {
+      const userId = await request.json();
+
+      this.room.broadcast(JSON.stringify({ type: "delete", userId }))
+      this.userIcons = userIcons!.filter((icon) => {
+        return icon.user.id !== userId;
+      });
+      await this.room.storage.put("userIcons", this.userIcons);
+
+      return new Response(null, { status: 204 });
+    }
+
+    return new Response("Not Found", { status: 404 });
   }
 
-  async onConnect(conn: Party.Connection, ctx: Party.ConnectionContext) {
+  async onConnect(conn: Party.Connection, _ctx: Party.ConnectionContext) {
     const userIcons = await this.ensureLoadUserIcons();
-
-    const message = {
-      type: "sync",
-      userIcons,
-    }
-    conn.send(JSON.stringify(message));
+    conn.send(JSON.stringify({ type: "sync", userIcons }));
   }
 
-  onMessage(messageString: string, sender: Party.Connection) {
+  async onMessage(messageString: string, _sender: Party.Connection) {
     const message = JSON.parse(messageString);
 
     if (message.type === "move") {
       const userIcon = { user: message.user, position: message.position }
-      this.room.broadcast(JSON.stringify({ type: "move", ...userIcon }), [sender.id]);
+      this.room.broadcast(JSON.stringify({ type: "move", ...userIcon }));
       this.userIcons = this.userIcons!.map((icon) =>
-        icon.user.email === message.user.email ? userIcon : icon
+        icon.user.id === message.user.id ? userIcon : icon
       );
     }
+
     if (message.type === "edit") {
-      this.room.broadcast(JSON.stringify({ type: "edit", user: message.user }), [sender.id]);
+      this.room.broadcast(JSON.stringify({ type: "edit", user: message.user }));
       this.userIcons = this.userIcons!.map((icon) => {
         const userIcon = { user: message.user, position: icon.position }
-        return icon.user.email === message.user.email ? userIcon : icon
+        return icon.user.id === message.user.id ? userIcon : icon
       });
     }
+
+    await this.room.storage.put("userIcons", this.userIcons);
   }
 }
 

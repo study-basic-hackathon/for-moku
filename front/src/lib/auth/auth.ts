@@ -1,39 +1,98 @@
-import NextAuth from "next-auth"
+import NextAuth, { NextAuthConfig } from "next-auth"
 import "next-auth/jwt"
 
 import Google from "next-auth/providers/google"
+import Credentials from "next-auth/providers/credentials"
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+import { NextResponse } from "next/server"
+
+const GUEST_EMAIL = 'guest@example.com'
+
+export const authConfig = {
   debug: !!process.env.AUTH_DEBUG,
-  theme: { logo: "https://authjs.dev/img/logo-sm.png" }, // ロゴを設定します
   providers: [
     Google,
+    Credentials({
+      name: 'Guest User',
+      async authorize() {
+        const user = { name: 'Guest User', email: GUEST_EMAIL };
+        return user;
+      }
+    })
   ],
-  basePath: "/auth",
+  pages: {
+    signIn: "/auth/signin",
+  },
   session: { strategy: "jwt" },
   callbacks: {
-    authorized({ request, auth }) {
+    async authorized({ request, auth }) {
       const { pathname } = request.nextUrl
+
       if (pathname === "/sandbox") return true
+
+      const isGuest = auth?.user && auth.user.email === GUEST_EMAIL;
+      if (isGuest && !pathname.startsWith('/room')) return false
+
+      if (pathname.startsWith('/auth') && !!auth) {
+        return NextResponse.redirect(new URL('/', request.url));
+      }
 
       return !!auth
     },
-    async session({ session, token }) {
+    jwt({ token, user, trigger, session }) {
+      if (user) token.id = user.id
+
+      if (trigger === "update" && session.roomId) {
+        token.roomId = session.roomId;
+      }
+
+      return token
+    },
+    session({ session, token }) {
       if (token?.accessToken) session.accessToken = token.accessToken
+
+      session.user.id = token.id ?? ""
+      session.roomId = token.roomId;
 
       return session
     },
   },
-})
+  events: {
+    signIn: () => removeUserFromRoom(),
+    signOut: () => removeUserFromRoom(),
+  },
+} satisfies NextAuthConfig
+
+export const { handlers, auth, signIn, signOut } = NextAuth(authConfig)
 
 declare module "next-auth" {
   interface Session {
-    accessToken?: string
+    accessToken?: string,
+    roomId?: string,
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    accessToken?: string
+    accessToken?: string,
+    id?: string,
+    roomId?: string,
+  }
+}
+
+import { PARTYKIT_URL } from "@/app/env";
+
+async function removeUserFromRoom() {
+  const session = await auth();
+
+  if (session?.user && session.roomId) {
+    const { user, roomId } = session;
+    fetch(`${PARTYKIT_URL}/parties/main/${roomId}`, {
+      method: "DELETE",
+      body: JSON.stringify(user.id),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
   }
 }
