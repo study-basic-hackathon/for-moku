@@ -1,7 +1,8 @@
-import { auth } from "@/lib/auth/auth";
+import { auth, GUEST_EMAIL } from "@/lib/auth/auth";
 import { Room } from "./Room";
 import { PARTYKIT_URL } from "@/app/env";
 import { SessionProvider } from "next-auth/react";
+import { selectUserByEmail } from '@/lib/db/user';
 
 export default async function RoomPage({
   params,
@@ -13,10 +14,9 @@ export default async function RoomPage({
   if (roomId === "undefined") return null;
 
   const session = await auth();
-  if (
-    session?.user && session.roomId
-    && session.roomId !== roomId
-  ) {
+  if (!session?.user) return null;
+
+  if (session.roomId && session.roomId !== roomId) {
     const { user, roomId } = session;
     fetch(`${PARTYKIT_URL}/parties/main/${roomId}`, {
       method: "DELETE",
@@ -27,10 +27,21 @@ export default async function RoomPage({
     })
   }
 
+  const user = { ...session.user } as User;
+
+  if (user.email !== GUEST_EMAIL) {
+    const res = await selectUserByEmail(user.email);
+    if (res) {
+      user.name = res.name;
+      user.bio = res.bio ?? "";
+      user.interests = res.interests ?? "";
+    }
+  }
+
   const url = `${PARTYKIT_URL}/parties/main/${roomId}`;
   const req = await fetch(url, {
     method: "POST",
-    body: JSON.stringify(session?.user as User),
+    body: JSON.stringify(user),
     headers: {
       "Content-Type": "application/json",
     },
