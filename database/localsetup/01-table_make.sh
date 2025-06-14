@@ -29,4 +29,4 @@ set PGPASSWORD=formoku
 set PGUSER=formoku
 
 # SQLファイルの実行
-psql -U formoku -d formoku -f /docker-entrypoint-initdb.d/sql/02-sample.sql
+psql -U formoku -d formoku -f /docker-entrypoint-initdb.d/sql/02-init.sql
