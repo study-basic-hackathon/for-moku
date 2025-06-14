@@ -14,9 +14,11 @@ import { useSession } from "next-auth/react";
 export function Room({
   roomId,
   userId,
+  imgUrl,
 }: {
-  roomId: string;
-  userId: string;
+  roomId: string,
+  userId: string,
+  imgUrl?: string | null,
 }) {
 
   const [userIcons, setUserIcons] = useState<UserIcon[]>([]);
@@ -82,8 +84,9 @@ export function Room({
   }
 
   return (
-    <div className="w-full h-full overflow-hidden" onWheel={onScroll}>
-      <div className="w-full h-full flex justify-center items-center" style={{transform: `scale(${scale})`}}>
+    <div className="size-full overflow-hidden select-none" onWheel={onScroll}>
+      <div className="size-full flex justify-center items-center" style={{transform: `scale(${scale})`}}>
+        {imgUrl && <img src={imgUrl} draggable="false"/>}
         {userIcons.map((icon, i) => {
           if (icon.user.id !== userId) {
             return (

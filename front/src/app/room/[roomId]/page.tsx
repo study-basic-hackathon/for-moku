@@ -3,6 +3,8 @@ import { Room } from "./Room";
 import { PARTYKIT_URL } from "@/app/env";
 import { SessionProvider } from "next-auth/react";
 import { selectUserByEmail } from '@/lib/db/user';
+import { selectEventById } from "@/lib/db/event";
+import { notFound } from "next/navigation";
 
 export default async function RoomPage({
   params,
@@ -12,6 +14,18 @@ export default async function RoomPage({
 
   const { roomId } = await params;
   if (roomId === "undefined") return null;
+
+  const event = await selectEventById(Number(roomId));
+  if (!event) notFound();
+
+  const currDateTime = new Date();
+  console.log(event.startDateTime, event.endDateTime);
+  if (currDateTime < event.startDateTime) {
+    console.log("too early");
+  }
+  if (currDateTime > event.endDateTime) {
+    console.log("too late");
+  }
 
   const session = await auth();
   if (!session?.user) return null;
@@ -51,10 +65,10 @@ export default async function RoomPage({
 
   return (
     <SessionProvider>
-      {/*<img src="https://i.ibb.co/1J4WN36v/room-sampleimage.png" draggable="false"/>*/}
       <Room
         roomId={roomId}
         userId={userId}
+        imgUrl={event?.imageUrl}
       />
     </SessionProvider>
   )
