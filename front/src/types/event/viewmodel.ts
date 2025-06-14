@@ -27,3 +27,21 @@ export type EventVenueEditViewModel = {
   eventName: string;
   imageJson?: JSON;
 };
+
+/**
+ * イベント編集画面用のビューモデル
+ * 
+ * template内でデータを扱う際に使います（基本的にはStringのレコードを持つだけにとどめましょう）
+ */
+export type EventEditViewModel = {
+  eventId: number;
+  eventName: string;
+  userGroupId: number;
+  userGroupName: string;
+  description: string;
+  eventDate: string;
+  eventStartTime: string;
+  eventEndTime: string;
+  eventUrl?: string;
+  venueUrl?: string;
+};
