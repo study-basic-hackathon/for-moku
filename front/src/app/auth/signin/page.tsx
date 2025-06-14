@@ -1,6 +1,12 @@
 import { signIn } from "@/lib/auth/auth"
 import { Button } from "@/components/atoms/shadcn/button"
- 
+
+
+function isRoomPath(callbackUrl: string) {
+  const path = new URL(callbackUrl).pathname;
+  return path.match("^/room/[0-9]*$");
+}
+
 export default async function SignInPage(props: {
   searchParams: { callbackUrl: string | undefined }
 }) {
@@ -30,7 +36,7 @@ export default async function SignInPage(props: {
             <span>Sign in with Google</span>
           </Button>
         </form>
-        {callbackUrl && callbackUrl.includes("/room") && (
+        {callbackUrl && isRoomPath(callbackUrl) && (
           <>
             <div className="flex gap-2 items-center my-4">
               <div className="flex-1 bg-neutral-300 h-[1px]" />
