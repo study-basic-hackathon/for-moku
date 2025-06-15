@@ -1,6 +1,6 @@
 import { auth } from '@/lib/auth/auth';
 import { selectUserByEmail } from '@/lib/db/user';
-import UserGroupTemplate from '@/components/templates/user_group/UserGroupRegisterTemplate';
+import UserGroupRegisterTemplate from '@/components/templates/user_group/UserGroupRegisterTemplate';
 import RegisterShortcutTemplate from '@/components/templates/common/RegisterShortcutTemplate';
 
 export default async function UserGroupPage() {
@@ -22,5 +22,5 @@ export default async function UserGroupPage() {
     );
   }
 
-  return <UserGroupTemplate />;
+  return <UserGroupRegisterTemplate />;
 }
