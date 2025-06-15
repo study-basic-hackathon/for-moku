@@ -2,7 +2,7 @@
 'use client';
 
 import { getMyProfile, updateMyProfile } from '@/actions/user/editUser';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import UserProfileForm from './UserProfileForm';
 
@@ -13,6 +13,7 @@ export default function UserEditTemplate() {
     bio: string;
     interests: string;
   } | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     (async () => {
@@ -38,10 +39,14 @@ export default function UserEditTemplate() {
       <UserProfileForm
         initialValues={initialValues}
         onSubmit={async (data) => {
-          // プロフィールを更新
-          await updateMyProfile(data);
+          startTransition(() => {
+            updateMyProfile(data).then(() => {
+              router.push('/');
+            });
+          });
         }}
         submitLabel="更新"
+        pending={isPending}
       />
     </div>
   );

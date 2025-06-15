@@ -1,9 +1,9 @@
 import { auth } from '@/lib/auth/auth';
 import { selectUserByEmail } from '@/lib/db/user';
-import UserGroupTemplate from '@/components/templates/user_group/UserGroupRegisterTemplate';
+import UserEditTemplate from '@/components/templates/user/UserEditTemplate';
 import RegisterShortcutTemplate from '@/components/templates/common/RegisterShortcutTemplate';
 
-export default async function UserGroupPage() {
+export default async function Page() {
   const session = await auth();
 
   if (!session?.user?.email) {
@@ -15,12 +15,12 @@ export default async function UserGroupPage() {
   if (!user) {
     return (
       <RegisterShortcutTemplate
-        title="ユーザー登録が必要です"
+        title="ユーザー情報が未登録です"
         linkHref="/user/register"
         linkLabel="ユーザー登録へ進む"
       />
     );
   }
 
-  return <UserGroupTemplate />;
+  return <UserEditTemplate />;
 }
