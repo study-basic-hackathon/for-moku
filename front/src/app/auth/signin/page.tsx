@@ -8,7 +8,7 @@ function isRoomPath(callbackUrl: string) {
 }
 
 export default async function SignInPage(props: {
-  searchParams: { callbackUrl: string | undefined }
+  searchParams: Promise<{ callbackUrl: string | undefined }>
 }) {
 
   const { searchParams } = await props;
