@@ -1,4 +1,4 @@
-import { getVenueEditViewmodel } from "@/actions/event/venueedit/getVenueEditViewmodel";
+import { getVenueEditViewmodel } from "@/actions/event/venueedit/viewmodel";
 import VenueEditorTemplate from "@/components/templates/event/venueedit/VenueEditorTemplate"
 import { notFound } from "next/navigation";
 

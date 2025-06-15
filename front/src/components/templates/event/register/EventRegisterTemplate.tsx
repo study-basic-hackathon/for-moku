@@ -2,7 +2,7 @@
 
 import CommonRegisterTemplate from '@/components/templates/common/CommonRegisterTemplate';
 import { EVENT_REGISTER_FORM_FIELDS } from '@/lib/event/register/constants';
-import { registerEvent } from '@/actions/event/registerEvent';
+import { registerEvent } from '@/actions/event/register/viewmodel';
 import { useState } from 'react';
 import type { EventRegisterFormField, EventRegisterForm } from '@/types/event/form';
 import { FormState } from '@/types/common/form';

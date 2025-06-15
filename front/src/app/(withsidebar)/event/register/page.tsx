@@ -1,4 +1,4 @@
-import { getMyAuthedUserGroups } from '@/actions/event/getUserGroup';
+import { getMyAuthedUserGroups } from '@/actions/event/register/getUserGroup';
 import EventRegisterTemplate from '@/components/templates/event/register/EventRegisterTemplate';
 import RegisterShortcutTemplate from '@/components/templates/common/RegisterShortcutTemplate';
 
