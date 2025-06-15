@@ -13,6 +13,13 @@ services:
       - postgres_volume_formoku:/var/lib/postgresql/data
     networks:
       - app-network
+  partykit:
+    build:
+      context: ./partykit
+      dockerfile: Dockerfile
+    container_name: 'partykit-local'
+    ports:
+      - '1999:1999'
   gyazo:
     build:
       context: ./localgyazo
