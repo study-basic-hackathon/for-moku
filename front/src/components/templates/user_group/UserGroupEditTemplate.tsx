@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { getUserGroupById, updateUserGroup } from '@/actions/user_group/editUserGroup';
 import UserGroupForm from './UserGroupForm';
@@ -15,6 +15,7 @@ export default function UserGroupEditTemplate({ groupId }: Props) {
     name: string;
     description: string;
   } | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     (async () => {
@@ -39,10 +40,13 @@ export default function UserGroupEditTemplate({ groupId }: Props) {
       <UserGroupForm
         initialValues={initialValues}
         onSubmit={async (data) => {
-          await updateUserGroup(groupId, data);
+          startTransition(() => {
+          updateUserGroup(groupId, data);
           router.push('/');
+          });
         }}
         submitLabel="更新"
+        pending={isPending}
       />
     </div>
   );

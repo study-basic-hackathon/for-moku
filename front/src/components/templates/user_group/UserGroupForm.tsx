@@ -9,19 +9,32 @@ type Props = {
   };
   onSubmit: (data: { name: string; description: string }) => Promise<void>;
   submitLabel?: string;
+  pending?: boolean;
 };
 
 export default function UserGroupForm({
   initialValues,
   onSubmit,
   submitLabel = '送信',
+  pending = false,
 }: Props) {
   const [name, setName] = useState(initialValues?.name ?? '');
   const [description, setDescription] = useState(initialValues?.description ?? '');
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit({ name, description });
+    setError(null);
+    setSuccess(false);
+
+    try {
+      await onSubmit({ name, description });
+      setSuccess(true);
+    } catch (err: any) {
+      // エラー発生時にエラーメッセージを設定
+      setError(err.message || '送信に失敗しました');
+    }
   };
 
   return (
@@ -47,9 +60,16 @@ export default function UserGroupForm({
         />
       </div>
 
+      {error && <p className="text-red-600">{error}</p>}
+      {success && <p className="text-green-600">{submitLabel}しました！</p>}
+
       <div className="text-center">
-        <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded">
-          {submitLabel}
+        <button
+          type="submit"
+          disabled={pending}
+          className="bg-blue-600 text-white px-6 py-2 rounded disabled:opacity-50"
+        >
+          {pending ? '送信中...' : submitLabel}
         </button>
       </div>
     </form>

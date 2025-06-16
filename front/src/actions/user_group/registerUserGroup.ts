@@ -9,14 +9,13 @@ import { auth } from '@/lib/auth/auth';
 /**
  * ユーザーグループを登録する関数
  *
- * @param _prevState 前回の状態（成功/失敗のフラグとエラーメッセージ）
  * @param formData フォームデータ（グループ名と説明）
  * @returns 処理結果（成功/失敗のフラグとエラーメッセージ）
  */
-export async function registerMyUserGroup(
-  _prevState: { success: boolean; error: string },
-  formData: FormData
-): Promise<{ success: boolean; error: string }> {
+export async function registerMyUserGroup(formData: {
+  name: string;
+  description: string;
+}): Promise<{ success: boolean; error: string }> {
   // 現在のユーザーセッションを取得
   const session = await auth();
   if (!session?.user?.email) {
@@ -24,8 +23,8 @@ export async function registerMyUserGroup(
   }
 
   // フォームデータからグループ名と説明を取得
-  const name = formData.get('name')?.toString();
-  const description = formData.get('description')?.toString() ?? '';
+  const name = formData.name;
+  const description = formData.description;
 
   // グループ名がない場合はエラーを返す
   if (!name) {
