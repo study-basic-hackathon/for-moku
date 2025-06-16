@@ -1,14 +1,13 @@
 import type { Config } from "drizzle-kit";
-import { config } from "dotenv";
 
-config({ path: ".env" });
+let url = "postgresql://postgres:postgres@localhost:5432/postgres";
 
-const url =
-  process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : process.env.LOCAL_DATABASE_URL;
-if (!url)
-  throw new Error(
-    `Connection string to ${process.env.NODE_ENV ? 'Neon' : 'local'} Postgres not found.`
+if (process.env.NODE_ENV === 'production') {
+  url = process.env.DATABASE_URL!;
+  if (!url) throw new Error(
+    "DATABASE_URL environment variable not found."
   );
+}
 
 export default {
   dialect: "postgresql",

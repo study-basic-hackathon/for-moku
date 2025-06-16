@@ -3,10 +3,10 @@ import { drizzle } from 'drizzle-orm/neon-serverless';
 import { WebSocket } from 'ws';
 import * as schema from "@/lib/db/schema";
 
-const connectionString =
-  process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : process.env.LOCAL_DATABASE_URL;
+let connectionString = "postgresql://postgres:postgres@localhost:5432/postgres";
 
 if (process.env.NODE_ENV === 'production') {
+  connectionString = process.env.DATABASE_URL!;
   neonConfig.webSocketConstructor = WebSocket;
   neonConfig.poolQueryViaFetch = true;
 } else {
