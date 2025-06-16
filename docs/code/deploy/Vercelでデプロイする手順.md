@@ -18,6 +18,16 @@
 - 認証情報 > 承認済みのリダイレクト URIにAPIのコールバックを受け取るURLを追加\
 (例: https://for-moku-deploy-test.vercel.app/api/auth/callback/google)
 
+## DB編（Neon）
+
+まずは[Vercel Marketplace](https://vercel.com/01063s-projects/~/integrations/marketplace)からNeonのプロジェクトを作成する
+
+frontのディレクトリで以下のコマンドを実行する
+```
+npx drizzle-kit generate
+npx drizzle-kit migrate
+```
+この時、NODE_ENVはproductionでないとならないので注意。
 
 ## Vercel編
 
@@ -29,8 +39,9 @@ next.config.tsに`eslint: { ignoreDuringBuilds: true }`を追加することで�
 - AUTH_GOOGLE_ID -> Google OAuthのクライアント ID
 - AUTH_GOOGLE_SECRET -> Google OAuthのクライントシークレット
 - NEXT_PUBLIC_PARTYKIT_HOST -> デプロイしたPartyKitサーバーのURL
+- DATABASE_URL -> その名の通り
 
 環境変数は編集しても、再デプロイするまで反映されないので注意！
 
-## データベース編
+## Gyazo編
 まだです

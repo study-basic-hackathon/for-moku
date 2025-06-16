@@ -1,15 +1,18 @@
-"use server";
 import type { Config } from "drizzle-kit";
-import { config } from "dotenv";
 
-config({ path: ".env" });
+let url = "postgresql://postgres:postgres@localhost:5432/postgres";
+
+if (process.env.NODE_ENV === 'production') {
+  url = process.env.DATABASE_URL!;
+  if (!url) throw new Error(
+    "DATABASE_URL environment variable not found."
+  );
+}
 
 export default {
   dialect: "postgresql",
   schema: "./src/lib/db/schema",        // ← schema.ts ではなく schema ディレクトリを指定
-  dbCredentials: {
-    url: process.env.DATABASE_URL!,
-  },
+  dbCredentials: { url },
   verbose: true,
   strict: true,
 } satisfies Config;
