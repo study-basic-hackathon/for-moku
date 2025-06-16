@@ -27,7 +27,7 @@ frontのディレクトリで以下のコマンドを実行する
 npx drizzle-kit generate
 npx drizzle-kit migrate
 ```
-以上です
+この時、NODE_ENVはproductionでないとならないので注意。
 
 ## Vercel編
 
