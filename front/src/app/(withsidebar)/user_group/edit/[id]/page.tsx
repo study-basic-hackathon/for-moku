@@ -3,7 +3,7 @@
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import UserGroupEditTemplate from "@/components/templates/user_group/UserGroupEditTemplate";
-import { ensureAdminOrRedirect } from '@/actions/user_group/editUserGroup';
+import { ensureAdmin } from '@/actions/user_group/editUserGroup';
 
 export default function UserGroupEditPage() {
   const { id } = useParams(); // ルートパラメータからidを取得
@@ -12,7 +12,7 @@ export default function UserGroupEditPage() {
   useEffect(() => {
     const checkAdmin = async () => {
       if (typeof id === 'string') {
-        const { success, error } = await ensureAdminOrRedirect(id);
+        const { success, error } = await ensureAdmin(id);
         if (!success) {
           console.error(error);
           router.push('/');

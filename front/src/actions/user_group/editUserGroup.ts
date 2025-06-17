@@ -13,7 +13,7 @@ import { UserGroup } from '@/types/user_group/schema';
  * @returns 管理者であれば success: true、および userId を返す
  *          管理者でない、ログインしていない、IDが不正な場合などは success: false とエラーメッセージを返す
  */
-async function ensureAdmin(groupId: string): Promise<{ success: boolean; error: string; userId?: number }> {
+export async function ensureAdmin(groupId: string): Promise<{ success: boolean; error: string; userId?: number }> {
   const session = await auth();
 
   if (!session?.user?.email) {
@@ -36,17 +36,6 @@ async function ensureAdmin(groupId: string): Promise<{ success: boolean; error: 
   }
 
   return { success: true, error: '', userId: user.id };
-}
-
-/**
- * 指定されたグループIDに対して、現在ログイン中のユーザーが管理者かどうかを確認する関数
- *
- * @param groupId 対象のユーザーグループID（文字列）
- * @returns 管理者であれば success: true、および userId を返す
- *          管理者でない、ログインしていない、IDが不正な場合などは success: false とエラーメッセージを返す
- */
-export async function ensureAdminOrRedirect(groupId: string): Promise<{ success: boolean; error: string }> {
-  return ensureAdmin(groupId);
 }
 
 /**
