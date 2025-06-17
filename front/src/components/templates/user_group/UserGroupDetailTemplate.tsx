@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getUserGroupById, ensureAdminOrRedirect } from '@/actions/user_group/editUserGroup';
+import { getUserGroupById, ensureAdmin } from '@/actions/user_group/editUserGroup';
 
 type Props = {
   groupId: string;
@@ -26,7 +26,7 @@ export default function UserGroupDetailTemplate({ groupId }: Props) {
       } else {
         console.error('ユーザーグループの取得に失敗:', result.error);
       }
-      const authResult = await ensureAdminOrRedirect(groupId);
+      const authResult = await ensureAdmin(groupId);
       setIsAdmin(authResult.success);
     })();
   }, [groupId]);
