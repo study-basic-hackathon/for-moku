@@ -7,12 +7,13 @@ import { isUserAdminOfGroup } from '@/lib/db/user_group_assignment';
 import { UserGroup } from '@/types/user_group/schema';
 
 /**
- * ユーザーが指定されたグループの管理者であるかを確認する関数
+ * 指定されたグループIDに対して、現在ログイン中のユーザーが管理者かどうかを確認する関数
  *
- * @param groupId チェックするグループID
- * @returns 処理結果（成功/失敗のフラグとエラーメッセージ）
+ * @param groupId 対象のユーザーグループID（文字列）
+ * @returns 管理者であれば success: true、および userId を返す
+ *          管理者でない、ログインしていない、IDが不正な場合などは success: false とエラーメッセージを返す
  */
-export async function ensureAdminOrRedirect(groupId: string): Promise<{ success: boolean; error: string }> {
+async function ensureAdmin(groupId: string): Promise<{ success: boolean; error: string; userId?: number }> {
   const session = await auth();
 
   if (!session?.user?.email) {
@@ -29,22 +30,23 @@ export async function ensureAdminOrRedirect(groupId: string): Promise<{ success:
     return { success: false, error: '無効なグループIDです' };
   }
 
-  try {
-    const group = await selectUserGroupById(groupIdNumber);
-    if (!group) {
-      return { success: false, error: 'グループが見つかりません' };
-    }
-  } catch (error) {
-    console.error('グループの取得中にエラーが発生しました:', error);
-    return { success: false, error: 'グループの取得中にエラーが発生しました' };
-  }
-
   const isAdmin = await isUserAdminOfGroup(user.id, groupIdNumber);
   if (!isAdmin) {
     return { success: false, error: '管理者権限がありません' };
   }
 
-  return { success: true, error: '' };
+  return { success: true, error: '', userId: user.id };
+}
+
+/**
+ * 指定されたグループIDに対して、現在ログイン中のユーザーが管理者かどうかを確認する関数
+ *
+ * @param groupId 対象のユーザーグループID（文字列）
+ * @returns 管理者であれば success: true、および userId を返す
+ *          管理者でない、ログインしていない、IDが不正な場合などは success: false とエラーメッセージを返す
+ */
+export async function ensureAdminOrRedirect(groupId: string): Promise<{ success: boolean; error: string }> {
+  return ensureAdmin(groupId);
 }
 
 /**
@@ -71,6 +73,7 @@ export async function getUserGroupById(groupId: string): Promise<{
   return { success: true, data: group };
 }
 
+
 /**
  * 指定されたグループIDでユーザーグループ情報を更新する関数
  *
@@ -82,9 +85,9 @@ export async function updateUserGroup(
   groupId: string,
   data: { name: string; description: string }
 ): Promise<{ success: boolean; error: string }> {
-  const session = await auth();
-  if (!session?.user?.email) {
-    return { success: false, error: 'ログインしていません' };
+  const authResult = await ensureAdmin(groupId);
+  if (!authResult.success) {
+    return { success: false, error: authResult.error };
   }
 
   try {
