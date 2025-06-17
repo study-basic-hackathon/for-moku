@@ -14,6 +14,9 @@ export default async function RoomPage({
 
   const { roomId } = await params;
   if (roomId === "undefined") return null;
+  
+  const eventId = Number(roomId);
+  if (isNaN(eventId)) notFound();
 
   const event = await selectEventById(Number(roomId));
   if (!event) notFound();

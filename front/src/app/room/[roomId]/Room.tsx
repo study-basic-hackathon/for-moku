@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/shadcn/a
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/atoms/shadcn/tooltip";
 import { User } from "lucide-react";
 import { EditProfileDialog } from "./EditProfileDialog";
-import { WheelEvent } from "react";
+import { WheelEvent, MouseEvent } from "react";
 import PartySocket from "partysocket";
 import { useSession } from "next-auth/react";
 
@@ -75,7 +75,7 @@ export function Room({
 
   const [scale, setScale] = useState(1);
 
-  function onScroll(event: WheelEvent<HTMLDivElement>) {
+  function onScroll(event: WheelEvent) {
     const delta = event.deltaY * -0.001;
     const newScale = scale + delta;
     if (newScale >= 0.5 && newScale <= 2) {
@@ -83,8 +83,48 @@ export function Room({
     }
   }
 
+  const nodeRef = useRef<HTMLDivElement | null>(null);
+  const [isDragging, setDragging] = useState(false);
+
+
+  function handleMove() {
+    if (!isDragging) return;
+    console.log("move")
+  }
+
+  function handleMouseDown(event: MouseEvent) {
+    console.log("mouse down")
+    setDragging(true);
+  }
+
+  function handleMouseUp() {
+    console.log("mouse up")
+    setDragging(false);
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousemove', handleMove);
+    document.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging]);
+
   return (
+    <>
     <div className="size-full overflow-hidden select-none" onWheel={onScroll}>
+      <Draggable
+        nodeRef={nodeRef as React.RefObject<HTMLElement>}
+        onDrag={(e) => {
+          console.log("test");
+          return false;
+        }}
+        position={{ x:0, y:0 }}
+      >
+        <div ref={nodeRef} className="absolute size-50 z-1">test</div>
+      </Draggable>
       <div className="size-full flex justify-center items-center" style={{transform: `scale(${scale})`}}>
         {imgUrl && <img src={imgUrl} draggable="false"/>}
         {userIcons.map((icon, i) => {
@@ -92,7 +132,7 @@ export function Room({
             return (
               <div
                 key={i}
-                className="absolute select-none size-12"
+                className="absolute size-12"
                 style={{transform: `translate(${icon.position.x}px, ${icon.position.y}px)`}}
               >
                 <Tooltip>
@@ -134,6 +174,7 @@ export function Room({
         })}
       </div>
     </div>
+    </>
   )
 };
 
@@ -165,12 +206,13 @@ function DraggableIcon({
         bounds="parent"
         defaultPosition={icon.position}
         scale={scale}
+        onMouseDown={(e) => e.stopPropagation()}
         onStop={(e, data) => handleDragStop(data)}
         nodeRef={nodeRef as React.RefObject<HTMLElement>}
       >
         <div
           ref={nodeRef}
-          className="absolute select-none size-12 z-1"
+          className="absolute select-none size-12 z-21"
         >
           <Tooltip>
             <TooltipTrigger>
