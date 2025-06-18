@@ -28,6 +28,10 @@ export default class Server implements Party.Server {
   async onRequest(request: Party.Request) {
     const userIcons = await this.ensureLoadUserIcons();
 
+    if (request.method === "GET") {
+      return new Response(JSON.stringify(userIcons));
+    }
+
     if (request.method === "POST") {
       const user = (await request.json()) as User;
       const userIcon = userIcons.find((icon) => {

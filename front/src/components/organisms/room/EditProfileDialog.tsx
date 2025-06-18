@@ -21,6 +21,7 @@ import {
 } from "@/components/atoms/shadcn/dialog";
 import { Dispatch, SetStateAction } from "react";
 import PartySocket from "partysocket";
+import { User } from "@/types/room/shared";
 
 const formSchema = z.object({
 	name: z.string(),
