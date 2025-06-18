@@ -1,0 +1,235 @@
+/* @theme custom */
+
+@import 'default';
+
+:root {
+  --color-background: #ffffff;
+  --color-foreground: #333333;
+  --color-highlight: #333300;
+  --color-dimmed: #666666;
+  --color-accent: #1863eb;
+  --font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+}
+
+.flex { display: flex; }
+.justify-center { justify-content: center; }
+.items-center { align-items: center; }
+.gap-8 { gap: 2rem; }
+
+/* テーブルセル内での中央配置 */
+td.justify-center {
+  text-align: center;
+}
+
+td.items-center {
+  vertical-align: middle;
+}
+
+section {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 0;
+  padding: 2em;
+}
+
+h1 {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  text-align: left;
+  font-size: 1.5em;
+  margin: 0;
+}
+
+h2 {
+  color: var(--color-dimmed);
+  font-size: 1.3em;
+  margin-bottom: 0.8em;
+}
+
+ul {
+  margin-left: 0.4em;
+}
+
+img {
+  max-width: 100%;
+  max-height: 80%;
+  object-fit: contain;
+  vertical-align: top;
+  margin: 0;
+  padding: 0;
+}
+
+table {
+  table-layout: auto;
+  width: 100%;
+  display: table;
+  font-size: 24px;
+}
+
+/* テーブル列の横幅比率 */
+table td:nth-child(1) { width: 20%; }
+table td:nth-child(2) { width: 15%; }
+table td:nth-child(3) { width: 65%; }
+
+table td, table th {
+  padding: 0.5em 1em;
+}
+
+section li {
+  font-size: 1em;
+  margin-bottom: 0.5em;
+  padding-left: 1em;
+  position: relative;
+}
+
+section li li {
+  font-size: 0.8em;
+}
+
+/* リードスライド用のスタイル */
+section.lead {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+section.lead h1 {
+  font-size: 3em;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  background: linear-gradient(45deg, #1863eb, #3b82f6);
+  background-clip: text;
+  margin-bottom: 0.3em;
+}
+
+section.lead h2 {
+  font-size: 1.5em;
+  color: var(--color-dimmed);
+}
+
+/* 汎用スタイル */
+section.agenda {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  padding: 2em;
+}
+
+section.agenda h1 {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  text-align: left;
+  font-size: 1.5em;
+  margin: 3rem 0;
+}
+
+section.agenda ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+section.agenda li {
+  font-size: 1.2em;
+  margin-bottom: 0.5em;
+  padding-left: 5em;
+  position: relative;
+}
+
+section.agenda li::before {
+  content: "•";
+  color: var(--color-highlight);
+  position: absolute;
+  padding-left: 3em;
+  left: 0;
+  font-size: 1em;
+}
+
+section.agenda li.highlight {
+  color: var(--color-accent);
+  font-weight: bold;
+}
+
+/* 3カラムレイアウト用のスタイル */
+section.two-columns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2em;
+  padding: 2em;
+}
+
+section.two-columns h1 {
+  grid-column: 1 / -1;
+  text-align: left;
+  font-size: 2em;
+  margin: 0;
+}
+
+section.two-columns ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+section.two-columns li {
+  font-size: 1.2em;
+  margin-bottom: 0.5em;
+  padding-left: 1.2em;
+  position: relative;
+}
+
+section.two-columns li::before {
+  content: "•";
+  color: var(--color-highlight);
+  position: absolute;
+  left: 0;
+  font-size: 1em;
+}
+
+/* 3カラムレイアウト用のスタイル */
+section.three-columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2em;
+  padding: 2em;
+}
+
+section.three-columns h1 {
+  grid-column: 1 / -1;
+  text-align: left;
+  font-size: 2em;
+  margin: 0;
+}
+
+section.three-columns ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+section.three-columns li {
+  font-size: 1.2em;
+  margin-bottom: 0.5em;
+  padding-left: 1.2em;
+  position: relative;
+}
+
+section.three-columns li::before {
+  content: "•";
+  color: var(--color-highlight);
+  position: absolute;
+  left: 0;
+  font-size: 1em;
+}
+
+section table {
+  width: 100%;
+}
+
+section table td, section table th {
+  padding: 0.5em 1em;
+}
