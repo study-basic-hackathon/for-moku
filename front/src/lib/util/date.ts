@@ -81,3 +81,28 @@ export function formatDateTimeHHMM(date: Date): string {
 
   return `${hours}:${minutes}`;
 }
+
+/**
+ * 日付から日時を生成する関数
+ * @param date 日付
+ * @param isStart 開始日時かどうか
+ * @returns 日時（開始日時なら00:00:00、終了日時なら23:59:59）
+ * 
+ * @example
+ * ```tsx
+ *  const date = new Date("2021-01-01")
+ *  const startDateTime = createDateTime(date, true)
+ *  console.log(startDateTime) // 2021-01-01T00:00:00.000Z
+ *  const endDateTime = createDateTime(date, false)
+ *  console.log(endDateTime) // 2021-01-01T23:59:59.999Z
+ * ```
+ */
+export function createDateTime(date: Date, isStart: boolean): Date {
+  const newDate = new Date(date)
+  if (isStart) {
+    newDate.setHours(0, 0, 0, 0)
+  } else {
+    newDate.setHours(23, 59, 59, 999)
+  }
+  return newDate
+}
