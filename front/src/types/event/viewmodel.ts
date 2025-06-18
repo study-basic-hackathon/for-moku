@@ -1,3 +1,5 @@
+import { Role } from "@/types/event/role";
+
 /**
  * イベント詳細画面用のビューモデル
  * 
@@ -45,3 +47,28 @@ export type EventEditViewModel = {
   eventUrl?: string;
   venueUrl?: string;
 };
+
+/**
+ * イベント一覧画面用のビューモデル
+ * 
+ * template内でデータを扱う際に使います
+ */
+export type EventListItem = {
+  id: string;
+  name: string;
+  description: string;
+  startDateTime: string;
+  endDateTime: string;
+  userGroupName: string;
+  role: Role;
+}
+
+
+/**
+ * イベント一覧画面用のビューモデル（実質データベースから取得したイベントの一覧のみ）
+ * 
+ * template内でデータを扱う際に使います
+ */
+export type EventListViewModel = {
+  events: EventListItem[];
+}
