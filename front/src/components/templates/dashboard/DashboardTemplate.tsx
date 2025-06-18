@@ -35,13 +35,10 @@ type Props = {
 }
 
 export default function DashboardTemplate({ dashboardViewModel }: Props) {
-  const { eventCalenderUnits } = dashboardViewModel;
+  const { eventCalendarUnits } = dashboardViewModel;
 
-  // デバッグ用
-  console.log(eventCalenderUnits);
-
-  // eventCalenderUnitsから適切な形式に変換する必要がある
-  const events: EventInput[] = eventCalenderUnits.map((unit) => ({
+  // eventCalendarUnitsから適切な形式に変換する必要がある
+  const events: EventInput[] = eventCalendarUnits.map((unit) => ({
     title: unit.title,
     start: parseDateTimeYYYYMMDDHHMMJPN(unit.startDateTime),
     end: parseDateTimeYYYYMMDDHHMMJPN(unit.endDateTime),

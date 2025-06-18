@@ -22,7 +22,7 @@ export const getDashboardViewModel = async (): Promise<DashboardViewModel> => {
   const events = await selectEventsByUserEmail(session.user.email);
   
   // イベントの一覧をダッシュボード用のビューモデルに変換
-  const eventCalenderUnits = events.map((event) => ({
+  const eventCalendarUnits = events.map((event) => ({
     title: event.name,
     startDateTime: formatDateTimeYYYYMMDDHHMMJPN(event.startDateTime),
     endDateTime: formatDateTimeYYYYMMDDHHMMJPN(event.endDateTime),
@@ -32,5 +32,5 @@ export const getDashboardViewModel = async (): Promise<DashboardViewModel> => {
     unitUrl: `/event/view/${event.id}`,
   }));
 
-  return { eventCalenderUnits };
+  return { eventCalendarUnits };
 };

@@ -10,7 +10,7 @@
  * @param borderColor イベントの枠線色
  * @param unitUrl イベントのURL (当日URLの場合もあれば　、イベント詳細URLの場合もある) 
  */
-export type EventCalenderUnit = {
+export type EventCalendarUnit = {
   title: string;
   startDateTime: string;
   endDateTime: string;
@@ -26,5 +26,5 @@ export type EventCalenderUnit = {
  * template内でデータを扱う際に使います（基本的にはStringのレコードを持つだけにとどめましょう）
  */
 export type DashboardViewModel = {
-  eventCalenderUnits: EventCalenderUnit[];
+  eventCalendarUnits: EventCalendarUnit[];
 };
