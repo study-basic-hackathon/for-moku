@@ -26,7 +26,7 @@ const items = [
   },
   {
     title: "イベント一覧",
-    url: "/#",
+    url: "/event/list",
     icon: Calendar,
   },
   {
