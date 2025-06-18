@@ -1,13 +1,10 @@
 import { db } from "@/lib/db";
 import { events } from "@/lib/db/schema/event";
-import { eq, ExtractTablesWithRelations} from "drizzle-orm";
-import { NodePgQueryResultHKT } from "drizzle-orm/node-postgres";
-import { PgTransaction } from "drizzle-orm/pg-core";
-import * as schema from '@/lib/db/schema';
-import { Event, NewEvent, UpdateEvent } from "@/types/event/schema";
-
-// ToDO後で消す
-export type Transaction = PgTransaction<NodePgQueryResultHKT, typeof schema, ExtractTablesWithRelations<typeof schema>>;
+import { asc, eq} from "drizzle-orm";
+import { Event, EventWithoutVenueJson, NewEvent, UpdateEvent } from "@/types/event/schema";
+import { users } from "@/lib/db/schema/user";
+import { userGroupAssignments } from "@/lib/db/schema/user_group_assignment";
+import { Transaction } from "@/types/db";
 
 /**
  * イベントを登録する
@@ -51,4 +48,35 @@ export async function updateEvent(tx: Transaction, id: number, event: UpdateEven
     .where(eq(events.id, id))
     .returning();
   return updatedEvent;
+}
+
+/**
+ * ユーザーのメールアドレスに基づいてイベント一覧を取得する
+ * 
+ * 見つからなければ、空のリストを返却する
+ * @param email ユーザーのメールアドレス
+ * @returns イベント一覧(会場情報は除外している)
+ */
+export async function selectEventsByUserEmail(email: string): Promise<EventWithoutVenueJson[]> {
+  const result = await db
+    .select({
+      id: events.id,
+      name: events.name,
+      description: events.description,
+      userGroupId: events.userGroupId,
+      startDateTime: events.startDateTime,
+      endDateTime: events.endDateTime,
+      eventUrl: events.eventUrl,
+      createdAt: events.createdAt,
+      updatedAt: events.updatedAt,
+      imageUrl: events.imageUrl,
+      venueUrl: events.venueUrl,
+    })
+    .from(events)
+    .innerJoin(userGroupAssignments, eq(events.userGroupId, userGroupAssignments.userGroupId))
+    .innerJoin(users, eq(userGroupAssignments.userId, users.id))
+    .where(eq(users.email, email))
+    .orderBy(asc(events.startDateTime));
+  
+  return result;
 }
