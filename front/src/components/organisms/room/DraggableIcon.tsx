@@ -42,18 +42,19 @@ export default function DraggableIcon({
       <Draggable
         defaultPosition={icon.position}
         scale={scale}
+        handle=".handle"
         onMouseDown={(e) => e.stopPropagation()}
         onStop={(e, data) => handleDragStop(data)}
         nodeRef={nodeRef as React.RefObject<HTMLElement>}
       >
         <div
           ref={nodeRef}
-          className="absolute select-none size-12 z-21"
+          className="absolute select-none size-12 z-1"
         >
           <Tooltip>
             <TooltipTrigger>
               <Avatar
-                className="size-12 outline-3 outline-blue-300"
+                className="size-12 outline-3 outline-blue-300 hover:cursor-move handle"
                 onDoubleClick={(e) => {
                   setOpen(true)
                 }}  
@@ -66,9 +67,7 @@ export default function DraggableIcon({
                 <AvatarFallback><User /></AvatarFallback>
               </Avatar>
             </TooltipTrigger>
-            <TooltipContent
-              className="rounded-sm"
-            >
+            <TooltipContent className="rounded-sm">
               <p>{`${icon.user.name}`}</p>
               <p>{`client id: ${icon.user.id}`}</p>
               <p>{`${icon.user.bio ?? ""}`}</p>

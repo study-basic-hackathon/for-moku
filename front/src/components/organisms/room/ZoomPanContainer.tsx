@@ -30,6 +30,8 @@ export default function ZoomPanContainer({
   }
 
   function onMouseDown(e: ReactMouseEvent) {
+    if (e.button !== 0) return;
+
     lastX.current = e.pageX;
     lastY.current = e.pageY;
     setDragging(true);

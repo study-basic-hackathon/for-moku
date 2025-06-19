@@ -1,4 +1,4 @@
-type User = {
+export type User = {
   id: string,
   name: string,
   email: string,
@@ -7,7 +7,7 @@ type User = {
   interests?: string,
 }
 
-type UserIcon = {
+export type UserIcon = {
   user: User,
   position: { x: number, y: number },
 }
