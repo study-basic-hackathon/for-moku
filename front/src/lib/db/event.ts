@@ -1,10 +1,11 @@
 import { db } from "@/lib/db";
 import { events } from "@/lib/db/schema/event";
 import { asc, eq} from "drizzle-orm";
-import { Event, EventWithoutVenueJson, NewEvent, UpdateEvent } from "@/types/event/schema";
+import { Event, EventSearchResult, EventWithoutVenueJson, NewEvent, UpdateEvent } from "@/types/event/schema";
 import { users } from "@/lib/db/schema/user";
 import { userGroupAssignments } from "@/lib/db/schema/user_group_assignment";
 import { Transaction } from "@/types/db";
+import { userGroups } from "@/lib/db/schema/user_group";
 
 /**
  * イベントを登録する
@@ -75,6 +76,45 @@ export async function selectEventsByUserEmail(email: string): Promise<EventWitho
     .from(events)
     .innerJoin(userGroupAssignments, eq(events.userGroupId, userGroupAssignments.userGroupId))
     .innerJoin(users, eq(userGroupAssignments.userId, users.id))
+    .where(eq(users.email, email))
+    .orderBy(asc(events.startDateTime));
+  
+  return result;
+}
+/**
+ * 
+ * ユーザーのメールアドレスに基づいてイベント一覧を取得する
+ * 
+ * 見つからなければ、空のリストを返却する
+ * 取得する項目は以下に限定している。
+ * 
+ * - id: イベントID
+ * - name: イベント名
+ * - description: イベント説明
+ * - startDateTime: イベント開始日時
+ * - endDateTime: イベント終了日時
+ * - userGroupName: ユーザーグループ名
+ * - role: ユーザーの権限
+ * 
+ * @param email ユーザーのメールアドレス
+ * 
+ * @returns イベント一覧(会場情報は除外している)
+ */
+export async function selectEventsSearchResultByUserEmail(email: string): Promise<EventSearchResult[]> {
+  const result = await db
+    .select({
+      id: events.id,
+      name: events.name,
+      description: events.description,
+      startDateTime: events.startDateTime,
+      endDateTime: events.endDateTime,
+      userGroupName: userGroups.name,
+      role: userGroupAssignments.role,
+    })
+    .from(events)
+    .innerJoin(userGroupAssignments, eq(events.userGroupId, userGroupAssignments.userGroupId))
+    .innerJoin(users, eq(userGroupAssignments.userId, users.id))
+    .innerJoin(userGroups, eq(userGroupAssignments.userGroupId, userGroups.id))
     .where(eq(users.email, email))
     .orderBy(asc(events.startDateTime));
   
