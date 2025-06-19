@@ -46,18 +46,6 @@ export default async function RoomPage({
 
   const session = await auth();
   if (!session?.user) return null;
-
-  if (session.roomId && session.roomId !== roomId) {
-    const { user, roomId } = session;
-    fetch(`${PARTYKIT_URL}/parties/main/${roomId}`, {
-      method: "DELETE",
-      body: JSON.stringify(user.id),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-  }
-
   const user = { ...session.user } as User;
 
   if (user.email !== GUEST_EMAIL) {
@@ -80,22 +68,17 @@ export default async function RoomPage({
     }
   }
 
-  const url = `${PARTYKIT_URL}/parties/main/${roomId}`;
-  const req = await fetch(url, {
-    method: "POST",
-    body: JSON.stringify(user),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  if (session.roomId && session.roomId !== roomId) {
+    removeUserFromRoom(user.id, session.roomId);
+  }
 
-  const userId = await req.json();
+  addUserToRoom(user, roomId);
 
   return (
     <SessionProvider>
       <ActiveEventTemplate
         roomId={roomId}
-        userId={userId}
+        userId={user.id}
         imgUrl={event?.imageUrl}
       />
     </SessionProvider>
@@ -145,4 +128,24 @@ async function insertNewUser(email: string) {
     bio: "",
     interests: "",
   }).returning())[0].id;
+}
+
+function removeUserFromRoom(userId: string, roomId: string) {
+  fetch(`${PARTYKIT_URL}/parties/main/${roomId}`, {
+    method: "DELETE",
+    body: JSON.stringify(userId),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+}
+
+function addUserToRoom(user: User, roomId: string) {
+  fetch(`${PARTYKIT_URL}/parties/main/${roomId}`, {
+    method: "POST",
+    body: JSON.stringify(user),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 }
