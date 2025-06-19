@@ -64,7 +64,11 @@ export function EditProfileDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="rounded-sm p-0" aria-describedby={undefined}>
+      <DialogContent
+        className="rounded-sm p-0"
+        aria-describedby={undefined}
+        onMouseDown={(e) => e.stopPropagation()}
+      >
         <DialogTitle className="text-base px-6 py-5 border-b">
           ユーザー情報編集
         </DialogTitle>
