@@ -29,7 +29,7 @@ export default async function RoomPage({
 
   const currDateTime = new Date();
   if (currDateTime < event.startDateTime) {
-    return eventNotStarted();
+    return eventNotStarted(roomId);
   }
   if (currDateTime > event.endDateTime) {
     const url = `${PARTYKIT_URL}/parties/main/${roomId}`;
@@ -85,11 +85,11 @@ export default async function RoomPage({
   )
 }
 
-function eventNotStarted() {
+function eventNotStarted(eventId: string) {
   return (
     <div className="size-full flex flex-col justify-center items-center gap-2">
       <h1 className="text-2xl">このイベントはまだ開始されていない</h1>
-      <Link href="/" prefetch={false}>
+      <Link href={`/event/view/${eventId}`} prefetch={false}>
         <p className="text-base hover:underline">イベント詳細ページへ</p>
       </Link>
     </div>  
