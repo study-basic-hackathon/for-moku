@@ -44,4 +44,11 @@ next.config.tsに`eslint: { ignoreDuringBuilds: true }`を追加することで�
 環境変数は編集しても、再デプロイするまで反映されないので注意！
 
 ## Gyazo編
-まだです
+Gyazoにログインして、[このページ](https://gyazo.com/oauth/applications)からNew Applicationを作る\
+そうすると、アクセストークンが発行できるようになる。
+
+Vercelのプロジェクトに以下の環境変数を追加する
+- GYAZO_ACCESS_TOKEN -> その名の通り
+- GYAZO_UPLOAD_END_POINT -> https://upload.gyazo.com/api/upload
+- GYAZO_DELETE_END_POINT -> https://api.gyazo.com/api/image
+- NEXT_PUBLIC_BASE_URL -> デプロイされたサイトのURL
