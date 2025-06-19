@@ -12,13 +12,22 @@ export default function ActiveEventTemplate({
   roomId,
   userId,
   imgUrl,
+  endTime,
 }: {
   roomId: string,
   userId: string,
   imgUrl?: string | null,
+  endTime: Date,
 }) {
 
-  const [userIcons, setUserIcons] = useState<UserIcon[]>([]);
+  useEffect(() => {
+    const currTime = new Date();
+    console.log(endTime.getTime() - currTime.getTime());
+    setTimeout(
+      () => window.location.reload(),
+      endTime.getTime() - currTime.getTime()
+    );
+  }, [])
 
   const { data: session, status, update } = useSession();
   useEffect(() => {
@@ -28,6 +37,8 @@ export default function ActiveEventTemplate({
       });
     }
   }, [status]);
+
+  const [userIcons, setUserIcons] = useState<UserIcon[]>([]);
 
   const socket = usePartySocket({
     host: PARTYKIT_HOST,
@@ -66,6 +77,10 @@ export default function ActiveEventTemplate({
         setUserIcons(prev =>
           prev.filter(icon => icon.user.id !== message.userId)
         )
+      }
+
+      if (message.type === "close") {
+        window.location.reload();
       }
     },
   });

@@ -39,7 +39,7 @@ export default async function RoomPage({
     return (
       <ClosedEventTemplate
         userIcons={userIcons}
-        imgUrl={event?.imageUrl}
+        imgUrl={event.imageUrl}
       />
     )
   }
@@ -79,7 +79,8 @@ export default async function RoomPage({
       <ActiveEventTemplate
         roomId={roomId}
         userId={user.id}
-        imgUrl={event?.imageUrl}
+        imgUrl={event.imageUrl}
+        endTime={event.endDateTime}
       />
     </SessionProvider>
   )
