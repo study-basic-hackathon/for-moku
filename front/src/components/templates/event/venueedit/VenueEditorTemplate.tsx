@@ -15,6 +15,11 @@ interface Props {
   eventVenueEditViewModel: EventVenueEditViewModel
 }
 
+/**
+ * 会場編集画面のテンプレート
+ * 
+ * @param eventVenueEditViewModel 会場編集ビューモデル
+ */
 export default function VenueEditorTemplate({ eventVenueEditViewModel }: Readonly<Props>) {
   const [selectedTool, setSelectedTool] = useState<VenueEditTool>('ピクセル塗りつぶし')
   const { 
@@ -75,7 +80,7 @@ export default function VenueEditorTemplate({ eventVenueEditViewModel }: Readonl
               handleMouseLeave={handleMouseLeave}
             />
           </div>
-          <div className="col-span-1 md:col-span-1 lg:col-span-2 xl:col-span-2">
+          <div className="col-span-1 md:col-span-1 lg:col-span-2 xl:col-span-4">
             <VenueToolSubMenu 
               selectedTool={selectedTool}
               onToolSelect={setSelectedTool}
@@ -94,7 +99,7 @@ export default function VenueEditorTemplate({ eventVenueEditViewModel }: Readonl
               onAdd={handleTextAdd}
             />
           </div>
-          <div className="col-span-1 md:col-span-1 lg:col-span-8 xl:col-span-4">
+          <div className="col-span-1 md:col-span-1 lg:col-span-8 xl:col-span-2">
             <VenueToolSelectionMenu 
               onToolSelect={setSelectedTool}
             />

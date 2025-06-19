@@ -20,7 +20,7 @@ export default function ColorPalette({
   onDeleteColor
 }: Readonly<ColorPaletteProps>) {
   return (
-    <div className="grid grid-cols-12 lg:grid-cols-4 gap-2">
+    <div className="grid grid-cols-12 lg:grid-cols-4 xl:grid-cols-8 gap-2">
       {colors.map((color) => (
         <ColorButton
           key={color.toString()}
