@@ -29,7 +29,7 @@ const formSchema = z.object({
 	interests: z.string(),
 })
 
-export function EditProfileDialog({
+export default function EditProfileDialog({
   socket,
   open,
   setOpen,
@@ -59,6 +59,7 @@ export function EditProfileDialog({
       bio: values.bio,
       interests: values.interests,
     }
+    console.log(values.bio);
     socket.send(JSON.stringify({ type: "edit", user: newUser }));
   }
 

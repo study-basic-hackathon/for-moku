@@ -6,14 +6,10 @@ import {
   AvatarFallback,
   AvatarImage
 } from "@/components/atoms/shadcn/avatar";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger
-} from "@/components/atoms/shadcn/tooltip";
 import { User } from "lucide-react";
 import { UserIcon } from "@/types/room/shared";
-import { EditProfileDialog } from "./EditProfileDialog";
+import EditProfileDialog from "./EditProfileDialog";
+import UserIconTooltip from "./UserIconTooltip";
 
 export default function DraggableIcon({
   socket,
@@ -51,29 +47,21 @@ export default function DraggableIcon({
           ref={nodeRef}
           className="absolute select-none size-12 z-1"
         >
-          <Tooltip>
-            <TooltipTrigger>
-              <Avatar
-                className="size-12 outline-3 outline-blue-300 hover:cursor-move handle"
-                onDoubleClick={(e) => {
-                  setOpen(true)
-                }}  
-              >
-                <AvatarImage
-                  src={`${icon.user.image}`}
-                  draggable="false"
-                  referrerPolicy="no-referrer"
-                />
-                <AvatarFallback><User /></AvatarFallback>
-              </Avatar>
-            </TooltipTrigger>
-            <TooltipContent className="rounded-sm">
-              <p>{`${icon.user.name}`}</p>
-              <p>{`client id: ${icon.user.id}`}</p>
-              <p>{`${icon.user.bio ?? ""}`}</p>
-              <p>{`${icon.user.interests ?? ""}`}</p>
-            </TooltipContent>
-          </Tooltip>
+          <UserIconTooltip user={icon.user}>
+            <Avatar
+              className="size-12 outline-3 outline-blue-300 hover:cursor-move handle"
+              onDoubleClick={(e) => {
+                setOpen(true)
+              }}  
+            >
+              <AvatarImage
+                src={`${icon.user.image}`}
+                draggable="false"
+                referrerPolicy="no-referrer"
+              />
+              <AvatarFallback><User /></AvatarFallback>
+            </Avatar>
+          </UserIconTooltip>
         </div>
       </Draggable>
       <EditProfileDialog
