@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { events } from "@/lib/db/schema/event";
-import { asc, eq} from "drizzle-orm";
-import { Event, EventSearchResult, EventWithoutVenueJson, NewEvent, UpdateEvent } from "@/types/event/schema";
+import { asc, eq, and } from "drizzle-orm";
+import { Event, EventSearchResult, EventWithoutVenueJson, NewEvent, UpdateEvent, EventEditViewInfo } from "@/types/event/schema";
 import { users } from "@/lib/db/schema/user";
 import { userGroupAssignments } from "@/lib/db/schema/user_group_assignment";
 import { Transaction } from "@/types/db";
@@ -119,4 +119,33 @@ export async function selectEventsSearchResultByUserEmail(email: string): Promis
     .orderBy(asc(events.startDateTime));
   
   return result;
+}
+
+
+/**
+ * ユーザーのメールアドレスとイベントIDに基づいて、イベント編集画面で使うビュー情報を取得する
+ * 
+ * @param email ユーザーのメールアドレス
+ * @param eventId イベントID
+ * @returns イベント詳細画面で使うビュー情報
+ */
+export async function selectEventEditViewInfoByUserEmailAndEventId(email: string, eventId: number): Promise<EventEditViewInfo | null> {
+  const result = await db
+    .select({
+      id: events.id,
+      name: events.name,
+      description: events.description,
+      startDateTime: events.startDateTime,
+      endDateTime: events.endDateTime,
+      eventUrl: events.eventUrl,
+      venueUrl: events.venueUrl,
+    })
+    .from(events)
+    .innerJoin(userGroupAssignments, eq(events.userGroupId, userGroupAssignments.userGroupId))
+    .innerJoin(users, eq(userGroupAssignments.userId, users.id))
+    .innerJoin(userGroups,eq(userGroupAssignments.userGroupId, userGroups.id) )
+    .where(and(eq(events.id, eventId), eq(users.email, email), eq(userGroupAssignments.role, 'admin')))
+    .limit(1);
+  
+  return result[0] ?? null;
 }

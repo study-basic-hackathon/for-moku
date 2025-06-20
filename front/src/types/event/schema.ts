@@ -29,3 +29,18 @@ export type EventSearchResult = {
   userGroupName: string;
   role: Role;
 };
+
+/**
+ * イベント編集画面で使うビューをとってくる時のスキーマの型
+ * 
+ * イベント編集画面で使うビューを取得する際に使用
+ */
+export type EventEditViewInfo = {
+  id: number;
+  name: string;
+  description: string | null;
+  startDateTime: Date;
+  endDateTime: Date;
+  eventUrl: string | null;
+  venueUrl: string | null;
+};

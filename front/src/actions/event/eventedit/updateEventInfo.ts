@@ -19,9 +19,6 @@ const BaseSchema = z.object({
   description: z.string({
     required_error: 'イベントの説明は必須です。',
   }),
-  userGroupId: z.coerce.number({
-    required_error: 'ユーザーグループは必須です。',
-  }),
   eventDate: z.string()
     .regex(DATE_PATTERN, 'イベント日はYYYY-MM-DD形式で入力してください。')
     .refine((date) => !isNaN(Date.parse(date)), '有効な日付を入力してください。'),
@@ -88,7 +85,6 @@ export async function updateEventInfo(
   const baseValidation = BaseSchema.safeParse({
     name: formData.get('name'),
     description: formData.get('description'),
-    userGroupId: formData.get('userGroupId'),
     eventDate: formData.get('eventDate'),
     eventStartTime: formData.get('eventStartTime'),
     eventEndTime: formData.get('eventEndTime'),

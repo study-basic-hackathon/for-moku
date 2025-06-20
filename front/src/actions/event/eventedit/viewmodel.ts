@@ -1,6 +1,6 @@
-import { selectEventById } from "@/lib/db/event";
-import { selectUserGroupById } from "@/lib/db/user_group";
-import { formatDateTimeHHMM, formatDateTimeYYYYMMDD_HYPHEN, formatDateTimeYYYYMMDD_SLASH } from "@/lib/util/date";
+import { auth } from "@/lib/auth/auth";
+import { selectEventEditViewInfoByUserEmailAndEventId } from "@/lib/db/event";
+import { formatDateTimeHHMM, formatDateTimeYYYYMMDD_HYPHEN } from "@/lib/util/date";
 import { EventEditViewModel } from "@/types/event/viewmodel";
 
 /**
@@ -10,31 +10,30 @@ import { EventEditViewModel } from "@/types/event/viewmodel";
  * @returns イベント詳細のビューモデル
  */
 export async function getEventEditViewModel(eventId: number): Promise<EventEditViewModel | null> {
-  // イベントを取得
-  const event = await selectEventById(eventId);
-  
-  // イベントが見つからない場合はエラーを返す
-  if (!event) {
+
+  // いつもの認証処理、メールアドレスがなければnullを返す
+  const session = await auth();
+  if (!session?.user?.email) {
     return null;
   }
 
-  // ユーザーグループを取得
-  const userGroup = await selectUserGroupById(event.userGroupId);
-  if (!userGroup) {
+  // イベント編集画面で使うビュー情報を取得
+  const eventEditViewInfo = await selectEventEditViewInfoByUserEmailAndEventId(session.user.email, eventId);
+
+  // ビュー情報がない場合はnullを返す
+  if (!eventEditViewInfo) {
     return null;
   }
 
-  // イベント詳細ビューモデルを作成
+  // イベント編集ビューモデルを作成
   return {
-    eventId: event.id,
-    eventName: event.name,
-    description: event.description ?? '',
-    userGroupId: event.userGroupId, 
-    userGroupName: userGroup.name,
-    eventDate: formatDateTimeYYYYMMDD_HYPHEN(event.startDateTime),
-    eventStartTime: formatDateTimeHHMM(event.startDateTime),
-    eventEndTime: formatDateTimeHHMM(event.endDateTime),
-    eventUrl: event.eventUrl ?? undefined,
-    venueUrl: event.venueUrl ?? undefined,
+    eventId: eventEditViewInfo.id,
+    eventName: eventEditViewInfo.name,
+    description: eventEditViewInfo?.description ?? '',
+    eventDate: formatDateTimeYYYYMMDD_HYPHEN(eventEditViewInfo.startDateTime),
+    eventStartTime: formatDateTimeHHMM(eventEditViewInfo.startDateTime),
+    eventEndTime: formatDateTimeHHMM(eventEditViewInfo.endDateTime),
+    eventUrl: eventEditViewInfo?.eventUrl ?? undefined,
+    venueUrl: eventEditViewInfo?.venueUrl ?? undefined,
   };
 }

@@ -84,13 +84,6 @@ export const EVENT_EDIT_FORM_FIELDS: EventRegisterFormField[] = [
     placeholder: 'イベントの概要を入力してください'
   },
   {
-    name: 'userGroupId',
-    label: 'イベントグループ',
-    required: true,
-    elementType: 'select',
-    placeholder: 'イベントグループを選択してください'
-  },
-  {
     name: 'eventDate',
     label: 'イベント日',
     required: true,
