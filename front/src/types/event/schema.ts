@@ -31,9 +31,9 @@ export type EventSearchResult = {
 };
 
 /**
- * イベント詳細表示用の型
+ * イベント編集画面で使うビューをとってくる時のスキーマの型
  * 
- * イベントの詳細情報を表示する際に使用
+ * イベント編集画面で使うビューを取得する際に使用
  */
 export type EventEditViewInfo = {
   id: number;
