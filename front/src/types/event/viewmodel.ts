@@ -38,8 +38,6 @@ export type EventVenueEditViewModel = {
 export type EventEditViewModel = {
   eventId: number;
   eventName: string;
-  userGroupId: number;
-  userGroupName: string;
   description: string;
   eventDate: string;
   eventStartTime: string;

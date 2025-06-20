@@ -27,22 +27,13 @@ export default function EventEditTemplate({ eventViewModel }: Readonly<EventEdit
           eventEndTime, 
           eventUrl, 
           venueUrl, 
-          userGroupName, 
-          userGroupId } = eventViewModel;
+       } = eventViewModel;
   
   // オプションの値を代入する
   const [formFields] = useState<EventRegisterFormField[]>(
     EVENT_EDIT_FORM_FIELDS.map((field) => {
       switch (field?.name) {
-        case 'userGroupId':
-          return {
-            ...field,
-            defaultValue: userGroupId.toString(),
-            options: [{
-              value: userGroupId.toString(),
-              label: userGroupName  
-            }]
-          }
+        
         case 'name':
           return {
             ...field,

@@ -29,3 +29,18 @@ export type EventSearchResult = {
   userGroupName: string;
   role: Role;
 };
+
+/**
+ * イベント詳細表示用の型
+ * 
+ * イベントの詳細情報を表示する際に使用
+ */
+export type EventEditViewInfo = {
+  id: number;
+  name: string;
+  description: string | null;
+  startDateTime: Date;
+  endDateTime: Date;
+  eventUrl: string | null;
+  venueUrl: string | null;
+};
