@@ -1,8 +1,8 @@
-import { VENUE_EDIT_TOOLS, VenueEditTool } from '@/types/tool'
+import { EDITOR_TOOL_PAIR_TREE, EditorToolPairKey } from '@/types/tool'
 import MonoClomeButton from '@/components/atoms/button/MonoClomeButton'
 
 interface ToolButtonGroupProps {
-  onToolSelect: (tool: VenueEditTool) => void
+  setDrawToolFromToolKey: (toolKey: keyof typeof EDITOR_TOOL_PAIR_TREE) => void
 }
 
 /**
@@ -11,18 +11,18 @@ interface ToolButtonGroupProps {
  * @param onToolSelect ツール選択時のコールバック
  * @returns ツールボタングループ
  */
-export default function ToolButtonGroup({ onToolSelect }: Readonly<ToolButtonGroupProps>) {
+export default function ToolButtonGroup({ setDrawToolFromToolKey }: Readonly<ToolButtonGroupProps>) {
   return (
-    <div className="grid grid-cols-6 xl:grid-cols-1 gap-2">
-      {VENUE_EDIT_TOOLS.map((tool) => (
+    <div className="grid grid-cols-3 xl:grid-cols-1 gap-2 justify-center">
+      {Object.entries(EDITOR_TOOL_PAIR_TREE).map(([toolKey, toolPair]) => (
         <MonoClomeButton 
-          key={tool}
-          onClick={() => onToolSelect(tool)}
+          key={toolKey}  
+          onClick={() => setDrawToolFromToolKey(toolKey as EditorToolPairKey)}
           className="col-span-1 grid grid-cols-1 gap-2"
           >
-          {tool}
+          {toolPair.name}
         </MonoClomeButton>
       ))}
     </div>
   )
-}
+} 

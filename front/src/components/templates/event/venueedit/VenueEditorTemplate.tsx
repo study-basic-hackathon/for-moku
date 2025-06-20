@@ -1,15 +1,14 @@
 'use client'
 
-import { useState } from 'react'
 import VenueActionHeader from "./VenueActionHeader"
 import VenueEditor from "./VenueEditor"
 import VenueToolSubMenu from "./VenueToolSubMenu"
 import VenueToolSelectionMenu from "./VenueToolSelectionMenu"
 import { useColorPalette } from '@/hooks/event/venueedit/submenu/useColorPalette'
 import { useCanvasDraw } from '@/hooks/event/venueedit/useCanvasDraw'
-import { VenueEditTool } from '@/types/tool'
 import TextDialog from '@/components/organisms/event/venueedit/text/TextDialog'
 import { EventVenueEditViewModel } from '@/types/event/viewmodel'
+import { useSubToolSelection } from '@/hooks/event/venueedit/useSubToolSelection'
 
 interface Props {
   eventVenueEditViewModel: EventVenueEditViewModel
@@ -21,7 +20,13 @@ interface Props {
  * @param eventVenueEditViewModel 会場編集ビューモデル
  */
 export default function VenueEditorTemplate({ eventVenueEditViewModel }: Readonly<Props>) {
-  const [selectedTool, setSelectedTool] = useState<VenueEditTool>('ピクセル塗りつぶし')
+  const {
+    selectedTool,
+    toggleToGenerateTool,
+    toggleToEraseTool,
+    setDrawToolFromToolKey
+  } = useSubToolSelection()
+
   const { 
     selectedColor,
     setSelectedColor, 
@@ -83,7 +88,8 @@ export default function VenueEditorTemplate({ eventVenueEditViewModel }: Readonl
           <div className="col-span-1 md:col-span-1 lg:col-span-2 xl:col-span-4">
             <VenueToolSubMenu 
               selectedTool={selectedTool}
-              onToolSelect={setSelectedTool}
+              toggleToGenerateTool={toggleToGenerateTool}
+              toggleToEraseTool={toggleToEraseTool}
               selectedColor={selectedColor}
               setSelectedColor={setSelectedColor}
               selectedColorBackGround={selectedColorBackGround}
@@ -101,7 +107,7 @@ export default function VenueEditorTemplate({ eventVenueEditViewModel }: Readonl
           </div>
           <div className="col-span-1 md:col-span-1 lg:col-span-8 xl:col-span-2">
             <VenueToolSelectionMenu 
-              onToolSelect={setSelectedTool}
+              setDrawToolFromToolKey={setDrawToolFromToolKey}
             />
           </div>
         </div>

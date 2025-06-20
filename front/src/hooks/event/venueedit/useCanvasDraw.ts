@@ -6,7 +6,7 @@ import { useToolSelect } from '@/hooks/event/venueedit/tool/useToolSelect'
 import { useDrawingState } from '@/hooks/event/venueedit/useDrawingState'
 import { useImageAction } from './image/useImageAction'
 import { EventVenueEditViewModel } from '@/types/event/viewmodel'
-import { useInitialState } from '@/hooks/event/venueedit/usenInitialState'
+import { useInitialState } from '@/hooks/event/venueedit/useInitialState'
 
 /**
  * キャンバスの描画を管理するフックのProps
