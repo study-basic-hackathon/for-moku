@@ -96,8 +96,9 @@ paginate: true
   </tr>
   <tr>
     <td>ブライアン</td>
-    <td class="justify-center items-center"><img src="./profile/01063/icon.jpg" /></td>
-    <td>自己紹介と一言をあわせて80文字程度</td>
+    <td class="justify-center items-center"><img src="./profile/01063/icon.png" /></td>
+    <td>1月に大学を卒業し、4月に来日したオーストラリア人<br/>
+        スキル磨きと就活の息抜きのために参加しました。</td>
   </tr>
   <tr>
     <td>山下</td>
