@@ -13,27 +13,29 @@ import { EDITOR_TOOL_PAIR_TREE, VenueEditTool } from "@/types/tool"
 export const useSubToolSelection = () => {
   const [selectedTool, setSelectedTool] = useState<VenueEditTool>("ピクセル塗りつぶし")
 
+  // 生成系ツールに切り替える
+  // セッターには現在のツールを参照して変換する関数を受け取ることができる
+  // 依存配列に現在の配列をいれて書くよりも、効率が上がるためこちらの方が望ましいとのこと
   const toggleToGenerateTool = useCallback(() => {
-    // EDITOR_TOOL_PAIR_TREEから該当するペアを探す
-    const toolPair = Object.values(EDITOR_TOOL_PAIR_TREE).find(
-      pair => pair.generate === selectedTool || pair.erase === selectedTool
-    );
-    
-    if (toolPair) {
-      setSelectedTool(toolPair.generate);
-    }
-  }, [selectedTool])
+    setSelectedTool(prevTool => {
+      const toolPair = Object.values(EDITOR_TOOL_PAIR_TREE).find(
+        pair => pair.generate === prevTool || pair.erase === prevTool
+      );
+      
+      return toolPair ? toolPair.generate : prevTool;
+    });
+  }, [])
 
+  // 消去系ツールに切り替える関数
   const toggleToEraseTool = useCallback(() => {
-    // EDITOR_TOOL_PAIR_TREEから該当するペアを探す
-    const toolPair = Object.values(EDITOR_TOOL_PAIR_TREE).find(
-      pair => pair.generate === selectedTool || pair.erase === selectedTool
-    );
-    
-    if (toolPair) {
-      setSelectedTool(toolPair.erase);
-    }
-  }, [selectedTool])
+    setSelectedTool(prevTool => {
+      const toolPair = Object.values(EDITOR_TOOL_PAIR_TREE).find(
+        pair => pair.generate === prevTool || pair.erase === prevTool
+      );
+      
+      return toolPair ? toolPair.erase : prevTool;
+    });
+  }, [])
 
   const setDrawToolFromToolKey = useCallback((toolKey: keyof typeof EDITOR_TOOL_PAIR_TREE) => {
     const toolPair = EDITOR_TOOL_PAIR_TREE[toolKey]
