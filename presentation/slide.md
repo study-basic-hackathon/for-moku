@@ -215,7 +215,7 @@ paginate: true
 <div class="flex justify-center items-center gap-8">
   <img src="./images/concept/room.png" />
   <img src="./images/symbol/right-allow.svg" />
-  <img src="./images/no_image_square.jpg" />
+  <img src="./images/capture/room.png" />
 </div>
 
 - リアルタイム通信を行うためには、WebSocketを利用できる中継サーバが必要
