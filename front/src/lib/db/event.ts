@@ -165,7 +165,7 @@ export async function checkUserIsAdminOfEventByUserEmailAndEventId(email: string
     .from(events)
     .innerJoin(userGroupAssignments, eq(events.userGroupId, userGroupAssignments.userGroupId))
     .innerJoin(users, eq(userGroupAssignments.userId, users.id))
-    .innerJoin(userGroups,eq(userGroupAssignments.userGroupId, userGroups.id) )
+    .innerJoin(userGroups, eq(userGroupAssignments.userGroupId, userGroups.id))
     .where(and(eq(events.id, eventId), eq(users.email, email), eq(userGroupAssignments.role, 'admin')))
     .limit(1);
   
