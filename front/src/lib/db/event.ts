@@ -149,3 +149,25 @@ export async function selectEventEditViewInfoByUserEmailAndEventId(email: string
   
   return result[0] ?? null;
 }
+
+/**
+ * ユーザーのメールアドレスとイベントIDに基づいて、ユーザーがイベントの管理者であるかを確認する
+ * 
+ * @param email ユーザーのメールアドレス
+ * @param eventId イベントID
+ * @returns ユーザーがイベントの管理者であるかどうか
+ */
+export async function checkUserIsAdminOfEventByUserEmailAndEventId(email: string, eventId: number): Promise<boolean> {
+  const result = await db
+    .select({
+      role: userGroupAssignments.role,
+    })
+    .from(events)
+    .innerJoin(userGroupAssignments, eq(events.userGroupId, userGroupAssignments.userGroupId))
+    .innerJoin(users, eq(userGroupAssignments.userId, users.id))
+    .innerJoin(userGroups,eq(userGroupAssignments.userGroupId, userGroups.id) )
+    .where(and(eq(events.id, eventId), eq(users.email, email), eq(userGroupAssignments.role, 'admin')))
+    .limit(1);
+  
+  return result.length > 0;
+}

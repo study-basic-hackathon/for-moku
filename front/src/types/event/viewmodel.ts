@@ -17,6 +17,7 @@ export type EventViewViewModel = {
   userGroupName: string;
   userGroupUrl: string;
   imageUrl?: string;
+  isAdmin: boolean;
 };
 
 /**

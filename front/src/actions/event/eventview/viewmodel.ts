@@ -1,7 +1,8 @@
-import { selectEventById } from "@/lib/db/event";
+import { checkUserIsAdminOfEventByUserEmailAndEventId, selectEventById } from "@/lib/db/event";
 import { selectUserGroupById } from "@/lib/db/user_group";
 import { EventViewViewModel } from "@/types/event/viewmodel";
 import { formatDateTimeYYYYMMDDHHMMJPN } from "@/lib/util/date";
+import { auth } from "@/lib/auth/auth";
 
 /**
  * イベントIDからイベント詳細ビューモデルを取得
@@ -13,16 +14,25 @@ export async function getEventViewViewModel(eventId: number): Promise<EventViewV
   // イベントを取得
   const event = await selectEventById(eventId);
   
-  // イベントが見つからない場合はエラーを返す
+  // イベントが見つからない場合はnullを返す
   if (!event) {
     return null;
   }
 
-  // ユーザーグループを取得
+  // ユーザーグループを取得、できなければnullを返す
   const userGroup = await selectUserGroupById(event.userGroupId);
   if (!userGroup) {
     return null;
   }
+
+  // いつもの認証処理、メールアドレスがなければnullを返す
+  const session = await auth();
+  if (!session?.user?.email) {
+    return null;
+  }
+  
+  // ユーザーがイベントの管理者であるかを確認する
+  const isAdmin = await checkUserIsAdminOfEventByUserEmailAndEventId(session.user.email, event.id);
 
   // イベント詳細ビューモデルを作成
   return {
@@ -35,7 +45,8 @@ export async function getEventViewViewModel(eventId: number): Promise<EventViewV
     eventUrl: event.eventUrl ?? undefined,
     venueUrl: event.venueUrl ?? undefined,
     userGroupName: userGroup.name,
-    userGroupUrl: `/user_group/${userGroup.id}`,
-    imageUrl: event.imageUrl ?? undefined
+    userGroupUrl: `/user_group/view/${userGroup.id}`,
+    imageUrl: event.imageUrl ?? undefined,
+    isAdmin: isAdmin,
   };
 }

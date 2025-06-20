@@ -20,13 +20,15 @@ export default function VenueView({ event }: Readonly<Props>) {
   return (
     <div className={eventContainerClass}>
       <div className="flex justify-end items-center w-full gap-x-2">
-      <ViewIconUnit unit={{
-          name: "venueEdit",
-          iconName: "Pencil",
-          description: "編集",
-          href: `/event/venueedit/${event.eventId}`,
-          iconClassName: "w-6 h-6",
-        }} />
+        {event.isAdmin && (
+          <ViewIconUnit unit={{
+            name: "venueEdit",
+            iconName: "Pencil",
+            description: "編集",
+            href: `/event/venueedit/${event.eventId}`,
+            iconClassName: "w-6 h-6",
+          }} />
+        )}
       </div>
       <div className="flex justify-center items-center mx-2 rounded-lg h-full">
         {event.imageUrl ? (
