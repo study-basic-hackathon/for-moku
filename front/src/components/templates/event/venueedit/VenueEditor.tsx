@@ -6,7 +6,6 @@ import { CANVAS_BASE } from '@/lib/event/venueedit/constants'
 interface VenueEditorProps {
   zoom: number
   canvasRef: React.RefObject<HTMLCanvasElement | null>
-  canDraw: () => boolean
   handleMouseDown: (e: React.MouseEvent<HTMLCanvasElement>) => void
   handleMouseMove: (e: React.MouseEvent<HTMLCanvasElement>) => void
   handleMouseUp: () => void
@@ -29,7 +28,6 @@ const canvasStyleFactory = (zoom: number, CANVAS_BASE: number) : React.CSSProper
 export default function VenueEditor({ 
   zoom,
   canvasRef,
-  canDraw,
   handleMouseDown,
   handleMouseMove,
   handleMouseUp,
@@ -54,7 +52,7 @@ export default function VenueEditor({
             style={{
               width: `${CANVAS_BASE}px`,
               height: `${CANVAS_BASE}px`,
-              cursor: canDraw() ? 'crosshair' : 'default'
+              cursor: 'crosshair'
             }}
           />
         </div>

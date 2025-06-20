@@ -52,11 +52,6 @@ export const useToolSelect = ({
   endDrawing,
 }: Props) => {
 
-
-  const canDraw = useCallback(() => {
-    return DRAWABLE_TOOLS.includes(selectedTool as DrawableTool)
-  }, [selectedTool])
-
   const pixelDraw = usePixelDraw({
     canvasRef,
     numPixel,
@@ -153,7 +148,6 @@ export const useToolSelect = ({
   const handleMouseLeave = createHandler('handleMouseLeave')
 
   return {
-    canDraw,
     handleMouseDown,
     handleMouseMove,
     handleMouseUp,
