@@ -6,7 +6,7 @@ type User = {
   email: string,
   image: string,
   bio?: string,
-  interests?: string
+  interests?: string,
 }
 
 type UserIcon = {
@@ -28,19 +28,21 @@ export default class Server implements Party.Server {
   async onRequest(request: Party.Request) {
     const userIcons = await this.ensureLoadUserIcons();
 
+    if (request.method === "GET") {
+      return new Response(JSON.stringify(userIcons));
+    }
+
     if (request.method === "POST") {
       const user = (await request.json()) as User;
       const userIcon = userIcons.find((icon) => {
         return icon.user.id === user.id;
       })
 
-      if (userIcon) {
-        return new Response(JSON.stringify(userIcon.user.id));
+      if (!userIcon) {
+        this.room.broadcast(JSON.stringify({ type: "new", user }));
+        this.userIcons!.push({ user: user, position: { x: 0, y: 0 }});
+        await this.room.storage.put("userIcons", this.userIcons);
       }
-
-      this.room.broadcast(JSON.stringify({ type: "new", user }));
-      this.userIcons!.push({ user: user, position: { x: 0, y: 0 }});
-      await this.room.storage.put("userIcons", this.userIcons);
 
       return new Response(JSON.stringify(user.id));
     }

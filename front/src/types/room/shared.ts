@@ -1,13 +1,13 @@
-type User = {
+export type User = {
   id: string,
   name: string,
   email: string,
-  image?: string,
+  image: string,
   bio?: string,
-  interests?: string
+  interests?: string,
 }
 
-type UserIcon = {
+export type UserIcon = {
   user: User,
   position: { x: number, y: number },
 }

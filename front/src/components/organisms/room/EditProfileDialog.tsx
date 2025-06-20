@@ -21,6 +21,7 @@ import {
 } from "@/components/atoms/shadcn/dialog";
 import { Dispatch, SetStateAction } from "react";
 import PartySocket from "partysocket";
+import { User } from "@/types/room/shared";
 
 const formSchema = z.object({
 	name: z.string(),
@@ -28,7 +29,7 @@ const formSchema = z.object({
 	interests: z.string(),
 })
 
-export function EditProfileDialog({
+export default function EditProfileDialog({
   socket,
   open,
   setOpen,
@@ -58,12 +59,17 @@ export function EditProfileDialog({
       bio: values.bio,
       interests: values.interests,
     }
+    console.log(values.bio);
     socket.send(JSON.stringify({ type: "edit", user: newUser }));
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="rounded-sm p-0" aria-describedby={undefined}>
+      <DialogContent
+        className="rounded-sm p-0"
+        aria-describedby={undefined}
+        onMouseDown={(e) => e.stopPropagation()}
+      >
         <DialogTitle className="text-base px-6 py-5 border-b">
           ユーザー情報編集
         </DialogTitle>

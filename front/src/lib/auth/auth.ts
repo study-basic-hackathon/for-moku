@@ -6,7 +6,7 @@ import Credentials from "next-auth/providers/credentials"
 
 import { NextResponse } from "next/server"
 
-const GUEST_EMAIL = 'guest@example.com'
+export const GUEST_EMAIL = 'guest@example.com'
 
 export const authConfig = {
   debug: !!process.env.AUTH_DEBUG,
