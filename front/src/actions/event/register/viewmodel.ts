@@ -33,8 +33,8 @@ const BaseSchema = z.object({
   venueUrl: z.string().url('会場のURLが有効な形式ではありません。').optional().or(z.literal(''))
 }).refine(
   (data) => {
-    const startTime = new Date(`${data.eventDate}T${data.eventStartTime}${UTC_OFFSET_STRING}`);
-    const endTime = new Date(`${data.eventDate}T${data.eventEndTime}${UTC_OFFSET_STRING}`);
+    const startTime = new Date(`${data.eventDate}T${data.eventStartTime}`);
+    const endTime = new Date(`${data.eventDate}T${data.eventEndTime}`);
     return startTime < endTime;
   },
   {

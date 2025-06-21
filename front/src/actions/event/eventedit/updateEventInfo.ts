@@ -63,8 +63,8 @@ const createUpdateEventEntity = (oldEvent: Event, validatedFields: any): UpdateE
   return {
     ...restWithoutId,
     ...rest,
-    startDateTime: new Date(`${eventDate}T${eventStartTime}:00.000${UTC_OFFSET_STRING}`),
-    endDateTime: new Date(`${eventDate}T${eventEndTime}:00.000${UTC_OFFSET_STRING}`),
+    startDateTime: new Date(`${eventDate}T${eventStartTime}:00.000`),
+    endDateTime: new Date(`${eventDate}T${eventEndTime}:00.000`),
   };
 };
 

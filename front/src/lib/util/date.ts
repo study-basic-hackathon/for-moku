@@ -1,3 +1,6 @@
+import { format } from 'date-fns';
+import { toZonedTime, fromZonedTime } from 'date-fns-tz';
+
 /**
  * 日時を日本語形式（YYYY年MM月dd日 HH:mm）にフォーマット
  * 
@@ -105,4 +108,28 @@ export function createDateTime(date: Date, isStart: boolean): Date {
     newDate.setHours(23, 59, 59, 999)
   }
   return newDate
+}
+
+/**
+ * UTC+0のDateをUTC+9として解釈する変換関数
+ * @param utcDate UTC+0のDateオブジェクト
+ * @returns UTC+9として解釈されたDateオブジェクト
+ */
+export function convertUTCToJST(utcDate: Date): Date {
+  // date-fns-tzを使用してより正確なタイムゾーン変換を行う
+  // UTC+0のDateをUTC+9（Asia/Tokyo）として解釈
+  const jstDate = toZonedTime(utcDate, 'Asia/Tokyo');
+  return jstDate;
+}
+
+/**
+ * JST（UTC+9）のDateをUTC+0に変換する関数
+ * @param jstDate JST（UTC+9）のDateオブジェクト
+ * @returns UTC+0のDateオブジェクト
+ */
+export function convertJSTToUTC(jstDate: Date): Date {
+  // date-fns-tzを使用してより正確なタイムゾーン変換を行う
+  // JST（UTC+9）のDateをUTC+0に変換
+  const utcDate = fromZonedTime(jstDate, 'Asia/Tokyo');
+  return utcDate;
 }

@@ -6,6 +6,7 @@ import { users } from "@/lib/db/schema/user";
 import { userGroupAssignments } from "@/lib/db/schema/user_group_assignment";
 import { Transaction } from "@/types/db";
 import { userGroups } from "@/lib/db/schema/user_group";
+import { convertUTCToJST, convertJSTToUTC } from "@/lib/util/date";
 
 /**
  * イベントを登録する
@@ -13,8 +14,23 @@ import { userGroups } from "@/lib/db/schema/user_group";
  * @returns 登録されたイベント
  */
 export async function insertEvent(tx: Transaction, event: NewEvent): Promise<Event> {
-  const [createdEvent] = await tx.insert(events).values(event).returning();
-  return createdEvent;
+  // JSTからUTCに変換してからデータベースに保存
+  const utcEvent = {
+    ...event,
+    startDateTime: convertJSTToUTC(event.startDateTime),
+    endDateTime: convertJSTToUTC(event.endDateTime),
+  };
+  
+  const [createdEvent] = await tx.insert(events).values(utcEvent).returning();
+  
+  // 取得時はUTCからJSTに変換して返す
+  return {
+    ...createdEvent,
+    startDateTime: convertUTCToJST(createdEvent.startDateTime),
+    endDateTime: convertUTCToJST(createdEvent.endDateTime),
+    createdAt: convertUTCToJST(createdEvent.createdAt),
+    updatedAt: convertUTCToJST(createdEvent.updatedAt),
+  };
 }
 
 /**
@@ -24,6 +40,15 @@ export async function insertEvent(tx: Transaction, event: NewEvent): Promise<Eve
  */
 export async function selectEventById(id: number): Promise<Event | undefined> {
   const [event] = await db.select().from(events).where(eq(events.id, id));
+  if (event) {
+    return {
+      ...event,
+      startDateTime: convertUTCToJST(event.startDateTime),
+      endDateTime: convertUTCToJST(event.endDateTime),
+      createdAt: convertUTCToJST(event.createdAt),
+      updatedAt: convertUTCToJST(event.updatedAt),
+    };
+  }
   return event;
 }
 
@@ -33,7 +58,14 @@ export async function selectEventById(id: number): Promise<Event | undefined> {
  * @returns イベント一覧
  */
 export async function selectEventsByUserGroupId(userGroupId: number): Promise<Event[]> {
-  return await db.select().from(events).where(eq(events.userGroupId, userGroupId));
+  const eventsList = await db.select().from(events).where(eq(events.userGroupId, userGroupId));
+  return eventsList.map(event => ({
+    ...event,
+    startDateTime: convertUTCToJST(event.startDateTime),
+    endDateTime: convertUTCToJST(event.endDateTime),
+    createdAt: convertUTCToJST(event.createdAt),
+    updatedAt: convertUTCToJST(event.updatedAt),
+  }));
 }
 
 /**
@@ -43,11 +75,29 @@ export async function selectEventsByUserGroupId(userGroupId: number): Promise<Ev
  * @returns 更新されたイベント
  */
 export async function updateEvent(tx: Transaction, id: number, event: UpdateEvent): Promise<Event | undefined> {
+  // JSTからUTCに変換してからデータベースに保存
+  const utcEvent = {
+    ...event,
+    startDateTime: event.startDateTime ? convertJSTToUTC(event.startDateTime) : undefined,
+    endDateTime: event.endDateTime ? convertJSTToUTC(event.endDateTime) : undefined,
+    updatedAt: new Date(),
+  };
+  
   const [updatedEvent] = await tx
     .update(events)
-    .set({ ...event, updatedAt: new Date() })
+    .set(utcEvent)
     .where(eq(events.id, id))
     .returning();
+  
+  if (updatedEvent) {
+    return {
+      ...updatedEvent,
+      startDateTime: convertUTCToJST(updatedEvent.startDateTime),
+      endDateTime: convertUTCToJST(updatedEvent.endDateTime),
+      createdAt: convertUTCToJST(updatedEvent.createdAt),
+      updatedAt: convertUTCToJST(updatedEvent.updatedAt),
+    };
+  }
   return updatedEvent;
 }
 
@@ -79,8 +129,15 @@ export async function selectEventsByUserEmail(email: string): Promise<EventWitho
     .where(eq(users.email, email))
     .orderBy(asc(events.startDateTime));
   
-  return result;
+  return result.map(event => ({
+    ...event,
+    startDateTime: convertUTCToJST(event.startDateTime),
+    endDateTime: convertUTCToJST(event.endDateTime),
+    createdAt: convertUTCToJST(event.createdAt),
+    updatedAt: convertUTCToJST(event.updatedAt),
+  }));
 }
+
 /**
  * 
  * ユーザーのメールアドレスに基づいてイベント一覧を取得する
@@ -118,9 +175,12 @@ export async function selectEventsSearchResultByUserEmail(email: string): Promis
     .where(eq(users.email, email))
     .orderBy(asc(events.startDateTime));
   
-  return result;
+  return result.map(event => ({
+    ...event,
+    startDateTime: convertUTCToJST(event.startDateTime),
+    endDateTime: convertUTCToJST(event.endDateTime),
+  }));
 }
-
 
 /**
  * ユーザーのメールアドレスとイベントIDに基づいて、イベント編集画面で使うビュー情報を取得する
@@ -147,5 +207,12 @@ export async function selectEventEditViewInfoByUserEmailAndEventId(email: string
     .where(and(eq(events.id, eventId), eq(users.email, email), eq(userGroupAssignments.role, 'admin')))
     .limit(1);
   
-  return result[0] ?? null;
+  if (result[0]) {
+    return {
+      ...result[0],
+      startDateTime: convertUTCToJST(result[0].startDateTime),
+      endDateTime: convertUTCToJST(result[0].endDateTime),
+    };
+  }
+  return null;
 }
