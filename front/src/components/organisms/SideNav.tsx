@@ -40,11 +40,6 @@ const items = [
     icon: Users,
   },
   {
-    title: "グループ検索",
-    url: "/#",
-    icon: Search,
-  },
-  {
     title: "Menu Item",
     url: "/#",
     icon: FileQuestion,
