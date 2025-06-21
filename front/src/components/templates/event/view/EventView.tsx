@@ -26,20 +26,15 @@ export default function EventView({ event }: Readonly<Props>) {
   return (
     <div className={eventContainerClass}>
       <div className="flex justify-end items-center w-full gap-x-2">
-        <ViewIconUnit unit={{
-          name: "edit",
-          iconName: "Pencil",
-          description: "編集",
-          href: `/event/eventedit/${event.eventId}`,
-          iconClassName: "w-6 h-6",
-        }} />
-        <ViewIconUnit unit={{
-          name: "copy",
-          iconName: "Copy",
-          description: "イベントコピー",
-          iconClassName: "w-6 h-6",
-          onClick: async () => {},
-        }} />
+        {event.isAdmin && (
+          <ViewIconUnit unit={{
+            name: "edit",
+            iconName: "Pencil",
+            description: "編集",
+            href: `/event/eventedit/${event.eventId}`,
+            iconClassName: "w-6 h-6",
+          }} />
+        )}
       </div>
       <CommonViewIconUnitList units={eventViewIconUnits} />
     </div>
