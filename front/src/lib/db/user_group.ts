@@ -1,10 +1,10 @@
 import { db } from '@/lib/db';
 import { Transaction } from '@/types/db';
-import { NewUserGroup } from '@/types/user_group/schema';
+import { NewUserGroup, UserGroupSearchResult } from '@/types/user_group/schema';
 import { userGroups } from '@/lib/db/schema/user_group';
 import { userGroupAssignments } from '@/lib/db/schema/user_group_assignment';
 import { users } from '@/lib/db/schema/user';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, asc } from 'drizzle-orm';
 
 /**
  * グループ名でユーザーグループを選択する関数
@@ -99,4 +99,37 @@ export async function updateUserGroupById(
       description: data.description,
     })
     .where(eq(userGroups.id, groupId));
+}
+
+/**
+ *
+ * ユーザーのメールアドレスに基づいてユーザーグループ一覧を取得する
+ *
+ * 見つからなければ、空のリストを返却する
+ * 取得する項目は以下に限定している。
+ *
+ * - id: ユーザーグループID
+ * - name: ユーザーグループ名
+ * - description: 説明
+ * - role: ユーザーの権限
+ *
+ * @param email ユーザーのメールアドレス
+ *
+ * @returns ユーザーグループ一覧
+ */
+export async function selectUserGroupsSearchResultByUserEmail(email: string): Promise<UserGroupSearchResult[]> {
+  const result = await db
+    .select({
+      id: userGroups.id,
+      name: userGroups.name,
+      description: userGroups.description,
+      role: userGroupAssignments.role,
+    })
+    .from(userGroups)
+    .innerJoin(userGroupAssignments, eq(userGroups.id, userGroupAssignments.userGroupId))
+    .innerJoin(users, eq(userGroupAssignments.userId, users.id))
+    .where(eq(users.email, email))
+    .orderBy(asc(userGroups.id));
+
+  return result;
 }
