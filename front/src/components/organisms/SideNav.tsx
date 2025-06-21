@@ -36,13 +36,8 @@ const items = [
   },
   {
     title: "グループ管理",
-    url: "/#",
+    url: "/user_group/list",
     icon: Users,
-  },
-  {
-    title: "グループ検索",
-    url: "/#",
-    icon: Search,
   },
   {
     title: "Menu Item",
@@ -54,9 +49,9 @@ const items = [
     url: "/event/view/sample",
     icon: FileText,
   },
-  
+
 ]
- 
+
 export function SideNav() {
   return (
     <Sidebar>
@@ -74,7 +69,7 @@ export function SideNav() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-            </SidebarMenu> 
+            </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
