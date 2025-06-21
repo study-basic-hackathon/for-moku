@@ -1,5 +1,6 @@
 import { EncodedVenue, TextState } from "@/types/event/state"
-import { createCanvas, CanvasRenderingContext2D } from 'canvas'
+import { GlobalFonts, createCanvas, CanvasRenderingContext2D } from '@napi-rs/canvas'
+import path from "path"
 
 interface Props {
   encodedVenue: EncodedVenue
@@ -33,10 +34,11 @@ function drawText(
   const endY = text.endY
   const textColor = text.textColor
   const textLength = text.text.length
-
+  GlobalFonts.registerFromPath(path.join(process.cwd(), 'public/fonts/NotoSansJP-Regular.ttf'), 'Noto Sans JP')
+  
   const fontSize = Math.min(((Math.abs(endX - startX) + 1) * cellSize)/textLength, (Math.abs(endY - startY)+1) * cellSize)
   ctx.fillStyle = textColor.toString()
-  ctx.font = `${fontSize}px sans-serif`
+  ctx.font = `${fontSize}px Noto Sans JP`
   
   const x = ((startX + endX) / 2 + 0.5) * cellSize
   const y = ((startY + endY) / 2 + 0.5) * cellSize
