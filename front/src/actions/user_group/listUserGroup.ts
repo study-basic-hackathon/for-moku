@@ -22,7 +22,7 @@ export const getUserGroupListViewModel = async (): Promise<UserGroupListViewMode
     notFound();
   }
 
-  // TODO: 現時点ではモックデータを使用しているが、データベースから取得するようにする
+  // データベースから一覧に表示するデータを取得
   const userGroups: UserGroupSearchResult[] = await selectUserGroupsSearchResultByUserEmail(session.user.email);
 
   // イベントの一覧をビューモデルに変換

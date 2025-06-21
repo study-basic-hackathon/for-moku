@@ -35,6 +35,11 @@ export function UserGroupListTemplate({ userGroupListViewModel }: Readonly<Props
   return (
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <FormSearch table={table} />
+      <div className="flex justify-end mb-4">
+        <a href="/user_group/register" className="bg-blue-600 text-white px-6 py-2 rounded">
+          グループ新規登録
+        </a>
+      </div>
       <ListTableData<UserGroupListItem> table={table} />
       <ListTablePagination<UserGroupListItem>  table={table} />
     </div>
