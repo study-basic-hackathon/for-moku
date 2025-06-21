@@ -29,6 +29,10 @@ export default async function RoomPage({
   if (!event) notFound();
 
   const currDateTime = getCurrentDateInTokyo();
+  console.log("new Date()", new Date());
+  console.log("currDateTime", currDateTime);
+  console.log("event.startDateTime", event.startDateTime);
+  console.log("event.endDateTime", event.endDateTime);
 
   if (currDateTime < event.startDateTime) {
     return eventNotStarted(roomId);
