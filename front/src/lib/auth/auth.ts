@@ -58,8 +58,8 @@ export const authConfig = {
     },
   },
   events: {
-    signIn: () => removeUserFromRoom(),
-    signOut: () => removeUserFromRoom(),
+    signIn: async () => await removeUserFromRoom(),
+    signOut: async () => await removeUserFromRoom(),
   },
 } satisfies NextAuthConfig
 
@@ -87,7 +87,7 @@ async function removeUserFromRoom() {
 
   if (session?.user && session.roomId) {
     const { user, roomId } = session;
-    fetch(`${PARTYKIT_URL}/parties/main/${roomId}`, {
+    await fetch(`${PARTYKIT_URL}/parties/main/${roomId}`, {
       method: "DELETE",
       body: JSON.stringify(user.id),
       headers: {
