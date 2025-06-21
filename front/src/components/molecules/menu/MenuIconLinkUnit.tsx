@@ -1,7 +1,8 @@
 import { LucideIconType } from "@/types/ui/icon";
 import { cn } from "@/lib/shadcn/utils";
-import MenuIcon from "@/components/atoms/MenuIcon";
-import MenuTitle from "@/components/atoms/MenuTitle";
+import MenuIcon from "@/components/atoms/menu/MenuIcon";
+import MenuTitle from "@/components/atoms/menu/MenuTitle";
+import Link from "next/link";
 
 /**
  * メニューの行を表示するコンポーネントのprops
@@ -9,21 +10,25 @@ import MenuTitle from "@/components/atoms/MenuTitle";
 interface Props {
   title: string;
   icon?: LucideIconType;
+  href: string;
   divClassName?: string | string[];
   iconClassName?: string | string[];
   titleClassName?: string | string[];
+  targetBlank?: boolean;
 }
 
 /**
- * デフォルトのクラス名 (flex, 中央揃え, アイコンとタイトルの間隔2rem)
+ * デフォルトのクラス名 (flex, 中央揃え, アイコンとタイトルの間隔2rem, ホバー効果)
  */
-const defaultDivClassName = ["flex", "items-center", "gap-2", "p-2"];
+const defaultDivClassName = ["flex", "items-center", "gap-2", "hover:bg-gray-100", "rounded-lg", "transition-colors", "cursor-pointer", "p-2"];
 
 /**
- * メニューの行を表示するコンポーネント
+ * メニューの行を表示するコンポーネント（リンク付き）
  * 
- * このコンポーネントは、アイコンとタイトルを横並びで表示するメニュー行を作成します。
+ * このコンポーネントは、アイコンとタイトルを横並びで表示するメニュー行を作成し、クリック可能なリンクとして機能します。
  * デフォルトでは、アイコンは40x40pxのサイズで表示され、タイトルはアイコンの右側に配置されます。
+ * ホバー時には背景色が変化し、視覚的なフィードバックを提供します。
+ * リンクは別窓で開きます。
  *  
  * スタイルのカスタマイズ:
  * - divClassName: メニュー行全体のスタイルをカスタマイズします（例：背景色、パディング、ホバー効果など）
@@ -32,10 +37,11 @@ const defaultDivClassName = ["flex", "items-center", "gap-2", "p-2"];
  * 
  * 使用例:
  * ```tsx
- * <MenuIconUnit
+ * <MenuIconLinkUnit
  *   icon={User}
  *   title="ユーザー設定"
- *   divClassName={["hover:bg-gray-100", "rounded-lg"]}
+ *   href="/settings"
+ *   divClassName={["hover:bg-blue-100"]}
  *   iconClassName={["text-blue-500"]}
  *   titleClassName={["font-bold"]}
  * />
@@ -43,22 +49,28 @@ const defaultDivClassName = ["flex", "items-center", "gap-2", "p-2"];
  * 
  * @param icon - 表示するアイコン（Lucideアイコン）
  * @param title - 表示するタイトルテキスト
+ * @param href - リンク先のURL
  * @param divClassName - メニュー行のコンテナに適用する追加のクラス名
  * @param iconClassName - アイコンに適用する追加のクラス名
  * @param titleClassName - タイトルに適用する追加のクラス名
- * @returns メニュー行のコンポーネント
+ * @param targetBlank - リンク先を別窓で開くかどうか（デフォルトはtrue）
+ * @returns リンク付きメニュー行のコンポーネント
  */
-export default function MenuIconUnit({ 
+export default function MenuIconLinkUnit({ 
   icon, 
   title, 
+  href,
   divClassName,
   iconClassName,
-  titleClassName 
+  titleClassName,
+  targetBlank = true
 }: Readonly<Props>) {
   return (
-    <div className={cn(defaultDivClassName, divClassName)}>
-      {icon && <MenuIcon icon={icon} className={iconClassName} />}
-      <MenuTitle title={title} className={titleClassName} />
-    </div>
+    <Link href={href} className="block" target={targetBlank ? "_blank" : "_self"} rel="noopener noreferrer">
+      <div className={cn(defaultDivClassName, divClassName)}>
+        {icon && <MenuIcon icon={icon} className={iconClassName} />}
+        <MenuTitle title={title} className={titleClassName} />
+      </div>
+    </Link>
   )
-}
+} 

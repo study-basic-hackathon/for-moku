@@ -1,5 +1,5 @@
 import { FileText } from "lucide-react";
-import MenuUnitRow from "@/components/molecules/MenuIconUnit";
+import MenuUnitRow from "@/components/molecules/menu/MenuIconUnit";
 
 export default function SampleAtomic() {
   return (

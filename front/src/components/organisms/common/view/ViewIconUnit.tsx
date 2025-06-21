@@ -1,9 +1,9 @@
 'use client';
 
 import { CommonViewIconUnit as CommonViewIconUnitType } from "@/types/common/view";
-import MenuIconUnit from "@/components/molecules/MenuIconUnit";
-import MenuIconLinkUnit from "@/components/molecules/MenuIconLinkUnit";
-import MenuIconClickableUnit from "@/components/molecules/MenuIconClickableUnit";
+import MenuIconUnit from "@/components/molecules/menu/MenuIconUnit";
+import MenuIconLinkUnit from "@/components/molecules/menu/MenuIconLinkUnit";
+import MenuIconClickableUnit from "@/components/molecules/menu/MenuIconClickableUnit";
 import { LucideIconType } from "@/types/ui/icon";
 import * as LucideIcons from "lucide-react";
 
