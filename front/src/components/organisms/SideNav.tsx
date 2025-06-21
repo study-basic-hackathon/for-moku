@@ -5,6 +5,7 @@ import {
   Home,
   Plus,
   Search,
+  UserPen,
   Users
 } from "lucide-react";
 import {
@@ -35,14 +36,14 @@ const items = [
     icon: Plus,
   },
   {
+    title: "プロフィール",
+    url: "/user/edit",
+    icon: UserPen,
+  },
+  {
     title: "グループ管理",
     url: "/user_group/list",
     icon: Users,
-  },
-  {
-    title: "Menu Item",
-    url: "/#",
-    icon: FileQuestion,
   },
   {
     title: "イベント詳細サンプル",
