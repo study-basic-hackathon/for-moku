@@ -37,3 +37,9 @@ export const POSTAL_CODE_PATTERN = /^\d{3}-\d{4}$/;
  * URLの正規表現パターン
  */
 export const URL_PATTERN = /^https?:\/\/[\w/:%#\$&\?\(\)~\.=\+\-]+$/; 
+
+
+/**
+ * タイムゾーンのオフセット
+ */
+export const UTC_OFFSET_STRING = "+09:00";

@@ -2,7 +2,7 @@
 
 import { z } from 'zod'
 import { FormState } from '@/types/common/form';
-import { DATE_PATTERN, TIME_PATTERN } from '@/lib/util/constants';
+import { DATE_PATTERN, TIME_PATTERN, UTC_OFFSET_STRING } from '@/lib/util/constants';
 import { insertEvent } from '@/lib/db/event';
 import { NewEvent } from '@/types/event/schema';
 import { db } from '@/lib/db';
@@ -33,8 +33,8 @@ const BaseSchema = z.object({
   venueUrl: z.string().url('会場のURLが有効な形式ではありません。').optional().or(z.literal(''))
 }).refine(
   (data) => {
-    const startTime = new Date(`${data.eventDate}T${data.eventStartTime}`);
-    const endTime = new Date(`${data.eventDate}T${data.eventEndTime}`);
+    const startTime = new Date(`${data.eventDate}T${data.eventStartTime}${UTC_OFFSET_STRING}`);
+    const endTime = new Date(`${data.eventDate}T${data.eventEndTime}${UTC_OFFSET_STRING}`);
     return startTime < endTime;
   },
   {

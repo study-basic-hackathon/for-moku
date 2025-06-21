@@ -2,7 +2,7 @@
 
 import { z } from 'zod'
 import { FormState } from '@/types/common/form';
-import { DATE_PATTERN, TIME_PATTERN } from '@/lib/util/constants';
+import { DATE_PATTERN, TIME_PATTERN, UTC_OFFSET_STRING } from '@/lib/util/constants';
 import { selectEventById, updateEvent } from '@/lib/db/event';
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
@@ -63,8 +63,8 @@ const createUpdateEventEntity = (oldEvent: Event, validatedFields: any): UpdateE
   return {
     ...restWithoutId,
     ...rest,
-    startDateTime: new Date(`${eventDate}T${eventStartTime}:00.000`),
-    endDateTime: new Date(`${eventDate}T${eventEndTime}:00.000`),
+    startDateTime: new Date(`${eventDate}T${eventStartTime}:00.000${UTC_OFFSET_STRING}`),
+    endDateTime: new Date(`${eventDate}T${eventEndTime}:00.000${UTC_OFFSET_STRING}`),
   };
 };
 
@@ -91,6 +91,8 @@ export async function updateEventInfo(
     eventUrl: formData.get('eventUrl'),
     venueUrl: formData.get('venueUrl')
   });
+
+  
 
   // 基本バリデーションでエラーがあれば、そのエラーを返却
   if (!baseValidation.success) {
