@@ -7,7 +7,7 @@ on:
   pull_request:
     # どのブランチに対してプルリクエストが出されたときに実行するか
     branches:
-      - main # 必要に応じて、対象ブランチをカンマ区切りで追加してください (例: main, develop)
+      - develop
 
 # ワークフローで実行されるジョブ
 jobs:
