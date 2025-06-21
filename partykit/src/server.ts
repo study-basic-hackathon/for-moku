@@ -1,5 +1,7 @@
 import type * as Party from "partykit/server";
 
+const BASE_URL = "https://for-moku-deploy-test.vercel.app/api/room/"
+
 type User = {
   id: string,
   name: string,
@@ -23,6 +25,32 @@ export default class Server implements Party.Server {
       this.userIcons = (await this.room.storage.get<UserIcon[]>("userIcons")) ?? [];
     }
     return this.userIcons;
+  }
+
+  async onStart() { 
+    await this.room.storage.put<string>("roomId", this.room.id);
+
+    console.log("on start", this.room.id);
+    const test = await fetch(`${BASE_URL}${this.room.id}`);
+    const message = await test.json()
+    console.log(Date.now());
+    console.log(message.endTime, typeof message.endTime);
+
+    const alarm = Date.now() + 10 * 1000;
+    await this.room.storage.setAlarm(alarm);
+  }
+
+  async onAlarm() {
+    const roomId = await this.room.storage.get<string>("roomId");
+    console.log("alarm", roomId);
+    const req = await fetch(`${BASE_URL}${roomId}`, {
+      method: "POST",
+      body: JSON.stringify("post test"),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(await req.json());
   }
 
   async onRequest(request: Party.Request) {
