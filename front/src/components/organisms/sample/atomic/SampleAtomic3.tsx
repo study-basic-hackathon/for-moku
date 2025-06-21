@@ -1,5 +1,5 @@
 import { Settings } from "lucide-react";
-import MenuIconUnit from "@/components/molecules/MenuIconUnit";
+import MenuIconUnit from "@/components/molecules/menu/MenuIconUnit";
 
 export default function SampleAtomic3() {
   return (
