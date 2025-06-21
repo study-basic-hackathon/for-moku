@@ -32,7 +32,7 @@ export function AvatarDropdown(props: {
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="min-w-[7rem] shadow-none">
-          <DropdownMenuItem>
+          <DropdownMenuItem asChild>
             <Link href="/user/edit">
               <User />
               アカウント
