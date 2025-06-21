@@ -45,12 +45,6 @@ const items = [
     url: "/user_group/list",
     icon: Users,
   },
-  {
-    title: "イベント詳細サンプル",
-    url: "/event/view/sample",
-    icon: FileText,
-  },
-
 ]
 
 export function SideNav() {
