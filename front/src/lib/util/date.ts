@@ -133,3 +133,17 @@ export function convertJSTToUTC(jstDate: Date): Date {
   const utcDate = fromZonedTime(jstDate, 'Asia/Tokyo');
   return utcDate;
 }
+
+/**
+ * 現在の日時をJST（UTC+9）で取得する関数
+ * @returns JST（UTC+9）の現在の日時
+ * 
+ * @example
+ * ```tsx
+ *  const currentDate = getCurrentDateInTokyo()
+ *  console.log(currentDate) // 2021-01-01T12:00:00.000Z
+ * ```
+ */
+export function getCurrentDateInTokyo(): Date {
+  return toZonedTime(new Date(), 'Asia/Tokyo');
+}

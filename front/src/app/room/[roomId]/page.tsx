@@ -11,6 +11,7 @@ import Link from "next/link";
 import { User, UserIcon } from "@/types/room/shared";
 import ActiveEventTemplate from "@/components/templates/room/ActiveEventTemplate";
 import ClosedEventTemplate from "@/components/templates/room/ClosedEventTemplate";
+import { getCurrentDateInTokyo } from "@/lib/util/date";
 
 export default async function RoomPage({
   params,
@@ -27,7 +28,8 @@ export default async function RoomPage({
   const event = await selectEventById(Number(roomId));
   if (!event) notFound();
 
-  const currDateTime = new Date();
+  const currDateTime = getCurrentDateInTokyo();
+
   if (currDateTime < event.startDateTime) {
     return eventNotStarted(roomId);
   }
