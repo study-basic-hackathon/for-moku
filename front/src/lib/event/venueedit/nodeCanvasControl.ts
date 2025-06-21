@@ -1,5 +1,6 @@
 import { EncodedVenue, TextState } from "@/types/event/state"
-import { createCanvas, CanvasRenderingContext2D } from 'canvas'
+import { createCanvas, CanvasRenderingContext2D, registerFont } from 'canvas'
+import path from 'path'
 
 interface Props {
   encodedVenue: EncodedVenue
@@ -36,7 +37,7 @@ function drawText(
 
   const fontSize = Math.min(((Math.abs(endX - startX) + 1) * cellSize)/textLength, (Math.abs(endY - startY)+1) * cellSize)
   ctx.fillStyle = textColor.toString()
-  ctx.font = `${fontSize}px sans-serif`
+  ctx.font = `${fontSize}px Noto Sans JP`
   
   const x = ((startX + endX) / 2 + 0.5) * cellSize
   const y = ((startY + endY) / 2 + 0.5) * cellSize
@@ -97,6 +98,10 @@ export function generateImage({
   const canvasSize = numPixel * pixelSize
   const canvas = createCanvas(canvasSize, canvasSize)
   const ctx = canvas.getContext('2d')
+  
+  // フォントを登録
+  const fontPath = path.join(process.cwd(), 'public/fonts/NotoSansJP-Regular.ttf') 
+  registerFont(fontPath, { family: 'Noto Sans JP' })
 
   // 背景を塗りつぶし
   ctx.fillStyle = backgroundColor
