@@ -1,6 +1,9 @@
 import { format } from 'date-fns';
 import { toZonedTime, fromZonedTime } from 'date-fns-tz';
 
+// 環境変数からタイムゾーンを取得（デフォルトはAsia/Tokyo）
+const TIMEZONE = process.env.TIMEZONE || 'Asia/Tokyo';
+
 /**
  * 日時を日本語形式（YYYY年MM月dd日 HH:mm）にフォーマット
  * 
@@ -111,13 +114,13 @@ export function createDateTime(date: Date, isStart: boolean): Date {
 }
 
 /**
- * UTC+0のDateをUTC+9として解釈する変換関数
- * @param utcDate UTC+0のDateオブジェクト
- * @returns UTC+9として解釈されたDateオブジェクト
+ * データベースから取得されたUTCのDateをAsia/Tokyoとして解釈する変換関数
+ * データベースから取得されるものは常にUTCとして正規化してからAsia/Tokyoに変換
+ * @param utcDate データベースから取得されたUTCのDateオブジェクト
+ * @returns Asia/Tokyoとして解釈されたDateオブジェクト
  */
 export function convertUTCToJST(utcDate: Date): Date {
-  // date-fns-tzを使用してより正確なタイムゾーン変換を行う
-  // UTC+0のDateをUTC+9（Asia/Tokyo）として解釈
+  // データベースから取得されたDateは常にUTCとして扱い、Asia/Tokyoに変換
   const jstDate = toZonedTime(utcDate, 'Asia/Tokyo');
   return jstDate;
 }
@@ -128,10 +131,41 @@ export function convertUTCToJST(utcDate: Date): Date {
  * @returns UTC+0のDateオブジェクト
  */
 export function convertJSTToUTC(jstDate: Date): Date {
-  // date-fns-tzを使用してより正確なタイムゾーン変換を行う
   // JST（UTC+9）のDateをUTC+0に変換
   const utcDate = fromZonedTime(jstDate, 'Asia/Tokyo');
   return utcDate;
+}
+
+/**
+ * アプリケーションのタイムゾーンからUTC+0に変換する関数
+ * 環境変数TIMEZONEに基づいて適切な変換を行う
+ * @param localDate アプリケーションのタイムゾーンのDateオブジェクト
+ * @returns UTC+0のDateオブジェクト
+ */
+export function convertLocalToUTC(localDate: Date): Date {
+  // 環境変数TIMEZONEに基づいて適切な変換を行う
+  if (TIMEZONE === 'UTC') {
+    // 既にUTCの場合はそのまま返す
+    return localDate;
+  } else {
+    // Asia/Tokyoなどの場合はUTCに変換
+    const utcDate = fromZonedTime(localDate, TIMEZONE);
+    return utcDate;
+  }
+}
+
+/**
+ * 現在の日時をアプリケーションのタイムゾーンで取得する関数
+ * @returns アプリケーションのタイムゾーンの現在の日時
+ * 
+ * @example
+ * ```tsx
+ *  const currentDate = getCurrentDateInLocalTimezone()
+ *  console.log(currentDate) // 現在のタイムゾーンの日時
+ * ```
+ */
+export function getCurrentDateInLocalTimezone(): Date {
+  return toZonedTime(new Date(), TIMEZONE);
 }
 
 /**

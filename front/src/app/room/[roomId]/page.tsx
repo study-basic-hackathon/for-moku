@@ -75,10 +75,10 @@ export default async function RoomPage({
   }
 
   if (session.roomId && session.roomId !== roomId) {
-    removeUserFromRoom(user.id, session.roomId);
+    await removeUserFromRoom(user.id, session.roomId);
   }
 
-  addUserToRoom(user, roomId);
+  await addUserToRoom(user, roomId);
 
   return (
     <SessionProvider>
@@ -137,8 +137,8 @@ async function insertNewUser(email: string) {
   }).returning())[0].id;
 }
 
-function removeUserFromRoom(userId: string, roomId: string) {
-  fetch(`${PARTYKIT_URL}/parties/main/${roomId}`, {
+async function removeUserFromRoom(userId: string, roomId: string) {
+  await fetch(`${PARTYKIT_URL}/parties/main/${roomId}`, {
     method: "DELETE",
     body: JSON.stringify(userId),
     headers: {
@@ -147,8 +147,8 @@ function removeUserFromRoom(userId: string, roomId: string) {
   })
 }
 
-function addUserToRoom(user: User, roomId: string) {
-  fetch(`${PARTYKIT_URL}/parties/main/${roomId}`, {
+async function addUserToRoom(user: User, roomId: string) {
+  await fetch(`${PARTYKIT_URL}/parties/main/${roomId}`, {
     method: "POST",
     body: JSON.stringify(user),
     headers: {
