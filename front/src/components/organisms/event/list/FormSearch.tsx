@@ -6,12 +6,14 @@ import { Label } from "@/components/atoms/shadcn/label"
 import { EventListItem } from "@/types/event/viewmodel"
 import { DatePicker } from "@/components/molecules/input/DatePicker"
 import { createDateTime } from "@/lib/util/date"
+import { MultiSelect } from "@/components/molecules/input/MultiSelect"
 
 interface Props {
   table: Table<EventListItem>
+  userGroupNames: string[]
 }
 
-export function FormSearch({ table }: Readonly<Props>) {
+export function FormSearch({ table, userGroupNames }: Readonly<Props>) {
   return (
     <div className="flex flex-col gap-4 p-4">
       <div className="flex items-center gap-4">
@@ -49,6 +51,24 @@ export function FormSearch({ table }: Readonly<Props>) {
             }
           }}
           placeholder="終了日を選択"
+        />
+      </div>
+      <div className="flex items-center gap-4">
+        <Label className="w-24">グループ名</Label>
+        <MultiSelect
+          options={userGroupNames.map((name) => ({
+            label: name,
+            value: name,
+          }))}
+          onValueChange={(value) => {
+            table.getColumn("userGroupName")?.setFilterValue(value)
+          }}
+          defaultValue={[]}
+          placeholder="グループ名で検索..."
+          variant="inverted"
+          animation={2}
+          maxCount={10}
+          className="max-w-sm"
         />
       </div>
     </div>
