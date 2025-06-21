@@ -43,7 +43,7 @@ export const EVENT_LIST_TABLE_COLUMN_FIELDS: EventListTableColumnField[] = [
   {
     name: "userGroupName",
     label: "グループ",
-    dataType: "string",
+    dataType: "enum",
     enableHiding: true,
     enableSorting: true,
     enableFiltering: true,

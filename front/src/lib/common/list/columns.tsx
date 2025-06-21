@@ -105,7 +105,7 @@ export function generateColumns<T extends RowData>(
         if (field.dataType === "date") {
           return <div className="text-bold">{formatDateTimeYYYYMMDDHHMMJPN(new Date(value as string))}</div>
         }
-        return <div className="text-bold">{value as string}</div>
+        return <div className="text-bold">{field.descriptionFunc ? field.descriptionFunc(value as string) : value as string}</div>
       },
       // フィルタコンフィグを追加する(前の処理で指定)
       ...generateFilterConfig<T>(field)

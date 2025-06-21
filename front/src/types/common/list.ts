@@ -34,5 +34,6 @@ export type CommonTableColumnField<T> = {
     enableSorting?: boolean;
     enableFiltering?: boolean;
     declineIncompleteFilter?: boolean;
+    descriptionFunc?: (value: string) => string;
   }
 }[keyof T];
