@@ -50,5 +50,5 @@ Gyazoにログインして、[このページ](https://gyazo.com/oauth/applicati
 Vercelのプロジェクトに以下の環境変数を追加する
 - GYAZO_ACCESS_TOKEN -> その名の通り
 - GYAZO_UPLOAD_END_POINT -> https://upload.gyazo.com/api/upload
-- GYAZO_DELETE_END_POINT -> https://api.gyazo.com/api/image
+- GYAZO_DELETE_END_POINT -> https://api.gyazo.com/api/images
 - NEXT_PUBLIC_BASE_URL -> デプロイされたサイトのURL
