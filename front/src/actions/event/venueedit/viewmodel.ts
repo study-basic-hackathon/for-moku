@@ -2,7 +2,7 @@
 
 import { auth } from "@/lib/auth/auth";
 import { EventVenueEditViewModel } from "@/types/event/viewmodel";
-import { selectEventById } from "@/lib/db/event";
+import { checkUserIsAdminOfEventByUserEmailAndEventId, selectEventById } from "@/lib/db/event";
 
 
 /**
@@ -32,8 +32,12 @@ export async function getVenueEditViewmodel({eventId} : Props): Promise<EventVen
     console.error('イベントが見つかりません', eventId);
     return null;
   }
-
-  // TODO: 権限の確認
+    
+  // ユーザーがイベントの管理者であるかを確認する
+  const isAdmin = await checkUserIsAdminOfEventByUserEmailAndEventId(session.user?.email ?? '', event.id);
+  if (!isAdmin) {
+    return null;
+  }
 
   // イベント会場編集画面用のビューモデルを作成
   return {
