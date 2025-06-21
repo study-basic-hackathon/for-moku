@@ -36,7 +36,7 @@ const items = [
   },
   {
     title: "グループ管理",
-    url: "/#",
+    url: "/user_group/list",
     icon: Users,
   },
   {
@@ -54,9 +54,9 @@ const items = [
     url: "/event/view/sample",
     icon: FileText,
   },
-  
+
 ]
- 
+
 export function SideNav() {
   return (
     <Sidebar>
@@ -74,7 +74,7 @@ export function SideNav() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-            </SidebarMenu> 
+            </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
