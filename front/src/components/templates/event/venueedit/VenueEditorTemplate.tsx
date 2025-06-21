@@ -39,7 +39,6 @@ export default function VenueEditorTemplate({ eventVenueEditViewModel }: Readonl
 
   const {
     canvasRef,
-    canDraw,
     zoom,
     numPixel,
     setNumPixel,
@@ -78,7 +77,6 @@ export default function VenueEditorTemplate({ eventVenueEditViewModel }: Readonl
             <VenueEditor 
               zoom={zoom}
               canvasRef={canvasRef}
-              canDraw={canDraw}
               handleMouseDown={handleMouseDown}
               handleMouseMove={handleMouseMove}
               handleMouseUp={handleMouseUp}
@@ -107,6 +105,7 @@ export default function VenueEditorTemplate({ eventVenueEditViewModel }: Readonl
           </div>
           <div className="col-span-1 md:col-span-1 lg:col-span-8 xl:col-span-2">
             <VenueToolSelectionMenu 
+              selectedTool={selectedTool} 
               setDrawToolFromToolKey={setDrawToolFromToolKey}
             />
           </div>

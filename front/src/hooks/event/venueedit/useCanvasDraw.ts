@@ -67,7 +67,7 @@ export const useCanvasDraw = ({
     eventId: eventVenueEditViewModel.eventId
   })
 
-  const { canDraw: toolCanDraw,
+  const {
       handleMouseDown,
       handleMouseMove,
       handleMouseUp,
@@ -98,7 +98,6 @@ export const useCanvasDraw = ({
 
   return { 
     canvasRef, 
-    canDraw: toolCanDraw,
     zoom,
     numPixel,
     handleZoomIn,
