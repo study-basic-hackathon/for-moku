@@ -4,7 +4,7 @@ import { getEventListViewModelServerPagenationSample } from "@/actions/sample/li
 export default async function Events({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   const params = await searchParams;
   const {events, totalCount, currentPage, totalPages, pageSize} = await getEventListViewModelServerPagenationSample({
