@@ -15,6 +15,7 @@ export async function GET(
   const { roomId } = await params;
   const event = await selectEventById(Number(roomId));
   const message = { endTime: event!.endDateTime }
+
   return NextResponse.json({ message });
 }
 
@@ -27,7 +28,6 @@ export async function POST(
   { params }: { params: Promise<{ roomId: string }> },
 ) {
 
-  console.log("post request");
   const { roomId } = await params;
   const eventId = Number(roomId);
   const userIcons = (await req.json()) as UserIcon[];
