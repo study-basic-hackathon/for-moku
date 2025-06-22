@@ -150,13 +150,11 @@ async function removeUserFromRoom(userId: string, roomId: string) {
 }
 
 async function addUserToRoom(user: User, roomId: string) {
-  console.log("add user to room");
-  const req = await fetch(`${PARTYKIT_URL}/parties/main/${roomId}`, {
+  await fetch(`${PARTYKIT_URL}/parties/main/${roomId}`, {
     method: "POST",
     body: JSON.stringify(user),
     headers: {
       "Content-Type": "application/json",
     },
   });
-  console.log("add response", req.json());
 }
