@@ -88,7 +88,6 @@ export default async function RoomPage({
         roomId={roomId}
         userId={user.id}
         imgUrl={event.imageUrl}
-        endTime={event.endDateTime}
       />
     </SessionProvider>
   )

@@ -12,22 +12,11 @@ export default function ActiveEventTemplate({
   roomId,
   userId,
   imgUrl,
-  endTime,
 }: {
   roomId: string,
   userId: string,
   imgUrl?: string | null,
-  endTime: Date,
 }) {
-
-  useEffect(() => {
-    const currTime = new Date();
-    console.log(endTime.getTime() - currTime.getTime());
-    setTimeout(
-      () => window.location.reload(),
-      endTime.getTime() - currTime.getTime()
-    );
-  }, [])
 
   const { data: session, status, update } = useSession();
   useEffect(() => {
