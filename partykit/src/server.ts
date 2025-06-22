@@ -1,5 +1,9 @@
 import type * as Party from "partykit/server";
 
+import { toZonedTime, fromZonedTime } from 'date-fns-tz';
+
+const BASE_URL = "https://for-moku-deploy-test.vercel.app/api/room/"
+
 type User = {
   id: string,
   name: string,
@@ -23,6 +27,34 @@ export default class Server implements Party.Server {
       this.userIcons = (await this.room.storage.get<UserIcon[]>("userIcons")) ?? [];
     }
     return this.userIcons;
+  }
+
+  async onStart() { 
+    await this.room.storage.put<string>("roomId", this.room.id);
+
+    const response = await fetch(`${BASE_URL}${this.room.id}`);
+    const { message } = await response.json();
+    const endTime = new Date(message.endTime);
+
+    if (endTime.getTime() > Date.now()) {
+      const alarm = fromZonedTime(endTime, 'Asia/Tokyo');
+      await this.room.storage.setAlarm(alarm);
+    }
+  }
+
+  async onAlarm() {
+    const roomId = await this.room.storage.get<string>("roomId");
+    const userIcons = await this.ensureLoadUserIcons();
+
+    await fetch(`${BASE_URL}${roomId}`, {
+      method: "POST",
+      body: JSON.stringify(userIcons),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    this.room.broadcast(JSON.stringify({ type: "close" }))
   }
 
   async onRequest(request: Party.Request) {
