@@ -30,24 +30,26 @@ paginate: true
 
 ---
 
-# もくもく会”中”に管理アプリを使っていますか？
+# for Moku が解決したい課題
 <style scoped>
   img { 
-    height: 350px; 
+    max-height: 250px; 
+    max-width: 300px;
   }
 </style>
 <div class="flex justify-center items-center gap-8">
-  <img src="./images/no_image_square.jpg" />
-  <img src="./images/no_image_square.jpg" />
+  <img src="./images/logo/connpass_logo_3.png" />
+  <img src="./images/symbol/right-allow.svg" />
+  <img src="./images/capture/sheetmoku.png" />
 </div>
 
-- 管理者 < 会場の間取りをスプシで作るのがとても面倒
-- 参加者 < 書くところを間違えること辛い
+- もくもく会が始まる前はConnpassなどのプラットフォームを使えるけど
+- もくもく会の最中に使う管理ツールは意外とない😭
 - ??? < また、スプレッドシートかぁ〜
 
 ---
 
-# このアプリケーションのコンセプト
+# アプリケーションのコンセプト
 <style scoped>
   img { 
     height: 350px; 
@@ -55,13 +57,13 @@ paginate: true
 </style>
 
 <div class="flex justify-center items-center gap-8">
-  <img src="./images/no_image_square.jpg" />
-  <img src="./images/no_image_square.jpg" />
-  <img src="./images/no_image_square.jpg" />
+  <img src="./images/concept/editor.png" />
+  <img src="./images/concept/room.png" />
+  <img src="./images/concept/freerole.png" />
 </div>
 
 - もくもく会の管理者と参加者の両方をターゲットとして、
-- 開催している時もサポートする機能を作る！
+- 開催している最中でも使える機能を！
 
 ---
 
@@ -118,18 +120,19 @@ paginate: true
 # 開発の様子
 <style scoped>
   img { 
-    height: 300px; 
+    height: 250px; 
   }
 </style>
 
 <div class="flex justify-center items-center gap-8">
-  <img src="./images/no_image_square.jpg" />
-  <img src="./images/no_image_square.jpg" />
-  <img src="./images/no_image_square.jpg" />
+  <img src="./images/capture/kanban.png" />
+  <img src="./images/capture/discord.png" />
+  <img src="./images/capture/megurojuuku.png" />
 </div>
 
-- Github Projectsで管理（最低でも優先度とサイズを設定）
-- 週１で対面ミーティングをしていました　(目黒@東京の住区センターで実施)
+- GitHub Projectsで管理（最低でも優先度とサイズを設定）
+- Discordをコミュニケーションツールに
+- 週１ペースで対面ミーティングを実施　(目黒@東京の住区センターで実施)
 
 ---
 
@@ -151,18 +154,21 @@ paginate: true
 
 <style scoped>
   img { 
-    height: 450px; 
+    height: 400px; 
   }
 </style>
 
 <div class="flex justify-center items-center gap-8">
-  <img src="./images/no_image_square.jpg" />
+  <img src="./images/model/formoku_arch.png" />
 </div>
+
+- 「Next.js」「PartyKit」「PostgreSQL」「Gyazo」を活用
+- FaaSを等を活用して最低金額0円から始められるように
+- コンテナ化することにより、類似の環境をローカルで再現
 
 ---
 
-# 参加者の状態をリアルタイム反映
-###  → PartyKitを使って実装
+# アプリケーションのコンセプト
 <style scoped>
   img { 
     height: 350px; 
@@ -170,12 +176,13 @@ paginate: true
 </style>
 
 <div class="flex justify-center items-center gap-8">
-  <img src="./images/no_image_square.jpg" />
-  <img src="./images/no_image_square.jpg" />
+  <img src="./images/concept/editor.png" />
+  <img src="./images/concept/room.png" />
+  <img src="./images/concept/freerole.png" />
 </div>
 
-- リアルタイム通信を行うためには、WebSocketを利用できる中継サーバが必要
-- PartyKitサーバを経由して、ユーザ同士のリアルタイム通信を確立
+- もくもく会の管理者と参加者の両方をターゲットとして、
+- 開催している最中に使える機能を！
 
 ---
 # 間取り編集エディタ
@@ -183,31 +190,56 @@ paginate: true
 
 <style scoped>
   img { 
-    height: 350px; 
+    height: 400px; 
+    max-width: 300px;
   }
 </style>
 
 <div class="flex justify-center items-center gap-8">
-  <img src="./images/no_image_square.jpg" />
-  <img src="./images/no_image_square.jpg" />
+  <img src="./images/concept/editor.png"/>
+  <img src="./images/symbol/right-allow.svg" />
+  <img src="./images/capture/editor.png" />
 </div>
 
-- HTMLのcanvas要素とマウスイベントの橋渡しとしてStateを利用
+- マウスイベント→Stateの変更→Canvasと同期
 - ピクセルの塗りつぶしと消去&テキストの追加ができるように
 
+
 ---
-# 誰もが管理者やメンバーになれる
+
+# リアルタイムで席を確認
+###  → PartyKit（FaaSサービス）を活用
+<style scoped>
+  img { 
+    height: 400px; 
+    max-width: 300px;
+  }
+</style>
+
+<div class="flex justify-center items-center gap-8">
+  <img src="./images/concept/room.png" />
+  <img src="./images/symbol/right-allow.svg" />
+  <img src="./images/capture/room.png" />
+</div>
+
+- リアルタイム通信を行うためには、WebSocketを利用できる中継サーバが必要
+- PartyKitが管理するサーバーを経由して、ユーザ同士のリアルタイム通信を確立
+
+---
+# 誰でも管理者やメンバーに
 ### → データモデリング
 
 <style scoped>
   img { 
-    height: 350px; 
+    height: 400px; 
+    max-width: 300px;
   }
 </style>
 
 <div class="flex justify-center items-center gap-8">
-  <img src="./images/no_image_square.jpg" />
-  <img src="./images/no_image_square.jpg" />
+  <img src="./images/concept/freerole.png" />
+  <img src="./images/symbol/right-allow.svg" />
+  <img src="./images/model/classdiagram.png" />
 </div>
 
 - イベントとユーザと管理者orメンバーは N : N :2で紐づく
@@ -230,20 +262,19 @@ paginate: true
 ---
 # やってみて良かったところ
 
-- Githubのプロジェクト機能を活用することで、互いの進捗を把握しやすくなった
+- GitHubのプロジェクト機能を活用することで、互いの進捗を把握しやすくなった
+- 色々な技術に触れることができた
 - 「ユーザ目線で必要なのか」を優先度の指標として使えた
 - 週一で振り返ることができ、柔軟に軌道修正しながらプロジェクトを進めることができた
 - もくもく会の運営を進める中で「こういうのがあったらいいな」と思ったものが、ハッカソンで実現できたのは本当に嬉しい
-- その他募集中
 
 ---
 # 難しかった点
 
-- メンバー同士の活動時間が被ることはなかったので、コミュニケーションのミスが生じたこともあった
+- チャットベースのコミュニケーションだったので、コミュニケーションのミスが生じたこともあった
 - 取れる時間が週〇〇時間と決まっているわけではないので、見積もりがかなり困難でした
-- TypeScriptやReact,Next.jsが初めてで、限られた時間でキャッチアップしながら開発するのが大変だった（井口）
-- その他募集中
-
+- TypeScriptやReact,Next.jsが初めてで、限られた時間でキャッチアップしながら開発するのが大変だった
+- Deploy先にVercelを選んだが、Vercel特有の問題にはかなり悩まされました。
 ---
  <!--
  _class: agenda
