@@ -3,6 +3,7 @@
     "partykit": "npx partykit dev"
   },
   "dependencies": {
+    "date-fns-tz": "^3.2.0",
     "partykit": "^0.0.115"
   }
 }
