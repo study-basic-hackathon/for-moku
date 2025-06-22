@@ -10,11 +10,11 @@ import { UserIcon } from '@/types/room/shared';
  * @returns イベント終了時のユーザアイコンの位置とプロフィール
  */
 export async function selectFinishedEventState(eventId: number) {
-  const userIcons = await db
+  const res = await db
     .select()
     .from(finishedEventState)
     .where(eq(finishedEventState.eventId, eventId));
-  return userIcons[0] ?? null;
+  return res[0].userIcons as UserIcon[] ?? null;
 }
 
 /**

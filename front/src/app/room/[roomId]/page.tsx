@@ -12,6 +12,7 @@ import { User, UserIcon } from "@/types/room/shared";
 import ActiveEventTemplate from "@/components/templates/room/ActiveEventTemplate";
 import ClosedEventTemplate from "@/components/templates/room/ClosedEventTemplate";
 import { getCurrentDateInTokyo } from "@/lib/util/date";
+import { selectFinishedEventState } from "@/lib/db/finished_event_state";
 
 export default async function RoomPage({
   params,
@@ -25,7 +26,7 @@ export default async function RoomPage({
   const eventId = Number(roomId);
   if (isNaN(eventId)) notFound();
 
-  const event = await selectEventById(Number(roomId));
+  const event = await selectEventById(eventId);
   if (!event) notFound();
 
   const currDateTime = getCurrentDateInTokyo();
@@ -34,9 +35,14 @@ export default async function RoomPage({
     return eventNotStarted(roomId);
   }
   if (currDateTime > event.endDateTime) {
-    const url = `${PARTYKIT_URL}/parties/main/${roomId}`;
-    const req = await fetch(url);
-    const userIcons = (await req.json()) as UserIcon[];
+    let userIcons = await selectFinishedEventState(eventId);
+
+    if (!userIcons) {
+      console.log("record doesn't exist")
+      const url = `${PARTYKIT_URL}/parties/main/${roomId}`;
+      const req = await fetch(url);
+      userIcons = await req.json();
+    }
 
     return (
       <ClosedEventTemplate
