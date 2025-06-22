@@ -1,26 +1,26 @@
 import { selectEventById } from "@/lib/db/event";
+import { insertFinishedEventState } from "@/lib/db/finished_event_state";
+import { UserIcon } from "@/types/room/shared";
 import { NextRequest, NextResponse } from "next/server";
 
  /**
- * @param req リクエスト(画像データ)
- * @returns レスポンス(Gyazo APIからのレスポンス)
+ * @param roomId: string -> イベントID(PartykitのインスタンスID)
+ * @returns レスポンス(Partykit Serverからのレスポンス)
  */
 export async function GET(
   _: NextRequest,
   { params }: { params: Promise<{ roomId: string }> },
 ) {
+
   const { roomId } = await params;
   const event = await selectEventById(Number(roomId));
-  console.log(roomId, event);
-  const message = {
-    endTime: event!.endDateTime,
-  }
+  const message = { endTime: event!.endDateTime }
   return NextResponse.json({ message });
 }
 
  /**
- * @param req リクエスト(画像データ)
- * @returns レスポンス(Gyazo APIからのレスポンス)
+ * @param roomId: string -> イベントID(PartykitのインスタンスID)
+ * @returns レスポンス(Partykit Serverからのレスポンス)
  */
 export async function POST(
   req: NextRequest,
@@ -28,7 +28,10 @@ export async function POST(
 ) {
 
   console.log("post request");
-  const test = await req.json();
-  console.log(test);
-  return NextResponse.json({ message: "post request success", status: 201 });
+  const { roomId } = await params;
+  const eventId = Number(roomId);
+  const userIcons = (await req.json()) as UserIcon[];
+  const res = await insertFinishedEventState(eventId, userIcons);
+
+  return NextResponse.json({ message: res, status: 201 });
 }
