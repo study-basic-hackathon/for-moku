@@ -12,7 +12,10 @@ export async function GET(
   const { roomId } = await params;
   const event = await selectEventById(Number(roomId));
   console.log(roomId, event);
-  return NextResponse.json({ message: event });
+  const message = {
+    endTime: event!.endDateTime,
+  }
+  return NextResponse.json({ message });
 }
 
  /**
