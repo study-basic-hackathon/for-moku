@@ -7,6 +7,7 @@ import { UserIcon } from "@/types/room/shared";
 import ZoomPanContainer from "@/components/organisms/room/ZoomPanContainer";
 import DraggableIcon from "@/components/organisms/room/DraggableIcon";
 import NonDraggableIcon from "@/components/organisms/room/NonDraggableIcon";
+import VenueImage from "@/components/organisms/room/VenueImage";
 
 export default function ActiveEventTemplate({
   roomId,
@@ -78,7 +79,7 @@ export default function ActiveEventTemplate({
 
   return (
     <ZoomPanContainer scale={scale} setScale={setScale}>
-      {imgUrl && <img src={imgUrl} draggable="false"/>}
+      {imgUrl && <VenueImage imgUrl={imgUrl}/>}
       {userIcons.map((icon, i) => {
         if (icon.user.id !== userId) {
           return <NonDraggableIcon key={i} icon={icon}/>

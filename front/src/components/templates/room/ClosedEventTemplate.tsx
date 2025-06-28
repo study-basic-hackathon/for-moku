@@ -3,6 +3,7 @@ import { useState } from "react";
 import { UserIcon } from "@/types/room/shared";
 import ZoomPanContainer from "@/components/organisms/room/ZoomPanContainer";
 import NonDraggableIcon from "@/components/organisms/room/NonDraggableIcon";
+import VenueImage from "@/components/organisms/room/VenueImage";
 
 export default function ActiveEventTemplate({
   userIcons,
@@ -16,7 +17,7 @@ export default function ActiveEventTemplate({
 
   return (
     <ZoomPanContainer scale={scale} setScale={setScale}>
-      {imgUrl && <img src={imgUrl} draggable="false"/>}
+      {imgUrl && <VenueImage imgUrl={imgUrl}/>}
       {userIcons.map((icon, i) => {
         return <NonDraggableIcon key={i} icon={icon}/>
       })}
