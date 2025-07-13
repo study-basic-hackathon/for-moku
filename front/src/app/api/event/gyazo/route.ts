@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const url = `${GYAZO_UPLOAD_END_POINT}`;
+    const url = `${process.env.GYAZO_UPLOAD_END_POINT}`;
     const headers = await createGyazoHeader();
     
     const formData = new FormData();
