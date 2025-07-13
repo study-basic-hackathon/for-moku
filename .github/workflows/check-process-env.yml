@@ -30,20 +30,14 @@ jobs:
           # 検索条件を設定
           SEARCH_PATTERN="process.env."
           INCLUDE_DIR="front"
-          EXCLUDE_PATTERNS=(
-            "front/src/app/*.ts"
-            "front/.next"
-            "front/*.ts"
-          )
           
-          # 除外パターンをgrepのオプションに変換
-          EXCLUDE_OPTIONS=""
-          for pattern in "${EXCLUDE_PATTERNS[@]}"; do
-            EXCLUDE_OPTIONS="$EXCLUDE_OPTIONS --exclude-glob=$pattern"
-          done
-          
-          # process.envの使用箇所を検索
-          RESULT=$(grep -r "$SEARCH_PATTERN" "$INCLUDE_DIR" $EXCLUDE_OPTIONS 2>/dev/null || true)
+          # process.envの使用箇所を検索（除外パターン付き）
+          RESULT=$(grep -r "$SEARCH_PATTERN" "$INCLUDE_DIR" \
+            --exclude-dir='.next' \
+            --exclude-dir='node_modules' \
+            --exclude='drizzle.config.ts' \
+            --exclude='env.ts' \
+            2>/dev/null || true)
           
           if [ -n "$RESULT" ]; then
             echo "❌ Direct process.env usage found:"
