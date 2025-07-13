@@ -1,3 +1,13 @@
+import { useState } from "react"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/atoms/shadcn/select"
+
 interface FormSelectProps {
   name: string;
   placeholder?: string;
@@ -33,24 +43,32 @@ interface FormSelectProps {
  * ```
  */
 export default function FormSelect({ name, placeholder, required, hasError, defaultValue, options }: Readonly<FormSelectProps>) {
+  const [value, setValue] = useState(defaultValue || '');
+
   return (
-    <select
-      name={name}
-      required={required}
-      defaultValue={defaultValue}
-      className={`w-full p-2 border rounded ${hasError ? 'border-red-500' : 'border-gray-300'}`}
-      key={name} // バリデーションエラー後にセレクトボックスの値を残すために使用
-    >
-      {placeholder && (
-        <option value="" disabled>
-          {placeholder}
-        </option>
-      )}
-      {options.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
+    <>
+      <Select value={value} onValueChange={setValue}>
+        <SelectTrigger 
+          className={`w-full ${hasError ? 'border-red-500' : 'border-gray-300'}`}
+        >
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {options.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+      <input 
+        type="hidden" 
+        name={name} 
+        value={value} 
+        required={required}
+      />
+    </>
   );
 } 
