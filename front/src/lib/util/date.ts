@@ -181,3 +181,12 @@ export function getCurrentDateInLocalTimezone(): Date {
 export function getCurrentDateInTokyo(): Date {
   return toZonedTime(new Date(), 'Asia/Tokyo');
 }
+
+/**
+ * タイムゾーンを削除した日時を取得する関数
+ * @param date タイムゾーンを削除したい日時
+ * @returns タイムゾーンを削除した日時
+ */
+export function getDateTimeRemovedTimezone(date: Date): Date {
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+}
