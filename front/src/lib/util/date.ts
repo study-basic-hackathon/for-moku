@@ -1,8 +1,6 @@
 import { format } from 'date-fns';
 import { toZonedTime, fromZonedTime } from 'date-fns-tz';
-
-// 環境変数からタイムゾーンを取得（デフォルトはAsia/Tokyo）
-const TIMEZONE = process.env.TIMEZONE || 'Asia/Tokyo';
+import { TIMEZONE } from '@/app/env';
 
 /**
  * 日時を日本語形式（YYYY年MM月dd日 HH:mm）にフォーマット
@@ -180,4 +178,13 @@ export function getCurrentDateInLocalTimezone(): Date {
  */
 export function getCurrentDateInTokyo(): Date {
   return toZonedTime(new Date(), 'Asia/Tokyo');
+}
+
+/**
+ * タイムゾーンを削除した日時を取得する関数
+ * @param date タイムゾーンを削除したい日時
+ * @returns タイムゾーンを削除した日時
+ */
+export function getDateTimeRemovedTimezone(date: Date): Date {
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60000);
 }

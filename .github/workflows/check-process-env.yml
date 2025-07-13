@@ -1,0 +1,56 @@
+# ワークフローの名前
+name: Check Process.env Usage
+
+# ワークフローがトリガーされるイベント
+on:
+  # プルリクエストが開かれたとき、同期されたとき、または再オープンされたときにトリガー
+  pull_request:
+    # どのブランチに対してプルリクエストが出されたときに実行するか
+    branches:
+      - develop
+
+# ワークフローで実行されるジョブ
+jobs:
+  # process.env使用チェックのジョブ
+  check-process-env:
+    # ジョブが実行されるVM環境
+    runs-on: ubuntu-latest # 最新のUbuntu環境を使用
+
+    # ジョブのステップ
+    steps:
+      # 1. リポジトリのコードをチェックアウト
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. process.envの直接使用をチェック
+      - name: Check for direct process.env usage
+        run: |
+          echo "Checking for direct process.env usage in front directory..."
+          
+          # 検索条件を設定
+          SEARCH_PATTERN="process.env."
+          INCLUDE_DIR="front"
+          EXCLUDE_PATTERNS=(
+            "front/src/app/*.ts"
+            "front/.next"
+            "front/*.ts"
+          )
+          
+          # 除外パターンをgrepのオプションに変換
+          EXCLUDE_OPTIONS=""
+          for pattern in "${EXCLUDE_PATTERNS[@]}"; do
+            EXCLUDE_OPTIONS="$EXCLUDE_OPTIONS --exclude-glob=$pattern"
+          done
+          
+          # process.envの使用箇所を検索
+          RESULT=$(grep -r "$SEARCH_PATTERN" "$INCLUDE_DIR" $EXCLUDE_OPTIONS 2>/dev/null || true)
+          
+          if [ -n "$RESULT" ]; then
+            echo "❌ Direct process.env usage found:"
+            echo "$RESULT"
+            echo ""
+            echo "Please use environment variables through proper configuration files or Next.js environment handling."
+            exit 1
+          else
+            echo "✅ No direct process.env usage found in specified directories."
+          fi

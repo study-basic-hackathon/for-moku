@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
  * reqにはblobを入れればいい
  * 使い方：
  * ```ts
- * const res = await fetch('${process.env.NEXT_PUBLIC_BASE_URL}/api/event/gyazo', {
+ * const res = await fetch(`${BASE_URL}/api/event/gyazo`, {
  *   method: 'POST',
  *   body: blob
  * });
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
  * reqには画像IDを入れればいい
  * 使い方：
  * ```ts
- * const res = await fetch('${process.env.NEXT_PUBLIC_BASE_URL}/api/event/gyazo', {
+ * const res = await fetch(`${BASE_URL}/api/event/gyazo`, {
  *   method: 'DELETE',
  *   body: { imageId: '1234567890' }
  * });
