@@ -30,7 +30,8 @@ interface FormInputDateProps {
  */
 export default function FormInputDate({ name, placeholder, hasError, defaultValue }: Readonly<FormInputDateProps>) {
   // 日付を管理するstate(デフォルト値があればそれを使用し、なければ今日の日付を使用)
-  const [date, setDate] = useState<Date>(defaultValue ? new Date(defaultValue) : new Date())
+  const [date, setDate] = useState<Date>(defaultValue ? 
+          getDateTimeRemovedTimezone(new Date(defaultValue)) : getDateTimeRemovedTimezone(new Date()))
   
   return (
     <> 
