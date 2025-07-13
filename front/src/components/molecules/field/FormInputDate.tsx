@@ -48,7 +48,7 @@ export default function FormInputDate({ name, placeholder, hasError, defaultValu
       <input
         type="hidden"
         name={name}
-        placeholder={placeholder}
+        
         value={formatDateTimeYYYYMMDD_HYPHEN(date)}
       />
     </>
