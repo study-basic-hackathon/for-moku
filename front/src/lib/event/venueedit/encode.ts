@@ -30,15 +30,12 @@ interface MatrixElement {
 function flattenAndRemoveNull(matrix: (Color | null)[][], numPixel: number): Map<string, {x: number, y: number}[]> {
   const flatten =  matrix.flatMap((row, y) => 
     row.map((value, x) => ({ value, x, y }))
-      .filter(({ value }) => value !== null) as MatrixElement[]
+      .filter(({ value, x, y }) => value !== null // 色がnullだったり、numPixelを超える範囲にあるものは永続化しない。
+        && x < numPixel && y < numPixel) as MatrixElement[]
   )
 
   const colorMap = flatten.reduce((acc, element) => {
     const color = element?.value?.toString()
-    if (element.x >= numPixel || element.y >= numPixel) { 
-      // ピクセル数を超える範囲にあるものは永続化しない。
-      return acc
-    }
     if (!acc.has(color)) {
       acc.set(color, [])
     }
