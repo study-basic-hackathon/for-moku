@@ -2,6 +2,7 @@ import { CommonRegisterFormField } from '@/types/common/form';
 import FormInput from '@/components/molecules/field/FormInput';
 import FormTextarea from '@/components/molecules/field/FormTextarea';
 import FormSelect from '@/components/molecules/field/FormSelect';
+import FormInputDate from '@/components/molecules/field/FormInputDate';
 
 interface FormFieldProps<T> {
   field: CommonRegisterFormField<T>;
@@ -32,6 +33,8 @@ interface FormFieldProps<T> {
  * ```
  */
 export default function FormField<T>({ field, hasError, defaultValue }: Readonly<FormFieldProps<T>>) {
+  
+  // テキストエリアの場合
   if (field.elementType === 'textarea') {
     return (
       <FormTextarea
@@ -44,6 +47,7 @@ export default function FormField<T>({ field, hasError, defaultValue }: Readonly
     );
   }
 
+  // セレクトボックスの場合
   if (field.elementType === 'select') {
     return (
       <FormSelect
@@ -56,7 +60,19 @@ export default function FormField<T>({ field, hasError, defaultValue }: Readonly
       />
     );
   }
+  // 日付入力フィールドの場合
+  if (field.elementType === 'input' && field.inputType === 'date') {
+    return (
+      <FormInputDate
+        name={field.name.toString()}
+        placeholder={field.placeholder}
+        hasError={hasError}
+        defaultValue={defaultValue}
+      />
+    );
+  }
 
+  // その他のフィールドの場合
   return (
     <FormInput
       name={field.name.toString()}
