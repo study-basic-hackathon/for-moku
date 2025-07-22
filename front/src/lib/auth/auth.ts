@@ -1,3 +1,4 @@
+import { AUTH_DEBUG } from "@/app/env";
 import NextAuth, { NextAuthConfig } from "next-auth"
 import "next-auth/jwt"
 
@@ -9,7 +10,7 @@ import { NextResponse } from "next/server"
 export const GUEST_EMAIL = 'guest@example.com'
 
 export const authConfig = {
-  debug: !!process.env.AUTH_DEBUG,
+  debug: AUTH_DEBUG,
   providers: [
     Google,
     Credentials({

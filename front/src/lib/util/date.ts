@@ -1,8 +1,6 @@
 import { format } from 'date-fns';
 import { toZonedTime, fromZonedTime } from 'date-fns-tz';
-
-// 環境変数からタイムゾーンを取得（デフォルトはAsia/Tokyo）
-const TIMEZONE = process.env.TIMEZONE || 'Asia/Tokyo';
+import { TIMEZONE } from '@/app/env';
 
 /**
  * 日時を日本語形式（YYYY年MM月dd日 HH:mm）にフォーマット
