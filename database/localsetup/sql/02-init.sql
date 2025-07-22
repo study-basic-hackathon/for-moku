@@ -45,3 +45,12 @@ CREATE TABLE "user_group_assignments" (
 
 ALTER TABLE "user_group_assignments" ADD CONSTRAINT "user_group_assignments_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "user_group_assignments" ADD CONSTRAINT "user_group_assignments_user_group_id_user_groups_id_fk" FOREIGN KEY ("user_group_id") REFERENCES "public"."user_groups"("id") ON DELETE cascade ON UPDATE no action;
+
+CREATE TABLE "finished_event_state" (
+        "id" bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "finished_event_state_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1),
+        "event_id" bigint NOT NULL,
+        "user_icons" jsonb NOT NULL,
+        "created_at" timestamp DEFAULT now() NOT NULL,
+        "updated_at" timestamp DEFAULT now() NOT NULL,
+        CONSTRAINT "finished_event_state_event_id_unique" UNIQUE("event_id")
+);
