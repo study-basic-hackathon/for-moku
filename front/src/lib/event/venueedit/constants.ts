@@ -25,6 +25,11 @@ export const DEFAULT_COLORS: Color[] = [
 ]
 
 /**
+ * デフォルトの選択ツール
+ */
+export const DEFAULT_SELECTED_TOOL = 'ピクセル塗りつぶし'
+
+/**
  * デフォルトのピクセル数
  */
 export const DEFAULT_NUM_PIXEL = 16

@@ -1,6 +1,7 @@
 import { atom } from 'jotai'
 import { EDITOR_TOOL_PAIR_TREE, VenueEditTool } from '@/types/tool'
 import { EditorToolPairKey } from '@/types/tool'
+import { DEFAULT_SELECTED_TOOL } from '@/lib/event/venueedit/constants'
 
 // アクションの型を定義
 export type ToolAction =
@@ -9,7 +10,7 @@ export type ToolAction =
   | { type: 'SET_DRAW_TOOL'; toolKey: EditorToolPairKey };
 
 // 状態を保持するプライベートなベースatom
-const _selectedToolAtom = atom<VenueEditTool>('ピクセル塗りつぶし');
+const _selectedToolAtom = atom<VenueEditTool>(DEFAULT_SELECTED_TOOL);
 
 // 読み取り専用のatom（コンポーネントはこれを参照）
 export const selectedToolAtom = atom((get) => get(_selectedToolAtom));
