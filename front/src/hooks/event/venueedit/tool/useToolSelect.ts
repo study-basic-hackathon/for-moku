@@ -1,5 +1,4 @@
-import { useCallback } from 'react'
-import { DRAWABLE_TOOLS, DrawableTool, VenueEditTool } from '@/types/tool'
+import { VenueEditTool } from '@/types/tool'
 import { usePixelDraw } from '@/hooks/event/venueedit/tool/cell/usePixelDraw'
 import { usePixelErase } from '@/hooks/event/venueedit/tool/cell/usePixelErase'
 import { useCircleDraw } from '@/hooks/event/venueedit/tool/cell/useCircleDraw'
@@ -8,9 +7,9 @@ import { Color } from 'react-color'
 import { useCircleErase } from '@/hooks/event/venueedit/tool/cell/useCircleErase'
 import { useTextAdd } from '@/hooks/event/venueedit/tool/select/useTextAdd'
 import { TextState } from '@/types/event/state'
+import { useSubToolSelection } from '@/hooks/event/venueedit/useSubToolSelection'
 
 interface Props {
-  selectedTool: VenueEditTool
   selectedColor: Color
   selectedColorBackGround?: Color
   canvasRef: React.RefObject<HTMLCanvasElement | null>
@@ -35,7 +34,6 @@ type ToolHandlers = {
 }
 
 export const useToolSelect = ({
-  selectedTool,
   selectedColor,
   selectedColorBackGround,
   canvasRef,
@@ -51,6 +49,7 @@ export const useToolSelect = ({
   startDrawing,
   endDrawing,
 }: Props) => {
+  const { selectedTool } = useSubToolSelection()
 
   const pixelDraw = usePixelDraw({
     canvasRef,
@@ -147,17 +146,17 @@ export const useToolSelect = ({
   const handleMouseUp = createHandler('handleMouseUp')
   const handleMouseLeave = createHandler('handleMouseLeave')
 
-  return {
-    handleMouseDown,
-    handleMouseMove,
-    handleMouseUp,
-    handleMouseLeave,
-    isTextDialogOpen: textAdd.isTextDialogOpen,
-    setIsTextDialogOpen: textAdd.setIsTextDialogOpen,
-    currentText: textAdd.currentText,
-    setCurrentText: textAdd.setCurrentText,
-    textPosition: textAdd.textPosition,
-    setTextPosition: textAdd.setTextPosition,
-    handleTextAdd: textAdd.handleTextAdd,
+  return { 
+    handleMouseDown, 
+    handleMouseMove, 
+    handleMouseUp, 
+    handleMouseLeave, 
+    isTextDialogOpen: textAdd.isTextDialogOpen, 
+    setIsTextDialogOpen: textAdd.setIsTextDialogOpen, 
+    currentText: textAdd.currentText, 
+    setCurrentText: textAdd.setCurrentText, 
+    textPosition: textAdd.textPosition, 
+    setTextPosition: textAdd.setTextPosition, 
+    handleTextAdd: textAdd.handleTextAdd, 
   }
 } 

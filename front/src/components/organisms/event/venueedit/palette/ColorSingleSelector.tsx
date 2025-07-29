@@ -5,17 +5,13 @@ import { useState } from 'react'
 import ColorPickerDialog from '@/components/organisms/event/venueedit/palette/ColorPickerDialog'
 import ToggleToGenerateButton from '@/components/organisms/event/venueedit/palette/ToggleToGenerateButton'
 import ToggleToEraseButton from '@/components/organisms/event/venueedit/palette/ToggleToEraseButton'
-import { VenueEditTool } from '@/types/tool'
-import { isDrawingTool } from '@/lib/event/venueedit/subToolSelection'
+import { useSubToolSelection } from '@/hooks/event/venueedit/useSubToolSelection'
 
 interface ColorSingleSelectorProps {
   selectedColor: Color
   selectedColorBackGround: Color
   setSelectedColor: (color: Color) => void
   setSelectedColorBackGround: (color: Color) => void
-  toggleToGenerateTool: () => void
-  toggleToEraseTool: () => void
-  selectedTool: VenueEditTool
 }
 
 export default function ColorSingleSelector({
@@ -23,10 +19,8 @@ export default function ColorSingleSelector({
   selectedColorBackGround,  
   setSelectedColor,
   setSelectedColorBackGround,
-  toggleToGenerateTool,
-  toggleToEraseTool,
-  selectedTool
 }: Readonly<ColorSingleSelectorProps>) {
+  const { isDrawingTool } = useSubToolSelection()
   const [isTextColorOpen, setIsTextColorOpen] = useState(false)
   const [isBackgroundColorOpen, setIsBackgroundColorOpen] = useState(false)
 
@@ -42,14 +36,12 @@ export default function ColorSingleSelector({
     <>
       <div className="flex gap-2 mb-4 justify-center">
         <ToggleToGenerateButton
-          onClick={toggleToGenerateTool}
           className="w-1/4 h-8"
-          isSelected={isDrawingTool(selectedTool)}
+          isSelected={isDrawingTool}
         />
         <ToggleToEraseButton
-          toggleToEraseTool={toggleToEraseTool}
           className="w-1/4 h-8"
-          isSelected={!isDrawingTool(selectedTool)}
+          isSelected={!isDrawingTool}
         />
       </div>
       <div className="grid grid-cols-4 lg:grid-cols-2 gap-2 justify-center">

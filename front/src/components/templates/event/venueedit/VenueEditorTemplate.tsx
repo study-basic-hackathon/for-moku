@@ -8,7 +8,6 @@ import { useColorPalette } from '@/hooks/event/venueedit/submenu/useColorPalette
 import { useCanvasDraw } from '@/hooks/event/venueedit/useCanvasDraw'
 import TextDialog from '@/components/organisms/event/venueedit/text/TextDialog'
 import { EventVenueEditViewModel } from '@/types/event/viewmodel'
-import { useSubToolSelection } from '@/hooks/event/venueedit/useSubToolSelection'
 
 interface Props {
   eventVenueEditViewModel: EventVenueEditViewModel
@@ -20,13 +19,6 @@ interface Props {
  * @param eventVenueEditViewModel 会場編集ビューモデル
  */
 export default function VenueEditorTemplate({ eventVenueEditViewModel }: Readonly<Props>) {
-  const {
-    selectedTool,
-    toggleToGenerateTool,
-    toggleToEraseTool,
-    setDrawToolFromToolKey
-  } = useSubToolSelection()
-
   const { 
     selectedColor,
     setSelectedColor, 
@@ -56,7 +48,6 @@ export default function VenueEditorTemplate({ eventVenueEditViewModel }: Readonl
     isPendingForSave
   } = useCanvasDraw({
     selectedColor,
-    selectedTool,
     selectedColorBackGround,
     eventVenueEditViewModel,
   })
@@ -85,9 +76,6 @@ export default function VenueEditorTemplate({ eventVenueEditViewModel }: Readonl
           </div>
           <div className="col-span-1 md:col-span-1 lg:col-span-2 xl:col-span-4">
             <VenueToolSubMenu 
-              selectedTool={selectedTool}
-              toggleToGenerateTool={toggleToGenerateTool}
-              toggleToEraseTool={toggleToEraseTool}
               selectedColor={selectedColor}
               setSelectedColor={setSelectedColor}
               selectedColorBackGround={selectedColorBackGround}
@@ -104,10 +92,7 @@ export default function VenueEditorTemplate({ eventVenueEditViewModel }: Readonl
             />
           </div>
           <div className="col-span-1 md:col-span-1 lg:col-span-8 xl:col-span-2">
-            <VenueToolSelectionMenu 
-              selectedTool={selectedTool} 
-              setDrawToolFromToolKey={setDrawToolFromToolKey}
-            />
+            <VenueToolSelectionMenu />
           </div>
         </div>
       </div>

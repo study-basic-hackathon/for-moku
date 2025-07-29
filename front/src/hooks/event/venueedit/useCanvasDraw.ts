@@ -1,34 +1,29 @@
 
-import { VenueEditTool } from '@/types/tool'
-import { Color } from 'react-color'
-import { useZoom } from '@/hooks/event/venueedit/useZoom'
-import { useToolSelect } from '@/hooks/event/venueedit/tool/useToolSelect'
-import { useDrawingState } from '@/hooks/event/venueedit/useDrawingState'
-import { useImageAction } from './image/useImageAction'
-import { EventVenueEditViewModel } from '@/types/event/viewmodel'
-import { useInitialState } from '@/hooks/event/venueedit/useInitialState'
+import { Color } from 'react-color';
+import { useZoom } from '@/hooks/event/venueedit/useZoom';
+import { useToolSelect } from '@/hooks/event/venueedit/tool/useToolSelect';
+import { useDrawingState } from '@/hooks/event/venueedit/useDrawingState';
+import { useImageAction } from './image/useImageAction';
+import { EventVenueEditViewModel } from '@/types/event/viewmodel';
+import { useInitialState } from '@/hooks/event/venueedit/useInitialState';
 
 /**
  * キャンバスの描画を管理するフックのProps
  * @param selectedColor 選択された色
- * @param selectedTool 選択されたツール
  */
 interface Props {
-  selectedColor: Color
-  selectedTool: VenueEditTool
-  selectedColorBackGround?: Color
-  eventVenueEditViewModel: EventVenueEditViewModel
+  selectedColor: Color;
+  selectedColorBackGround?: Color;
+  eventVenueEditViewModel: EventVenueEditViewModel;
 }
 
 /**
  * キャンバスの描画を管理するフック
  * @param selectedColor 選択された色
- * @param selectedTool 選択されたツール
  * @returns キャンバスの参照、キャンバスのサイズ、セルの座標を取得する関数、描画関数
  */
 export const useCanvasDraw = ({ 
   selectedColor,
-  selectedTool,
   selectedColorBackGround,
   eventVenueEditViewModel
 }: Props) => {
@@ -79,7 +74,6 @@ export const useCanvasDraw = ({
       textPosition, 
       setTextPosition, 
       handleTextAdd } = useToolSelect({
-    selectedTool,
     selectedColor,
     selectedColorBackGround,
     canvasRef,
