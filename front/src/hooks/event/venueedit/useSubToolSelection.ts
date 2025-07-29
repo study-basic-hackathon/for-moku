@@ -2,7 +2,7 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useMemo } from 'react';
 import { selectedToolAtom, toolActionAtom } from '@/store/event/venueedit/tool';
 import { EditorToolPairKey, PIXEL_TOOLS, TEXT_TOOLS } from '@/types/tool';
-import { isDrawingTool as _isDrawingTool, getToolType as _getToolType } from '@/lib/event/venueedit/subToolSelection';
+import { isDrawingTool as _isDrawingTool, getToolType } from '@/lib/event/venueedit/subToolSelection';
 
 /**
  * サブツール選択を管理するフック
@@ -33,11 +33,8 @@ export const useSubToolSelection = () => {
   // isDrawingToolはselectedToolに依存し、その結果をメモ化する
   const isDrawingTool = useMemo(() => _isDrawingTool(selectedTool), [selectedTool]);
 
-  // getToolTypeは純粋関数であり、その参照を安定させるためにuseMemoでラップする
-  const getToolType = useMemo(() => _getToolType, []);
-
-  // toolTypeはselectedToolとgetToolTypeに依存し、その結果をメモ化する
-  const toolType = useMemo(() => getToolType(selectedTool), [selectedTool, getToolType]);
+  // toolTypeはselectedToolに依存し、その結果をメモ化する
+  const toolType = useMemo(() => getToolType(selectedTool), [selectedTool]);
 
   // isPixelToolはselectedToolに依存し、その結果をメモ化する
   const isPixelTool = useMemo(() => (PIXEL_TOOLS as readonly string[]).includes(selectedTool), [selectedTool]);
@@ -50,7 +47,6 @@ export const useSubToolSelection = () => {
     toggleToGenerateTool,
     toggleToEraseTool,
     setDrawToolFromToolKey,
-    getToolType,
     toolType,
     isDrawingTool,
     isPixelTool,
