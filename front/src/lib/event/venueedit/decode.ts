@@ -1,6 +1,6 @@
 import { Color } from "react-color"
 import { EncodedVenue, TextState } from "@/types/event/state"
-import { DEFAULT_NUM_PIXEL } from "@/lib/event/venueedit/constants"
+import { DEFAULT_NUM_PIXEL, MAX_NUM_PIXEL } from "@/lib/event/venueedit/constants"
 
 /**
  * 復元された会場の情報
@@ -23,8 +23,8 @@ export function decodeVenue(json: string | EncodedVenue): DecodedVenue {
   if (!data) {
     return {
       numPixel: DEFAULT_NUM_PIXEL,
-      pixelColorState: Array(DEFAULT_NUM_PIXEL).fill(null).map(() => Array(DEFAULT_NUM_PIXEL).fill(null)),
-      circleColorState: Array(DEFAULT_NUM_PIXEL).fill(null).map(() => Array(DEFAULT_NUM_PIXEL).fill(null)),
+      pixelColorState: Array(MAX_NUM_PIXEL).fill(null).map(() => Array(MAX_NUM_PIXEL).fill(null)),
+      circleColorState: Array(MAX_NUM_PIXEL).fill(null).map(() => Array(MAX_NUM_PIXEL).fill(null)),
       textState: []
     }
   }
@@ -33,8 +33,8 @@ export function decodeVenue(json: string | EncodedVenue): DecodedVenue {
 
   // 空の二次元配列を作成
   const numPixelNew = numPixel ?? DEFAULT_NUM_PIXEL
-  const pixelColorState: (Color | null)[][] = Array(numPixelNew).fill(null).map(() => Array(numPixelNew).fill(null))
-  const circleColorState: (Color | null)[][] = Array(numPixelNew).fill(null).map(() => Array(numPixelNew).fill(null))
+  const pixelColorState: (Color | null)[][] = Array(MAX_NUM_PIXEL).fill(null).map(() => Array(MAX_NUM_PIXEL).fill(null))
+  const circleColorState: (Color | null)[][] = Array(MAX_NUM_PIXEL).fill(null).map(() => Array(MAX_NUM_PIXEL).fill(null))
   const textStateNew: TextState[] = textState ?? []
   if(encodedPixelColor) {
     // ピクセルカラーを復元

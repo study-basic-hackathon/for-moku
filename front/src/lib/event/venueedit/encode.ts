@@ -22,13 +22,16 @@ interface MatrixElement {
 
 /**
  * マトリックスをフラット化し、nullを除去して色ごとに座標をグループ化する
+ * この時、numPixelを超える範囲にあるものは永続化しない。
  * @param matrix 2次元の色マトリックス
+ * @param numPixel ピクセル数
  * @returns 色をキー、座標の配列を値とするMap
  */
-function flattenAndRemoveNull(matrix: (Color | null)[][]): Map<string, {x: number, y: number}[]> {
+function flattenAndRemoveNull(matrix: (Color | null)[][], numPixel: number): Map<string, {x: number, y: number}[]> {
   const flatten =  matrix.flatMap((row, y) => 
     row.map((value, x) => ({ value, x, y }))
-      .filter(({ value }) => value !== null) as MatrixElement[]
+      .filter(({ value, x, y }) => value !== null // 色がnullだったり、numPixelを超える範囲にあるものは永続化しない。
+        && x < numPixel && y < numPixel) as MatrixElement[]
   )
 
   const colorMap = flatten.reduce((acc, element) => {
@@ -53,8 +56,8 @@ function flattenAndRemoveNull(matrix: (Color | null)[][]): Map<string, {x: numbe
  * @returns エンコードされた会場データ
  */
 export function encodeVenue(numPixel: number, pixelColorState: (Color | null)[][], circleColorState: (Color | null)[][], textState: TextState[]) :EncodedVenue {
-  const encodedPixelColor = Object.fromEntries(flattenAndRemoveNull(pixelColorState))
-  const encodedCircleColor = Object.fromEntries(flattenAndRemoveNull(circleColorState))
+  const encodedPixelColor = Object.fromEntries(flattenAndRemoveNull(pixelColorState, numPixel))
+  const encodedCircleColor = Object.fromEntries(flattenAndRemoveNull(circleColorState, numPixel))
   return {
     numPixel,
     encodedPixelColor,
