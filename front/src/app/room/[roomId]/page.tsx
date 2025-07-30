@@ -45,10 +45,12 @@ export default async function RoomPage({
     }
 
     return (
-      <ClosedEventTemplate
-        userIcons={userIcons}
-        imgUrl={event.imageUrl}
-      />
+      <SessionProvider>
+        <ClosedEventTemplate
+          userIcons={userIcons}
+          imgUrl={event.imageUrl}
+        />
+      </SessionProvider>
     )
   }
 
@@ -60,6 +62,7 @@ export default async function RoomPage({
     const res = await selectUserByEmail(user.email);
 
     if (res) {
+      user.id = res.id.toString();
       user.name = res.name;
       user.bio = res.bio ?? "";
       user.interests = res.interests ?? "";
@@ -72,6 +75,7 @@ export default async function RoomPage({
       user.name = "New User";
 
       const userId = await insertNewUser(user.email);
+      user.id = userId.toString();
       await insertMemberAssignment(userId, event.userGroupId);
     }
   }

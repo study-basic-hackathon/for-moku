@@ -82,7 +82,7 @@ export default function ActiveEventTemplate({
       {imgUrl && <VenueImage imgUrl={imgUrl}/>}
       {userIcons.map((icon, i) => {
         if (icon.user.id !== userId) {
-          return <NonDraggableIcon key={i} icon={icon}/>
+          return <NonDraggableIcon key={i} icon={icon} roomId={roomId}/>
         } else {
           return <DraggableIcon key={i} socket={socket} icon={icon} scale={scale}/>
         }

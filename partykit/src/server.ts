@@ -58,10 +58,22 @@ export default class Server implements Party.Server {
   }
 
   async onRequest(request: Party.Request) {
+    // CORS headers
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    };
+
+    // Handle preflight requests
+    if (request.method === "OPTIONS") {
+      return new Response(null, { status: 200, headers: corsHeaders });
+    }
+
     const userIcons = await this.ensureLoadUserIcons();
 
     if (request.method === "GET") {
-      return new Response(JSON.stringify(userIcons));
+      return new Response(JSON.stringify(userIcons), { headers: corsHeaders });
     }
 
     if (request.method === "POST") {
@@ -76,7 +88,7 @@ export default class Server implements Party.Server {
         await this.room.storage.put("userIcons", this.userIcons);
       }
 
-      return new Response(JSON.stringify(user.id));
+      return new Response(JSON.stringify(user.id), { headers: corsHeaders });
     }
 
     if (request.method === "DELETE") {
@@ -88,10 +100,10 @@ export default class Server implements Party.Server {
       });
       await this.room.storage.put("userIcons", this.userIcons);
 
-      return new Response(null, { status: 204 });
+      return new Response(null, { status: 204, headers: corsHeaders });
     }
 
-    return new Response("Not Found", { status: 404 });
+    return new Response("Not Found", { status: 404, headers: corsHeaders });
   }
 
   async onConnect(conn: Party.Connection, _ctx: Party.ConnectionContext) {
