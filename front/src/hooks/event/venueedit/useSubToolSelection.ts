@@ -1,54 +1,55 @@
-import { useCallback, useState } from "react"
-import { EDITOR_TOOL_PAIR_TREE, VenueEditTool } from "@/types/tool"
+import { useAtomValue, useSetAtom } from 'jotai';
+import { useCallback, useMemo } from 'react';
+import { selectedToolAtom, toolActionAtom } from '@/store/event/venueedit/tool';
+import { EditorToolPairKey, PIXEL_TOOLS, TEXT_TOOLS } from '@/types/tool';
+import { isDrawingTool as _isDrawingTool, getToolType } from '@/lib/event/venueedit/subToolSelection';
 
 /**
  * サブツール選択を管理するフック
- * 
+ *
  * @returns サブツールの状態と操作関数
- * - selectedTool: 現在選択されているツール
- * - toggleToGenerateTool: 生成系ツールに切り替える関数
- * - toggleToEraseTool: 消去系ツールに切り替える関数
- * - setDrawToolFromToolKey: ツールキーから描画系ツールに切り替える関数
  */
 export const useSubToolSelection = () => {
-  const [selectedTool, setSelectedTool] = useState<VenueEditTool>("ピクセル塗りつぶし")
+  const selectedTool = useAtomValue(selectedToolAtom);
+  const dispatch = useSetAtom(toolActionAtom);
 
-  // 生成系ツールに切り替える
-  // セッターには現在のツールを参照して変換する関数を受け取ることができる
-  // 依存配列に現在の配列をいれて書くよりも、効率が上がるためこちらの方が望ましいとのこと
-  const toggleToGenerateTool = useCallback(() => {
-    setSelectedTool(prevTool => {
-      const toolPair = Object.values(EDITOR_TOOL_PAIR_TREE).find(
-        pair => pair.generate === prevTool || pair.erase === prevTool
-      );
-      
-      return toolPair ? toolPair.generate : prevTool;
-    });
-  }, [])
+  const toggleToGenerateTool = useCallback(
+    () => dispatch({ type: 'TOGGLE_GENERATE' }),
+    [dispatch]
+  );
 
-  // 消去系ツールに切り替える関数
-  const toggleToEraseTool = useCallback(() => {
-    setSelectedTool(prevTool => {
-      const toolPair = Object.values(EDITOR_TOOL_PAIR_TREE).find(
-        pair => pair.generate === prevTool || pair.erase === prevTool
-      );
-      
-      return toolPair ? toolPair.erase : prevTool;
-    });
-  }, [])
+  const toggleToEraseTool = useCallback(
+    () => dispatch({ type: 'TOGGLE_ERASE' }),
+    [dispatch]
+  );
 
-  const setDrawToolFromToolKey = useCallback((toolKey: keyof typeof EDITOR_TOOL_PAIR_TREE) => {
-    const toolPair = EDITOR_TOOL_PAIR_TREE[toolKey]
-    
-    if (toolPair) {
-      setSelectedTool(toolPair.generate)
-    }
-  }, [])
+  const setDrawToolFromToolKey = useCallback(
+    (toolKey: EditorToolPairKey) => {
+      dispatch({ type: 'SET_DRAW_TOOL', toolKey });
+    },
+    [dispatch]
+  );
+
+  // isDrawingToolはselectedToolに依存し、その結果をメモ化する
+  const isDrawingTool = useMemo(() => _isDrawingTool(selectedTool), [selectedTool]);
+
+  // toolTypeはselectedToolに依存し、その結果をメモ化する
+  const toolType = useMemo(() => getToolType(selectedTool), [selectedTool]);
+
+  // isPixelToolはselectedToolに依存し、その結果をメモ化する
+  const isPixelTool = useMemo(() => (PIXEL_TOOLS as readonly string[]).includes(selectedTool), [selectedTool]);
+
+  // isTextToolはselectedToolに依存し、その結果をメモ化する
+  const isTextTool = useMemo(() => (TEXT_TOOLS as readonly string[]).includes(selectedTool), [selectedTool]);
 
   return {
     selectedTool,
     toggleToGenerateTool,
     toggleToEraseTool,
-    setDrawToolFromToolKey
-  }
-}
+    setDrawToolFromToolKey,
+    toolType,
+    isDrawingTool,
+    isPixelTool,
+    isTextTool,
+  };
+};

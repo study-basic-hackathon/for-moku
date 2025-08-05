@@ -1,20 +1,16 @@
 import { EDITOR_TOOL_PAIR_TREE, EditorToolPairKey, VenueEditTool } from '@/types/tool'
 import MonoClomeButton from '@/components/atoms/button/MonoClomeButton'
 import { useCallback } from 'react'
+import { useSubToolSelection } from '@/hooks/event/venueedit/useSubToolSelection'
 
-interface ToolButtonGroupProps {
-  selectedTool: VenueEditTool
-  setDrawToolFromToolKey: (toolKey: keyof typeof EDITOR_TOOL_PAIR_TREE) => void
-}
 
 /**
  * ツールボタングループ
  * 
- * @param selectedTool 現在選択されているツール
- * @param setDrawToolFromToolKey ツール選択時のコールバック
  * @returns ツールボタングループ
  */
-export default function ToolButtonGroup({ selectedTool, setDrawToolFromToolKey }: Readonly<ToolButtonGroupProps>) {
+export default function ToolButtonGroup() {
+  const { selectedTool, setDrawToolFromToolKey } = useSubToolSelection()
   
   // 現在選択されているツールがどのツールタイプに属するかを求める関数
   const isSelected = useCallback((toolKey: EditorToolPairKey) => {

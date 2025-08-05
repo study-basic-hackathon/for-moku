@@ -1,6 +1,7 @@
 'use client'
 
 import XButton from '@/components/molecules/button/XButton'
+import { useSubToolSelection } from '@/hooks/event/venueedit/useSubToolSelection'
 
 /**
  * 削除系のツールに切り替えるボタンコンポーネント
@@ -26,15 +27,12 @@ import XButton from '@/components/molecules/button/XButton'
  * />
  * ```
  * 
- * @param toggleToEraseTool - ボタンクリック時に実行されるコールバック関数
  * @param disabled - ボタンを無効化するかどうか
  * @param isSelected - ボタンが選択されているかどうか
  * @param className - 追加のクラス名
  * @returns バツ記号を表示するボタンコンポーネント
  */
 interface ToggleToEraseButtonProps {
-  /** ボタンクリック時に実行されるコールバック関数 */
-  toggleToEraseTool: () => void
   /** ボタンを無効化するかどうか */
   disabled?: boolean
   /** ボタンが選択されているかどうか */
@@ -43,7 +41,8 @@ interface ToggleToEraseButtonProps {
   className?: string
 }
 
-export default function ToggleToEraseButton({ toggleToEraseTool, disabled, isSelected, className }: Readonly<ToggleToEraseButtonProps>) {
+export default function ToggleToEraseButton({ disabled, isSelected, className }: Readonly<ToggleToEraseButtonProps>) {
+  const { toggleToEraseTool } = useSubToolSelection()
   return (
     <XButton
       onClick={toggleToEraseTool}
