@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Position, TextState } from '@/types/event/state'
 import { Color } from 'react-color'
+import { useSelectedColor } from '@/hooks/event/venueedit/submenu/useSelectedColor'
 
 interface TextDialogProps {
   textState: TextState[]
   setTextState: React.Dispatch<React.SetStateAction<TextState[]>>
-  selectedColor: Color
-  selectedColorBackGround?: Color
   isDialogModalOpen: boolean
   setIsDialogModalOpen: (isOpen: boolean) => void
 }
@@ -14,11 +13,10 @@ interface TextDialogProps {
 export const useTextDialog = ({
   textState,
   setTextState,
-  selectedColor,
-  selectedColorBackGround,
   isDialogModalOpen,
   setIsDialogModalOpen,
 }: TextDialogProps) => {
+  const { selectedColor, selectedColorBackGround } = useSelectedColor()
   const [isTextDialogOpen, setIsTextDialogOpen] = useState(false)
   const [currentText, setCurrentText] = useState('')
   const [textPosition, setTextPosition] = useState<Position>({
@@ -38,7 +36,7 @@ export const useTextDialog = ({
     setIsTextDialogOpen(isDialogModalOpen)
   }, [isDialogModalOpen])
 
-  const handleTextAdd = () => {
+  const handleTextAdd = useCallback(() => {
     const newTextState: TextState[] = [...textState, {
       text: currentText,
       textColor: selectedColor,
@@ -52,7 +50,7 @@ export const useTextDialog = ({
     }]
     setTextState(newTextState)
     setIsTextDialogOpen(false)
-  }
+  }, [currentText, selectedColor, selectedColorBackGround, textState, textPosition, setTextState, setIsTextDialogOpen])
 
   return {
     isTextDialogOpen,
@@ -62,7 +60,5 @@ export const useTextDialog = ({
     textPosition,
     setTextPosition,
     handleTextAdd,
-    selectedColor,
-    selectedColorBackGround,
   }
 }

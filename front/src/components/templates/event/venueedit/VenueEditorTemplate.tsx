@@ -20,11 +20,7 @@ interface Props {
  */
 export default function VenueEditorTemplate({ eventVenueEditViewModel }: Readonly<Props>) {
   const { 
-    selectedColor,
-    setSelectedColor, 
     colorPalette, 
-    selectedColorBackGround,
-    setSelectedColorBackGround,
     addColor,
     removeColor
   } = useColorPalette()
@@ -47,8 +43,6 @@ export default function VenueEditorTemplate({ eventVenueEditViewModel }: Readonl
     saveImageAction,
     isPendingForSave
   } = useCanvasDraw({
-    selectedColor,
-    selectedColorBackGround,
     eventVenueEditViewModel,
   })
 
@@ -76,10 +70,6 @@ export default function VenueEditorTemplate({ eventVenueEditViewModel }: Readonl
           </div>
           <div className="col-span-1 md:col-span-1 lg:col-span-2 xl:col-span-4">
             <VenueToolSubMenu 
-              selectedColor={selectedColor}
-              setSelectedColor={setSelectedColor}
-              selectedColorBackGround={selectedColorBackGround}
-              setSelectedColorBackGround={setSelectedColorBackGround}
               colorPalette={colorPalette}
               onAddColor={addColor}
               onDeleteColor={removeColor}
