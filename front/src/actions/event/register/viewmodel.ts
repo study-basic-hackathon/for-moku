@@ -20,8 +20,7 @@ const BaseSchema = z.object({
     required_error: 'イベントの説明は必須です。',
   }),
   userGroupId: z.string()
-    .regex(/^\d+$/, { message: 'ユーザーグループの指定が不正です。' })
-    .transform((val) => Number(val)),
+    .refine((val) => val.length > 0 && !isNaN(Number(val)), { message: 'ユーザーグループの指定が不正です。' }),
   eventDate: z.string()
     .regex(DATE_PATTERN, 'イベント日はYYYY-MM-DD形式で入力してください。')
     .refine((date) => !isNaN(Date.parse(date)), '有効な日付を入力してください。'),
@@ -108,6 +107,7 @@ export async function registerEvent(
     ...rest,
     startDateTime: new Date(`${eventDate}T${eventStartTime}:00.000`),
     endDateTime: new Date(`${eventDate}T${eventEndTime}:00.000`),
+    userGroupId: Number(rest.userGroupId)
   };
 
   // イベントの登録処理(トランザクションは正直なくてもいいけど、lib/db側の記述がシンプルになるために使用)
