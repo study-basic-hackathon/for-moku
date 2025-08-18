@@ -21,7 +21,7 @@ const BaseSchema = z.object({
   }),
   userGroupId: z.coerce.number({
     required_error: 'ユーザーグループは必須です。',
-  }),
+  }).min(1, 'ユーザーグループの指定が不正です。'),
   eventDate: z.string()
     .regex(DATE_PATTERN, 'イベント日はYYYY-MM-DD形式で入力してください。')
     .refine((date) => !isNaN(Date.parse(date)), '有効な日付を入力してください。'),

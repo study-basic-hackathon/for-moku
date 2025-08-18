@@ -28,7 +28,8 @@ export default function EventRegisterTemplate({ userGroups }: Readonly<EventRegi
             options: userGroups.map(group => ({
               value: group.id.toString(),
               label: group.name
-            }))
+            })),
+            defaultValue: userGroups.length > 0 ? userGroups[0].id.toString() : undefined
           }
         : field
     ).map((field) => 
