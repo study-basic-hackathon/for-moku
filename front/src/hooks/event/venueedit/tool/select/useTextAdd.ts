@@ -8,8 +8,6 @@ interface Props {
   canvasRef: React.RefObject<HTMLCanvasElement | null>
   numPixel: number
   draggingColor: string
-  selectedColor: Color
-  selectedColorBackGround?: Color
   textState: TextState[]
   setTextState: React.Dispatch<React.SetStateAction<TextState[]>>
   isDialogModalOpen: boolean
@@ -20,8 +18,6 @@ export const useTextAdd = ({
   canvasRef, 
   numPixel, 
   draggingColor, 
-  selectedColor,
-  selectedColorBackGround,
   textState,
   setTextState,
   isDialogModalOpen,
@@ -38,8 +34,6 @@ export const useTextAdd = ({
     setTextPosition,
     handleTextAdd,
   } = useTextDialog({
-    selectedColor,
-    selectedColorBackGround,
     textState,
     setTextState,
     isDialogModalOpen,

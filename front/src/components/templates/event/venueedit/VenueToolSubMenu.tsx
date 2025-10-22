@@ -5,20 +5,12 @@ import ColorSingleSelector from '@/components/organisms/event/venueedit/palette/
 import { useSubToolSelection } from '@/hooks/event/venueedit/useSubToolSelection';
 
 interface VenueToolSubMenuProps {
-  selectedColor: Color;
-  setSelectedColor: (color: Color) => void;
-  selectedColorBackGround: Color;
-  setSelectedColorBackGround: (color: Color) => void;
   colorPalette: Color[];
   onAddColor: (color: Color) => void;
   onDeleteColor: (color: Color) => void;
 }
 
 export default function VenueToolSubMenu({
-  selectedColor,
-  setSelectedColor,
-  selectedColorBackGround,
-  setSelectedColorBackGround,
   colorPalette,
   onAddColor,
   onDeleteColor
@@ -34,20 +26,13 @@ export default function VenueToolSubMenu({
           </div>
           {isPixelTool && (
             <ColorPalette
-              onColorSelect={setSelectedColor}
-              selectedColor={selectedColor}
               colors={colorPalette}
               onAddColor={onAddColor}
               onDeleteColor={onDeleteColor}
             />
           )}
           {isTextTool && (
-            <ColorSingleSelector
-              selectedColor={selectedColor}
-              selectedColorBackGround={selectedColorBackGround}
-              setSelectedColor={setSelectedColor}
-              setSelectedColorBackGround={setSelectedColorBackGround}
-            />
+            <ColorSingleSelector/>
           )}
         </div>
       </div>

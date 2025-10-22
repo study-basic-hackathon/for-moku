@@ -6,30 +6,25 @@ import ColorPickerDialog from '@/components/organisms/event/venueedit/palette/Co
 import ToggleToGenerateButton from '@/components/organisms/event/venueedit/palette/ToggleToGenerateButton'
 import ToggleToEraseButton from '@/components/organisms/event/venueedit/palette/ToggleToEraseButton'
 import { useSubToolSelection } from '@/hooks/event/venueedit/useSubToolSelection'
+import { useSelectedColor } from '@/hooks/event/venueedit/submenu/useSelectedColor'
 
-interface ColorSingleSelectorProps {
-  selectedColor: Color
-  selectedColorBackGround: Color
-  setSelectedColor: (color: Color) => void
-  setSelectedColorBackGround: (color: Color) => void
-}
-
-export default function ColorSingleSelector({
-  selectedColor,
-  selectedColorBackGround,  
-  setSelectedColor,
-  setSelectedColorBackGround,
-}: Readonly<ColorSingleSelectorProps>) {
+export default function ColorSingleSelector() {
   const { isDrawingTool } = useSubToolSelection()
+  const { 
+    selectedColor, 
+    updateSelectedColor, 
+    selectedColorBackGround, 
+    updateSelectedColorBackGround 
+  } = useSelectedColor()
   const [isTextColorOpen, setIsTextColorOpen] = useState(false)
   const [isBackgroundColorOpen, setIsBackgroundColorOpen] = useState(false)
 
   const handleTextColorChange = (hex: string) => {
-    setSelectedColor(hex as Color)
+    updateSelectedColor(hex as Color)
   }
 
   const handleBackgroundColorChange = (hex: string) => {
-    setSelectedColorBackGround(hex as Color)
+    updateSelectedColorBackGround(hex as Color)
   }
 
   return (

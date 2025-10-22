@@ -10,8 +10,6 @@ import { TextState } from '@/types/event/state'
 import { useSubToolSelection } from '@/hooks/event/venueedit/useSubToolSelection'
 
 interface Props {
-  selectedColor: Color
-  selectedColorBackGround?: Color
   canvasRef: React.RefObject<HTMLCanvasElement | null>
   numPixel: number
   setPixelColorState: React.Dispatch<React.SetStateAction<(Color | null)[][]>>
@@ -34,8 +32,6 @@ type ToolHandlers = {
 }
 
 export const useToolSelect = ({
-  selectedColor,
-  selectedColorBackGround,
   canvasRef,
   numPixel,
   setPixelColorState,
@@ -54,7 +50,6 @@ export const useToolSelect = ({
   const pixelDraw = usePixelDraw({
     canvasRef,
     numPixel,
-    selectedColor,
     setPixelColorState,
     pixelColorState,
     setCircleColorState,
@@ -75,7 +70,6 @@ export const useToolSelect = ({
   const circleDraw = useCircleDraw({
     canvasRef,
     numPixel,
-    selectedColor,
     setPixelColorState,
     pixelColorState,
     setCircleColorState,
@@ -97,8 +91,6 @@ export const useToolSelect = ({
     canvasRef,
     numPixel,
     draggingColor: '#FFFF00',
-    selectedColor,
-    selectedColorBackGround,
     textState,
     setTextState,
     isDialogModalOpen,

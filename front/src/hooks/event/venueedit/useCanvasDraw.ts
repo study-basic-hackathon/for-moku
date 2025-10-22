@@ -12,19 +12,14 @@ import { useInitialState } from '@/hooks/event/venueedit/useInitialState';
  * @param selectedColor 選択された色
  */
 interface Props {
-  selectedColor: Color;
-  selectedColorBackGround?: Color;
   eventVenueEditViewModel: EventVenueEditViewModel;
 }
 
 /**
  * キャンバスの描画を管理するフック
- * @param selectedColor 選択された色
  * @returns キャンバスの参照、キャンバスのサイズ、セルの座標を取得する関数、描画関数
  */
 export const useCanvasDraw = ({ 
-  selectedColor,
-  selectedColorBackGround,
   eventVenueEditViewModel
 }: Props) => {
 
@@ -74,8 +69,6 @@ export const useCanvasDraw = ({
       textPosition, 
       setTextPosition, 
       handleTextAdd } = useToolSelect({
-    selectedColor,
-    selectedColorBackGround,
     canvasRef,
     numPixel,
     setPixelColorState,
