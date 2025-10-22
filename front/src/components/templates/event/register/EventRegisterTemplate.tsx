@@ -25,6 +25,7 @@ export default function EventRegisterTemplate({ userGroups }: Readonly<EventRegi
       field?.name === 'userGroupId'
         ? {
             ...field,
+            defaultValue: userGroups[0].id.toString(),
             options: userGroups.map(group => ({
               value: group.id.toString(),
               label: group.name
