@@ -2,8 +2,6 @@ import type * as Party from "partykit/server";
 
 import { toZonedTime, fromZonedTime } from 'date-fns-tz';
 
-const BASE_URL = "https://for-moku-deploy-test.vercel.app/api/room/"
-
 type User = {
   id: string,
   name: string,
@@ -29,32 +27,69 @@ export default class Server implements Party.Server {
     return this.userIcons;
   }
 
+  getApiBaseUrl(context: string): string | null {
+    const baseUrl = this.room.env.API_BASE_URL as string | undefined;
+    if (!baseUrl) {
+      console.error(`[${context}] API_BASE_URL is not set`);
+      return null;
+    }
+    return baseUrl;
+  }
+
   async onStart() { 
     await this.room.storage.put<string>("roomId", this.room.id);
 
-    const response = await fetch(`${BASE_URL}${this.room.id}`);
-    const { message } = await response.json();
-    const endTime = new Date(message.endTime);
+    const baseUrl = this.getApiBaseUrl('onStart');
+    if (!baseUrl) return;
+    
+    try {
+      const response = await fetch(`${baseUrl}/api/room/${this.room.id}`);
+      
+      if (!response.ok) {
+        console.error(`[onStart] API error: ${response.status}`);
+        return;
+      }
+      
+      const { message } = await response.json();
+      const endTime = new Date(message.endTime);
 
-    if (endTime.getTime() > Date.now()) {
-      const alarm = fromZonedTime(endTime, 'Asia/Tokyo');
-      await this.room.storage.setAlarm(alarm);
+      if (endTime.getTime() > Date.now()) {
+        await this.room.storage.setAlarm(endTime.getTime());
+        console.log(`[onStart] Room ${this.room.id}: Alarm set for ${endTime.toISOString()}`);
+      }
+    } catch (error) {
+      console.error(`[onStart] Error:`, error);
     }
   }
 
   async onAlarm() {
+    console.log(`[onAlarm] Starting alarm handler at ${new Date().toISOString()}`);
     const roomId = await this.room.storage.get<string>("roomId");
     const userIcons = await this.ensureLoadUserIcons();
+    const baseUrl = this.getApiBaseUrl('onAlarm');
+    
+    if (!baseUrl) return;
+    
+    try {
+      const response = await fetch(`${baseUrl}/api/room/${roomId}`, {
+        method: "POST",
+        body: JSON.stringify(userIcons),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      
+      if (!response.ok) {
+        console.error(`[onAlarm] Failed to save state: ${response.status}`);
+        return;
+      }
+      
+      console.log(`[onAlarm] Room ${roomId}: Event state saved (${userIcons.length} users)`);
+    } catch (error) {
+      console.error(`[onAlarm] Error:`, error);
+    }
 
-    await fetch(`${BASE_URL}${roomId}`, {
-      method: "POST",
-      body: JSON.stringify(userIcons),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    this.room.broadcast(JSON.stringify({ type: "close" }))
+    this.room.broadcast(JSON.stringify({ type: "close" }));
   }
 
   async onRequest(request: Party.Request) {
