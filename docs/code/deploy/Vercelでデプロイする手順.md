@@ -7,8 +7,12 @@
 PartyKitに環境変数を設定（初回のみ）:
 ```bash
 cd partykit
-npx partykit env add API_BASE_URL https://for-moku.vercel.app
+npx partykit env add API_BASE_URL
 ```
+
+プロンプトが表示されたら `https://for-moku.vercel.app` を入力してEnterキーを押す。
+
+※ `npx partykit env add`は`partykit.json`があるディレクトリで実行する必要があります。
 
 ### 2. デプロイ
 
