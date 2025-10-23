@@ -6,17 +6,11 @@ https://docs.partykit.io/
 
 ## ローカル開発
 
-### 環境変数の設定
+### 環境変数
 
-`partykit/.env` ファイルで環境変数を管理:
-```bash
-# partykit/.env
-API_BASE_URL=http://host.docker.internal:3000
-```
+ローカル開発時は環境変数の設定は不要です。
 
-PartyKitは自動的に `.env` ファイルを読み込むため、追加の設定は不要です。
-
-Docker Composeでコンテナから起動する場合、`host.docker.internal` を使用することで、ホストマシンで動作しているNext.js（ポート3000）にアクセスできます。
+`API_BASE_URL`が未設定の場合、自動的に`http://host.docker.internal:3000`（Docker Composeから起動した場合にホストマシンのNext.jsにアクセスするURL）を使用します。
 
 ### 起動方法
 

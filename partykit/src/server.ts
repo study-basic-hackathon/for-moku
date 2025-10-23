@@ -27,20 +27,16 @@ export default class Server implements Party.Server {
     return this.userIcons;
   }
 
-  getApiBaseUrl(context: string): string | null {
+  getApiBaseUrl(): string {
     const baseUrl = this.room.env.API_BASE_URL as string | undefined;
-    if (!baseUrl) {
-      console.error(`[${context}] API_BASE_URL is not set`);
-      return null;
-    }
-    return baseUrl;
+    // ローカル開発時はデフォルトでhost.docker.internalを使用
+    return baseUrl || 'http://host.docker.internal:3000';
   }
 
   async onStart() { 
     await this.room.storage.put<string>("roomId", this.room.id);
 
-    const baseUrl = this.getApiBaseUrl('onStart');
-    if (!baseUrl) return;
+    const baseUrl = this.getApiBaseUrl();
     
     try {
       const response = await fetch(`${baseUrl}/api/room/${this.room.id}`);
@@ -66,9 +62,7 @@ export default class Server implements Party.Server {
     console.log(`[onAlarm] Starting alarm handler at ${new Date().toISOString()}`);
     const roomId = await this.room.storage.get<string>("roomId");
     const userIcons = await this.ensureLoadUserIcons();
-    const baseUrl = this.getApiBaseUrl('onAlarm');
-    
-    if (!baseUrl) return;
+    const baseUrl = this.getApiBaseUrl();
     
     try {
       const response = await fetch(`${baseUrl}/api/room/${roomId}`, {
