@@ -14,7 +14,7 @@ export async function selectFinishedEventState(eventId: number) {
     .select()
     .from(finishedEventState)
     .where(eq(finishedEventState.eventId, eventId));
-  return res[0].userIcons as UserIcon[] ?? null;
+  return res[0]?.userIcons as UserIcon[] ?? null;
 }
 
 /**

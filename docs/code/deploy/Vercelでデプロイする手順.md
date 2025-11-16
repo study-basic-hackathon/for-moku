@@ -2,15 +2,43 @@
 
 ## PartyKit編
 
-手順：PartyKitのディレクトリで`npx partykit deploy`を実行するだけ
+### 1. 環境変数の設定
 
-初めてデプロイしているのであればGitHubでのログインが求められる。\
-デプロイしたサーバーのURLは以下のフォーマットに従う\
-[プロジェクトの名前].[GitHubのユーザ名].partykit.dev\
-&nbsp;^ partykit.jsonで設定できる
+PartyKitに環境変数を設定（初回のみ）:
+```bash
+cd partykit
+npx partykit env add API_BASE_URL
+```
 
-`npx partykit list`でデプロイされているプロジェクトの一覧が確認できる\
-[PartyKit CLIのコマンド一覧](https://docs.partykit.io/reference/partykit-cli/)
+プロンプトが表示されたら `https://for-moku.vercel.app` を入力してEnterキーを押す。
+
+※ `npx partykit env add`は`partykit.json`があるディレクトリで実行する必要があります。
+
+### 2. デプロイ
+
+PartyKitのディレクトリで以下のコマンドを実行:
+```bash
+npx partykit deploy
+```
+
+初めてデプロイする場合はGitHubでのログインが求められる。
+
+### 3. デプロイ先URL
+
+デプロイしたサーバーのURLは以下のフォーマットに従う:
+```
+[プロジェクトの名前].[GitHubのユーザ名].partykit.dev
+```
+※ プロジェクト名は `partykit.json` で設定できる
+
+### 便利なコマンド
+
+- デプロイ済みプロジェクト一覧: `npx partykit list`
+- 環境変数確認: `npx partykit env list`
+- 環境変数削除: `npx partykit env remove API_BASE_URL`
+- 環境変数の再設定: `npx partykit env add API_BASE_URL` (既存の値を上書き)
+
+参考: [PartyKit CLIのコマンド一覧](https://docs.partykit.io/reference/partykit-cli/)、[環境変数の管理方法](https://docs.partykit.io/guides/managing-environment-variables/)
 
 ## Google OAuth2編
 - [Google Cloud Console](https://console.cloud.google.com/)で新たなプロジェクトを作成

@@ -5,7 +5,7 @@ compatibility_flags = []
 
 # Durable Objects設定
 [[durable_objects.bindings]]
-name = "ForMokuServer"           # バインディング名
+name = "ForMokuServer"           # バインディング名（URLの/parties/for-moku-server/...に対応）
 class_name = "ForMokuServer"     # server.tsでexportしているクラス名
 
 # マイグレーション設定（初回デプロイ時）

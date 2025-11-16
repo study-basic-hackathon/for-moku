@@ -1,10 +1,6 @@
 import type * as Party from "partyserver";
 import { Server } from "partyserver";
 
-import { toZonedTime, fromZonedTime } from 'date-fns-tz';
-
-const BASE_URL = "https://for-moku-deploy-test.vercel.app/api/room/"
-
 type User = {
   id: string,
   name: string,
@@ -19,11 +15,18 @@ type UserIcon = {
   position: { x: number, y: number },
 }
 
-export default class ForMokuServer extends Server<unknown> {
+type Env = {
+  API_BASE_URL?: string;
+}
+
+export default class ForMokuServer extends Server<Env> {
   userIcons?: UserIcon[];
   
-  // @ts-expect-error - DurableObject has ctx but TypeScript doesn't recognize it  
+  // DurableObject has ctx and env properties but TypeScript doesn't expose them
+  // @ts-expect-error - DurableObjectState type not available in partyserver
   declare ctx: DurableObjectState;
+  // Env is passed to constructor and stored by parent DurableObject class
+  declare env: Env;
 
   async ensureLoadUserIcons() {
     if (!this.userIcons) {
@@ -33,32 +36,76 @@ export default class ForMokuServer extends Server<unknown> {
     return this.userIcons;
   }
 
+  getApiBaseUrl(): string {
+    // Docker環境では環境変数 API_BASE_URL を設定可能
+    // wrangler.toml の [vars] セクションで定義できる
+    // 例: API_BASE_URL = "https://for-moku-deploy-test.vercel.app"
+    
+    // 本番環境（Cloudflare Workers）: wrangler.toml の vars または Cloudflare Dashboard で設定
+    // DurableObject のコンストラクタで env が渡され、親クラスに保存されている
+    if (this.env?.API_BASE_URL) {
+      return this.env.API_BASE_URL;
+    }
+    
+    // ローカル開発（Docker）: host.docker.internal でホストマシンの localhost にアクセス
+    // フロントエンドが localhost:3000 で動作している前提
+    return 'http://host.docker.internal:3000';
+  }
+
   async onStart() { 
+    // remember room id
     await this.ctx.storage.put<string>("roomId", this.name);
 
-    const response = await fetch(`${BASE_URL}${this.name}`);
-    const { message } = await response.json();
-    const endTime = new Date(message.endTime);
+    const baseUrl = this.getApiBaseUrl();
+    try {
+      const response = await fetch(`${baseUrl}/api/room/${this.name}`);
+      if (!response.ok) {
+        console.error(`[onStart] API error: ${response.status}`);
+        return;
+      }
+      const { message } = await response.json();
+      const endTime = new Date(message.endTime);
 
-    if (endTime.getTime() > Date.now()) {
-      const alarm = fromZonedTime(endTime, 'Asia/Tokyo');
-      await this.ctx.storage.setAlarm(alarm);
+      if (endTime.getTime() > Date.now()) {
+        // endTimeは既にUTCのISO8601文字列なので、fromZonedTimeは不要
+        await this.ctx.storage.setAlarm(endTime);
+        console.log(`[onStart] Room ${this.name}: Alarm set for ${endTime.toISOString()}`);
+      }
+    } catch (error) {
+      console.error(`[onStart] Error fetching room metadata:`, error);
     }
   }
 
   async onAlarm() {
+    console.log(`[onAlarm] Starting alarm handler at ${new Date().toISOString()}`);
     const roomId = await this.ctx.storage.get<string>("roomId");
     const userIcons = await this.ensureLoadUserIcons();
+    const baseUrl = this.getApiBaseUrl();
 
-    await fetch(`${BASE_URL}${roomId}`, {
-      method: "POST",
-      body: JSON.stringify(userIcons),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+      const response = await fetch(`${baseUrl}/api/room/${roomId}`, {
+        method: "POST",
+        body: JSON.stringify(userIcons),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    this.broadcast(JSON.stringify({ type: "close" }))
+      if (!response.ok) {
+        console.error(`[onAlarm] Failed to save state: ${response.status}`);
+      } else {
+        console.log(`[onAlarm] Room ${roomId}: Event state saved (${userIcons?.length ?? 0} users)`);
+      }
+    } catch (error) {
+      console.error(`[onAlarm] Error saving event state:`, error);
+    }
+
+    // broadcast close to connected clients
+    try {
+      this.broadcast(JSON.stringify({ type: "close" }));
+    } catch (e) {
+      console.error("[onAlarm] Failed to broadcast close:", e);
+    }
   }
 
   async onRequest(request: Request) {
