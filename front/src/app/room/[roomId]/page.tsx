@@ -8,7 +8,7 @@ import { selectEventById } from "@/lib/db/event";
 import { selectUserByEmail } from '@/lib/db/user';
 import { users, userGroupAssignments } from "@/lib/db/schema";
 import Link from "next/link";
-import { User, UserIcon } from "@/types/room/shared";
+import { User } from "@/types/room/shared";
 import ActiveEventTemplate from "@/components/templates/room/ActiveEventTemplate";
 import ClosedEventTemplate from "@/components/templates/room/ClosedEventTemplate";
 import { getCurrentDateInTokyo } from "@/lib/util/date";
