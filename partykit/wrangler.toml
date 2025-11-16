@@ -1,0 +1,14 @@
+name = "for-moku-partykit"
+main = "src/index.ts"
+compatibility_date = "2025-11-01"
+compatibility_flags = []
+
+# Durable Objects設定
+[[durable_objects.bindings]]
+name = "ForMokuServer"           # バインディング名
+class_name = "ForMokuServer"     # server.tsでexportしているクラス名
+
+# マイグレーション設定（初回デプロイ時）
+[[migrations]]
+tag = "v1"
+new_classes = ["ForMokuServer"]

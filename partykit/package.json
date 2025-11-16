@@ -1,9 +1,13 @@
 {
   "scripts": {
-    "partykit": "npx partykit dev"
+    "dev": "wrangler dev src/index.ts --local --ip 0.0.0.0 --port 1999",
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
     "date-fns-tz": "^3.2.0",
-    "partykit": "^0.0.115"
+    "partyserver": "^0.0.75"
+  },
+  "devDependencies": {
+    "wrangler": "^3.94.0"
   }
 }
