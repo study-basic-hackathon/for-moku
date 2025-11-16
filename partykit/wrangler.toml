@@ -9,6 +9,13 @@ name = "ForMokuServer"           # バインディング名（URLの/parties/for
 class_name = "ForMokuServer"     # server.tsでexportしているクラス名
 
 # マイグレーション設定（初回デプロイ時）
+# 無料プラン対応: new_sqlite_classes を使用
 [[migrations]]
 tag = "v1"
-new_classes = ["ForMokuServer"]
+new_sqlite_classes = ["ForMokuServer"]
+
+# 環境変数
+# ローカル開発時: 未設定の場合は自動的に http://host.docker.internal:3000 を使用
+# 本番環境: 以下のコメントアウトを解除してVercelのURLを設定
+# [vars]
+# API_BASE_URL = "https://for-moku.vercel.app"
