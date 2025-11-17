@@ -1,9 +1,10 @@
 import { routePartykitRequest } from "partyserver";
 import ForMokuServer from "./server";
+import type { DurableObjectNamespace } from "@cloudflare/workers-types";
 
 // Env型: Durable Objectバインディングと環境変数を定義
 type Env = {
-  ForMokuServer: any; // DurableObjectNamespace type (対応するURLパス: /parties/for-moku-server/...)
+  ForMokuServer: DurableObjectNamespace; // DurableObjectNamespace type (対応するURLパス: /parties/for-moku-server/...)
   API_BASE_URL?: string;
 };
 
