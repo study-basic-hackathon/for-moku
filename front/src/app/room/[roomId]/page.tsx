@@ -8,7 +8,7 @@ import { selectEventById } from "@/lib/db/event";
 import { selectUserByEmail } from '@/lib/db/user';
 import { users, userGroupAssignments } from "@/lib/db/schema";
 import Link from "next/link";
-import { User } from "@/types/room/shared";
+import { User, UserIcon } from "@/types/room/shared";
 import ActiveEventTemplate from "@/components/templates/room/ActiveEventTemplate";
 import ClosedEventTemplate from "@/components/templates/room/ClosedEventTemplate";
 import { getCurrentDateInTokyo } from "@/lib/util/date";
@@ -35,14 +35,14 @@ export default async function RoomPage({
     return eventNotStarted(roomId);
   }
   if (currDateTime > event.endDateTime) {
-    let userIcons = await selectFinishedEventState(eventId);
+    let userIcons = await selectFinishedEventState(eventId) as UserIcon[] | null;
 
     if (!userIcons) {
       console.log("record doesn't exist")
       const url = `${PARTYKIT_URL}/parties/for-moku-server/${roomId}`;
       console.log("Fetching from:", url);
       const req = await fetch(url);
-      userIcons = await req.json();
+      userIcons = await req.json() as UserIcon[];
     }
 
     return (
