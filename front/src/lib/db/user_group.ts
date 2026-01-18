@@ -97,6 +97,7 @@ export async function updateUserGroupById(
     .set({
       name: data.name,
       description: data.description,
+      updatedAt: new Date(), // UPDATE時にupdatedAtを明示的に設定（timestamp with time zoneがUTCに自動変換）
     })
     .where(eq(userGroups.id, groupId));
 }

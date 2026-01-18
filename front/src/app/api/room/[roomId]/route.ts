@@ -2,7 +2,9 @@ import { selectEventById } from "@/lib/db/event";
 import { insertFinishedEventState } from "@/lib/db/finished_event_state";
 import { UserIcon } from "@/types/room/shared";
 import { NextRequest, NextResponse } from "next/server";
-import { convertJSTToUTC } from "@/lib/util/date";
+import { db } from "@/lib/db";
+import { events } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 
  /**
  * @param roomId: string -> イベントID(PartykitのインスタンスID)
@@ -14,11 +16,15 @@ export async function GET(
 ) {
 
   const { roomId } = await params;
-  const event = await selectEventById(Number(roomId));
+  // PartyKit用にはUTCが必要なので、DBから直接UTC Dateを取得
+  const [event] = await db.select().from(events).where(eq(events.id, Number(roomId))).limit(1);
   
-  // selectEventByIdはJST Dateを返すので、PartyKitサーバー用にUTCに変換
-  const endTimeUTC = convertJSTToUTC(event!.endDateTime);
-  const message = { endTime: endTimeUTC }
+  if (!event) {
+    return NextResponse.json({ error: "Event not found" }, { status: 404 });
+  }
+  
+  // DBから取得したendDateTimeはすでにUTC Dateなのでそのまま使用
+  const message = { endTime: event.endDateTime }
 
   return NextResponse.json({ message });
 }

@@ -11,7 +11,7 @@ export const users = pgTable("users", {
   name: text("name").notNull(),
   bio: text("bio"),
   interests: text("interests"),
-  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
-  deactivatedAt: timestamp("deactivated_at", { mode: "date" }),
+  createdAt: timestamp("created_at", { mode: "date", withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true }).notNull().defaultNow(),
+  deactivatedAt: timestamp("deactivated_at", { mode: "date", withTimezone: true }),
 });

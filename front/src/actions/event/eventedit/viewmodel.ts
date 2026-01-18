@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth/auth";
 import { selectEventEditViewInfoByUserEmailAndEventId } from "@/lib/db/event";
-import { formatDateTimeHHMM, formatDateTimeYYYYMMDD_HYPHEN } from "@/lib/util/date";
+import { formatDateTimeHHMM, formatDateTimeYYYYMMDD_HYPHEN, convertUTCToJST } from "@/lib/util/date";
 import { EventEditViewModel } from "@/types/event/viewmodel";
 
 /**
@@ -25,14 +25,18 @@ export async function getEventEditViewModel(eventId: number): Promise<EventEditV
     return null;
   }
 
+  // データベースから取得したUTC DateをJSTに変換してから表示用にフォーマット
+  const startDateTimeJST = convertUTCToJST(eventEditViewInfo.startDateTime);
+  const endDateTimeJST = convertUTCToJST(eventEditViewInfo.endDateTime);
+
   // イベント編集ビューモデルを作成
   return {
     eventId: eventEditViewInfo.id,
     eventName: eventEditViewInfo.name,
     description: eventEditViewInfo?.description ?? '',
-    eventDate: formatDateTimeYYYYMMDD_HYPHEN(eventEditViewInfo.startDateTime),
-    eventStartTime: formatDateTimeHHMM(eventEditViewInfo.startDateTime),
-    eventEndTime: formatDateTimeHHMM(eventEditViewInfo.endDateTime),
+    eventDate: formatDateTimeYYYYMMDD_HYPHEN(startDateTimeJST),
+    eventStartTime: formatDateTimeHHMM(startDateTimeJST),
+    eventEndTime: formatDateTimeHHMM(endDateTimeJST),
     eventUrl: eventEditViewInfo?.eventUrl ?? undefined,
     venueUrl: eventEditViewInfo?.venueUrl ?? undefined,
   };

@@ -23,6 +23,6 @@ import {
       .references(() => userGroups.id, { onDelete: "cascade" }), // 外部キー（グループ）
 
     role: userGroupRoleEnum("role").notNull(),
-    createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
-    updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true }).notNull().defaultNow(),
   });

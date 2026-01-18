@@ -11,7 +11,6 @@ import Link from "next/link";
 import { User, UserIcon } from "@/types/room/shared";
 import ActiveEventTemplate from "@/components/templates/room/ActiveEventTemplate";
 import ClosedEventTemplate from "@/components/templates/room/ClosedEventTemplate";
-import { getCurrentDateInTokyo } from "@/lib/util/date";
 import { selectFinishedEventState } from "@/lib/db/finished_event_state";
 
 export default async function RoomPage({
@@ -29,7 +28,8 @@ export default async function RoomPage({
   const event = await selectEventById(eventId);
   if (!event) notFound();
 
-  const currDateTime = getCurrentDateInTokyo();
+  // データベースから取得したeventの日時はUTCなので、現在時刻もUTCで取得して比較
+  const currDateTime = new Date();
 
   if (currDateTime < event.startDateTime) {
     return eventNotStarted(roomId);

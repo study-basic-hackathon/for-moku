@@ -1,7 +1,7 @@
 import { checkUserIsAdminOfEventByUserEmailAndEventId, selectEventById } from "@/lib/db/event";
 import { selectUserGroupById } from "@/lib/db/user_group";
 import { EventViewViewModel } from "@/types/event/viewmodel";
-import { formatDateTimeYYYYMMDDHHMMJPN } from "@/lib/util/date";
+import { formatDateTimeYYYYMMDDHHMMJPN, convertUTCToJST } from "@/lib/util/date";
 import { auth } from "@/lib/auth/auth";
 
 /**
@@ -34,14 +34,18 @@ export async function getEventViewViewModel(eventId: number): Promise<EventViewV
   // ユーザーがイベントの管理者であるかを確認する
   const isAdmin = await checkUserIsAdminOfEventByUserEmailAndEventId(session.user.email, event.id);
 
+  // データベースから取得したUTC DateをJSTに変換してから表示用にフォーマット
+  const startDateTimeJST = convertUTCToJST(event.startDateTime);
+  const endDateTimeJST = convertUTCToJST(event.endDateTime);
+
   // イベント詳細ビューモデルを作成
   return {
     eventId: event.id,
     eventName: event.name,
     description: event.description ?? '',
     eventShareLinkUrl: `/room/${event.id}`,
-    eventStartDateTime: formatDateTimeYYYYMMDDHHMMJPN(event.startDateTime),
-    eventEndDateTime: formatDateTimeYYYYMMDDHHMMJPN(event.endDateTime),
+    eventStartDateTime: formatDateTimeYYYYMMDDHHMMJPN(startDateTimeJST),
+    eventEndDateTime: formatDateTimeYYYYMMDDHHMMJPN(endDateTimeJST),
     eventUrl: event.eventUrl ?? undefined,
     venueUrl: event.venueUrl ?? undefined,
     userGroupName: userGroup.name,

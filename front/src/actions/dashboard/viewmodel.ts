@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth/auth";
 import { selectEventsByUserEmail } from "@/lib/db/event";
-import { formatDateTimeYYYYMMDDHHMMJPN } from "@/lib/util/date";
+import { formatDateTimeYYYYMMDDHHMMJPN, convertUTCToJST } from "@/lib/util/date";
 import { DashboardViewModel } from "@/types/dashboard/viewmodel";
 import { notFound, redirect } from "next/navigation";
 import { getDarkerColorBySeedString } from "@/lib/util/color";
@@ -22,15 +22,21 @@ export const getDashboardViewModel = async (): Promise<DashboardViewModel> => {
   const events = await selectEventsByUserEmail(session.user.email);
   
   // イベントの一覧をダッシュボード用のビューモデルに変換
-  const eventCalendarUnits = events.map((event) => ({
-    title: event.name,
-    startDateTime: formatDateTimeYYYYMMDDHHMMJPN(event.startDateTime),
-    endDateTime: formatDateTimeYYYYMMDDHHMMJPN(event.endDateTime),
-    description: event.description ?? "",
-    backgroundColor: getDarkerColorBySeedString(event.name),
-    borderColor: getDarkerColorBySeedString(event.name),
-    unitUrl: `/event/view/${event.id}`,
-  }));
+  const eventCalendarUnits = events.map((event) => {
+    // データベースから取得したUTC DateをJSTに変換してから表示用にフォーマット
+    const startDateTimeJST = convertUTCToJST(event.startDateTime);
+    const endDateTimeJST = convertUTCToJST(event.endDateTime);
+    
+    return {
+      title: event.name,
+      startDateTime: formatDateTimeYYYYMMDDHHMMJPN(startDateTimeJST),
+      endDateTime: formatDateTimeYYYYMMDDHHMMJPN(endDateTimeJST),
+      description: event.description ?? "",
+      backgroundColor: getDarkerColorBySeedString(event.name),
+      borderColor: getDarkerColorBySeedString(event.name),
+      unitUrl: `/event/view/${event.id}`,
+    };
+  });
 
   return { eventCalendarUnits };
 };

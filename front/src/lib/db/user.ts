@@ -57,6 +57,7 @@ export async function updateUserById(
       name: data.name,
       bio: data.bio,
       interests: data.interests,
+      updatedAt: new Date(), // UPDATE時にupdatedAtを明示的に設定（timestamp with time zoneがUTCに自動変換）
     })
     .where(eq(users.id, userId));
 }
