@@ -103,10 +103,16 @@ export async function registerEvent(
 
   const { eventDate, eventStartTime, eventEndTime, ...rest } = validatedFields.data;
 
+  // JST（日本時間）として入力された日時をUTCに変換してデータベースに保存
+  // fromZonedTimeを使って文字列を直接JST DateTimeとして解釈（環境非依存）
+  const { fromZonedTime } = await import('date-fns-tz');
+  const startDateTime = fromZonedTime(`${eventDate}T${eventStartTime}:00.000`, 'Asia/Tokyo');
+  const endDateTime = fromZonedTime(`${eventDate}T${eventEndTime}:00.000`, 'Asia/Tokyo');
+
   const newEvent: NewEvent = {
     ...rest,
-    startDateTime: new Date(`${eventDate}T${eventStartTime}:00.000`),
-    endDateTime: new Date(`${eventDate}T${eventEndTime}:00.000`),
+    startDateTime,
+    endDateTime,
     userGroupId: Number(rest.userGroupId)
   };
 
