@@ -1,8 +1,5 @@
-import type * as Party from "partykit/server";
-
-import { toZonedTime, fromZonedTime } from 'date-fns-tz';
-
-const BASE_URL = "https://for-moku-deploy-test.vercel.app/api/room/"
+import type * as Party from "partyserver";
+import { Server } from "partyserver";
 
 type User = {
   id: string,
@@ -18,46 +15,100 @@ type UserIcon = {
   position: { x: number, y: number },
 }
 
-export default class Server implements Party.Server {
+type Env = {
+  API_BASE_URL?: string;
+}
+
+export default class ForMokuServer extends Server<Env> {
   userIcons?: UserIcon[];
-  constructor(readonly room: Party.Room) {}
+  
+  // DurableObject has ctx and env properties but TypeScript doesn't expose them
+  // @ts-expect-error - DurableObjectState type not available in partyserver
+  declare ctx: DurableObjectState;
+  // Env is passed to constructor and stored by parent DurableObject class
+  declare env: Env;
 
   async ensureLoadUserIcons() {
     if (!this.userIcons) {
-      this.userIcons = (await this.room.storage.get<UserIcon[]>("userIcons")) ?? [];
+      // Server extends DurableObject, so we use this.ctx.storage
+      this.userIcons = (await this.ctx.storage.get<UserIcon[]>("userIcons")) ?? [];
     }
     return this.userIcons;
   }
 
+  getApiBaseUrl(): string {
+    // Docker環境では環境変数 API_BASE_URL を設定可能
+    // wrangler.toml の [vars] セクションで定義できる
+    // 例: API_BASE_URL = "https://for-moku-deploy-test.vercel.app"
+    
+    // 本番環境（Cloudflare Workers）: wrangler.toml の vars または Cloudflare Dashboard で設定
+    // DurableObject のコンストラクタで env が渡され、親クラスに保存されている
+    if (this.env?.API_BASE_URL) {
+      return this.env.API_BASE_URL;
+    }
+    
+    // ローカル開発（Docker）: host.docker.internal でホストマシンの localhost にアクセス
+    // フロントエンドが localhost:3000 で動作している前提
+    return 'http://host.docker.internal:3000';
+  }
+
   async onStart() { 
-    await this.room.storage.put<string>("roomId", this.room.id);
+    // remember room id
+    await this.ctx.storage.put<string>("roomId", this.name);
 
-    const response = await fetch(`${BASE_URL}${this.room.id}`);
-    const { message } = await response.json();
-    const endTime = new Date(message.endTime);
+    const baseUrl = this.getApiBaseUrl();
+    try {
+      const response = await fetch(`${baseUrl}/api/room/${this.name}`);
+      if (!response.ok) {
+        console.error(`[onStart] API error: ${response.status}`);
+        return;
+      }
+      const { message } = await response.json();
+      const endTime = new Date(message.endTime);
 
-    if (endTime.getTime() > Date.now()) {
-      const alarm = fromZonedTime(endTime, 'Asia/Tokyo');
-      await this.room.storage.setAlarm(alarm);
+      if (endTime.getTime() > Date.now()) {
+        // endTimeは既にUTCのISO8601文字列なので、fromZonedTimeは不要
+        await this.ctx.storage.setAlarm(endTime);
+        console.log(`[onStart] Room ${this.name}: Alarm set for ${endTime.toISOString()}`);
+      }
+    } catch (error) {
+      console.error(`[onStart] Error fetching room metadata:`, error);
     }
   }
 
   async onAlarm() {
-    const roomId = await this.room.storage.get<string>("roomId");
+    console.log(`[onAlarm] Starting alarm handler at ${new Date().toISOString()}`);
+    const roomId = await this.ctx.storage.get<string>("roomId");
     const userIcons = await this.ensureLoadUserIcons();
+    const baseUrl = this.getApiBaseUrl();
 
-    await fetch(`${BASE_URL}${roomId}`, {
-      method: "POST",
-      body: JSON.stringify(userIcons),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+      const response = await fetch(`${baseUrl}/api/room/${roomId}`, {
+        method: "POST",
+        body: JSON.stringify(userIcons),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    this.room.broadcast(JSON.stringify({ type: "close" }))
+      if (!response.ok) {
+        console.error(`[onAlarm] Failed to save state: ${response.status}`);
+      } else {
+        console.log(`[onAlarm] Room ${roomId}: Event state saved (${userIcons?.length ?? 0} users)`);
+      }
+    } catch (error) {
+      console.error(`[onAlarm] Error saving event state:`, error);
+    }
+
+    // broadcast close to connected clients
+    try {
+      this.broadcast(JSON.stringify({ type: "close" }));
+    } catch (e) {
+      console.error("[onAlarm] Failed to broadcast close:", e);
+    }
   }
 
-  async onRequest(request: Party.Request) {
+  async onRequest(request: Request) {
     const userIcons = await this.ensureLoadUserIcons();
 
     if (request.method === "GET") {
@@ -66,14 +117,14 @@ export default class Server implements Party.Server {
 
     if (request.method === "POST") {
       const user = (await request.json()) as User;
-      const userIcon = userIcons.find((icon) => {
+      const userIcon = userIcons?.find((icon) => {
         return icon.user.id === user.id;
       })
 
       if (!userIcon) {
-        this.room.broadcast(JSON.stringify({ type: "new", user }));
+        this.broadcast(JSON.stringify({ type: "new", user }));
         this.userIcons!.push({ user: user, position: { x: 0, y: 0 }});
-        await this.room.storage.put("userIcons", this.userIcons);
+        await this.ctx.storage.put("userIcons", this.userIcons);
       }
 
       return new Response(JSON.stringify(user.id));
@@ -82,11 +133,11 @@ export default class Server implements Party.Server {
     if (request.method === "DELETE") {
       const userId = await request.json();
 
-      this.room.broadcast(JSON.stringify({ type: "delete", userId }))
+      this.broadcast(JSON.stringify({ type: "delete", userId }))
       this.userIcons = userIcons!.filter((icon) => {
         return icon.user.id !== userId;
       });
-      await this.room.storage.put("userIcons", this.userIcons);
+      await this.ctx.storage.put("userIcons", this.userIcons);
 
       return new Response(null, { status: 204 });
     }
@@ -99,27 +150,30 @@ export default class Server implements Party.Server {
     conn.send(JSON.stringify({ type: "sync", userIcons }));
   }
 
-  async onMessage(messageString: string, _sender: Party.Connection) {
+  async onMessage(connection: Party.Connection, messageString: Party.WSMessage) {
+    if (typeof messageString !== "string") {
+      console.warn("Received non-string message");
+      return;
+    }
+    
     const message = JSON.parse(messageString);
 
     if (message.type === "move") {
       const userIcon = { user: message.user, position: message.position }
-      this.room.broadcast(JSON.stringify({ type: "move", ...userIcon }));
+      this.broadcast(JSON.stringify({ type: "move", ...userIcon }));
       this.userIcons = this.userIcons!.map((icon) =>
         icon.user.id === message.user.id ? userIcon : icon
       );
     }
 
     if (message.type === "edit") {
-      this.room.broadcast(JSON.stringify({ type: "edit", user: message.user }));
+      this.broadcast(JSON.stringify({ type: "edit", user: message.user }));
       this.userIcons = this.userIcons!.map((icon) => {
         const userIcon = { user: message.user, position: icon.position }
         return icon.user.id === message.user.id ? userIcon : icon
       });
     }
 
-    await this.room.storage.put("userIcons", this.userIcons);
+    await this.ctx.storage.put("userIcons", this.userIcons);
   }
 }
-
-Server satisfies Party.Worker;

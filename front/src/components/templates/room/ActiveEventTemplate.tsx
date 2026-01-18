@@ -32,6 +32,7 @@ export default function ActiveEventTemplate({
 
   const socket = usePartySocket({
     host: PARTYKIT_HOST,
+    party: "for-moku-server",
     room: roomId,
     id: userId,
 

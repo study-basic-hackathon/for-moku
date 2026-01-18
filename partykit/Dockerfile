@@ -1,4 +1,4 @@
-FROM node:22.16.0-bullseye
+FROM node:22-bookworm
 
 WORKDIR /app
 
@@ -8,4 +8,5 @@ RUN npm install
 
 COPY . .
 
-CMD ["npm", "run", "partykit"]
+# Wranglerのローカル開発サーバーを起動
+CMD ["npm", "run", "dev"]

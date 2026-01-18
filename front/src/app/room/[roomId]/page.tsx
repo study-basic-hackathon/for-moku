@@ -35,13 +35,14 @@ export default async function RoomPage({
     return eventNotStarted(roomId);
   }
   if (currDateTime > event.endDateTime) {
-    let userIcons = await selectFinishedEventState(eventId);
+    let userIcons = await selectFinishedEventState(eventId) as UserIcon[] | null;
 
     if (!userIcons) {
       console.log("record doesn't exist")
-      const url = `${PARTYKIT_URL}/parties/main/${roomId}`;
+      const url = `${PARTYKIT_URL}/parties/for-moku-server/${roomId}`;
+      console.log("Fetching from:", url);
       const req = await fetch(url);
-      userIcons = await req.json();
+      userIcons = await req.json() as UserIcon[];
     }
 
     return (
@@ -139,7 +140,7 @@ async function insertNewUser(email: string) {
 }
 
 async function removeUserFromRoom(userId: string, roomId: string) {
-  await fetch(`${PARTYKIT_URL}/parties/main/${roomId}`, {
+  await fetch(`${PARTYKIT_URL}/parties/for-moku-server/${roomId}`, {
     method: "DELETE",
     body: JSON.stringify(userId),
     headers: {
@@ -149,7 +150,7 @@ async function removeUserFromRoom(userId: string, roomId: string) {
 }
 
 async function addUserToRoom(user: User, roomId: string) {
-  await fetch(`${PARTYKIT_URL}/parties/main/${roomId}`, {
+  await fetch(`${PARTYKIT_URL}/parties/for-moku-server/${roomId}`, {
     method: "POST",
     body: JSON.stringify(user),
     headers: {

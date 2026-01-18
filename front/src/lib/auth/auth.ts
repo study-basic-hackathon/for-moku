@@ -88,7 +88,7 @@ async function removeUserFromRoom() {
 
   if (session?.user && session.roomId) {
     const { user, roomId } = session;
-    await fetch(`${PARTYKIT_URL}/parties/main/${roomId}`, {
+    await fetch(`${PARTYKIT_URL}/parties/for-moku-server/${roomId}`, {
       method: "DELETE",
       body: JSON.stringify(user.id),
       headers: {
