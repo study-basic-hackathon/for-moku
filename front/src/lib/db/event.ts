@@ -80,7 +80,8 @@ export async function updateEvent(tx: Transaction, id: number, event: UpdateEven
     ...event,
     startDateTime: event.startDateTime ? convertJSTToUTC(event.startDateTime) : undefined,
     endDateTime: event.endDateTime ? convertJSTToUTC(event.endDateTime) : undefined,
-    updatedAt: new Date(),
+    // updatedAtは明示的にUTC現在時刻を設定（環境非依存）
+    updatedAt: new Date(), // new Date()は常にUTCタイムスタンプを持つ
   };
   
   const [updatedEvent] = await tx
