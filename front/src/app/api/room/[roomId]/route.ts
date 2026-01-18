@@ -2,6 +2,7 @@ import { selectEventById } from "@/lib/db/event";
 import { insertFinishedEventState } from "@/lib/db/finished_event_state";
 import { UserIcon } from "@/types/room/shared";
 import { NextRequest, NextResponse } from "next/server";
+import { convertJSTToUTC } from "@/lib/util/date";
 
  /**
  * @param roomId: string -> イベントID(PartykitのインスタンスID)
@@ -14,7 +15,10 @@ export async function GET(
 
   const { roomId } = await params;
   const event = await selectEventById(Number(roomId));
-  const message = { endTime: event!.endDateTime }
+  
+  // selectEventByIdはJST Dateを返すので、PartyKitサーバー用にUTCに変換
+  const endTimeUTC = convertJSTToUTC(event!.endDateTime);
+  const message = { endTime: endTimeUTC }
 
   return NextResponse.json({ message });
 }
