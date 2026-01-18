@@ -19,3 +19,9 @@ new_sqlite_classes = ["ForMokuServer"]
 # 本番環境: 以下のコメントアウトを解除してVercelのURLを設定
 # [vars]
 # API_BASE_URL = "https://for-moku.vercel.app"
+
+# ログ設定
+[observability]
+[observability.logs]
+enabled = true
+invocation_logs = true
