@@ -56,15 +56,21 @@ const FormSchema = BaseSchema.refine(
 );
 
 
-const createUpdateEventEntity = (oldEvent: Event, validatedFields: any): UpdateEvent => {
+const createUpdateEventEntity = async (oldEvent: Event, validatedFields: any): Promise<UpdateEvent> => {
   const { eventDate, eventStartTime, eventEndTime, ...rest } = validatedFields.data;
   const {id: _, ...restWithoutId} = oldEvent;
+
+  // JST（日本時間）として入力された日時をUTCに変換してデータベースに保存
+  // fromZonedTimeを使って文字列を直接JST DateTimeとして解釈（環境非依存）
+  const { fromZonedTime } = await import('date-fns-tz');
+  const startDateTime = fromZonedTime(`${eventDate}T${eventStartTime}:00.000`, 'Asia/Tokyo');
+  const endDateTime = fromZonedTime(`${eventDate}T${eventEndTime}:00.000`, 'Asia/Tokyo');
 
   return {
     ...restWithoutId,
     ...rest,
-    startDateTime: new Date(`${eventDate}T${eventStartTime}:00.000`),
-    endDateTime: new Date(`${eventDate}T${eventEndTime}:00.000`),
+    startDateTime,
+    endDateTime,
   };
 };
 
@@ -127,7 +133,7 @@ export async function updateEventInfo(
   }
 
   // DBにすでにあるデータとフォームデータを結合して、新しいイベントエンティティを作成
-  const newEvent = createUpdateEventEntity(oldEvent, validatedFields);
+  const newEvent = await createUpdateEventEntity(oldEvent, validatedFields);
 
   // イベントの登録処理(トランザクションは正直なくてもいいけど、lib/db側の記述がシンプルになるために使用)
   const updatedEvent = await db.transaction(async (tx) => {
