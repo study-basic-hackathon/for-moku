@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint",
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
@@ -37,12 +37,12 @@
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "dotenv": "^16.5.0",
-    "drizzle-orm": "^0.44.0",
+    "drizzle-orm": "^0.45.4",
     "jotai": "^2.12.5",
     "lucide-react": "^0.511.0",
     "md5": "^2.3.0",
-    "next": "^16.1.3",
-    "next-auth": "^5.0.0-beta.28",
+    "next": "^16.4.6",
+    "next-auth": "^5.0.0-beta.32",
     "partysocket": "1.1.4",
     "pg": "^8.16.0",
     "react": "^19.0.0",
@@ -52,7 +52,7 @@
     "react-draggable": "^4.4.6",
     "react-hook-form": "^7.57.0",
     "tailwind-merge": "^3.3.0",
-    "zod": "^3.25.55"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -65,7 +65,7 @@
     "@types/react-dom": "^19",
     "drizzle-kit": "^0.31.1",
     "eslint": "^9",
-    "eslint-config-next": "^16.1.3",
+    "eslint-config-next": "^16.4.6",
     "tailwindcss": "^4",
     "tsx": "^4.19.4",
     "tw-animate-css": "^1.3.0",

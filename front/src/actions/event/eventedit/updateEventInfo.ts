@@ -14,10 +14,10 @@ import { Event, UpdateEvent } from "@/types/event/schema";
  */
 const BaseSchema = z.object({
   name: z.string({
-    required_error: 'イベント名は必須です。',
+    error: 'イベント名は必須です。',
   }),
   description: z.string({
-    required_error: 'イベントの説明は必須です。',
+    error: 'イベントの説明は必須です。',
   }),
   eventDate: z.string()
     .regex(DATE_PATTERN, 'イベント日はYYYY-MM-DD形式で入力してください。')
@@ -103,7 +103,7 @@ export async function updateEventInfo(
   // 基本バリデーションでエラーがあれば、そのエラーを返却
   if (!baseValidation.success) {
     return {
-      error: baseValidation.error.errors,
+      error: baseValidation.error.issues,
       formData: Object.fromEntries(formData.entries())
     };
   }
@@ -114,7 +114,7 @@ export async function updateEventInfo(
   // バリデーションエラーがあれば、エラーとフォームデータを返却
   if (!validatedFields.success) {
     return {
-      error: validatedFields.error.errors,
+      error: validatedFields.error.issues,
       formData: Object.fromEntries(formData.entries())
     };
   }
