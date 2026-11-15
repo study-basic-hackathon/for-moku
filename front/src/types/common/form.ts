@@ -1,6 +1,6 @@
 import { InputHTMLAttributes } from "react";
 import { JSX } from "react/jsx-runtime";
-import { ZodIssue } from "zod";
+import type { z } from "zod";
 
 /**
  * HTML要素の型(input, select, textareaとか)
@@ -48,6 +48,6 @@ export type CommonRegisterFormField<T> = {
  * 
  */
 export type FormState = {
-  error: ZodIssue[];
+  error: z.core.$ZodIssue[];
   formData?: { [key: string]: FormDataEntryValue | null };
 };
